@@ -1,0 +1,63 @@
+# Usage way:
+#            $ source MYPIPS/pipsrc.sh
+#            $ tpips scritp_pips.p > out_pre_code_with_preconditions.c
+
+
+# ---- Set the file name here
+delete precod
+create precod \
+    init/foo.c
+    
+
+# ---- prettyprinter settings  
+ 
+setproperty PRETTYPRINT_ALL_DECLARATIONS TRUE  
+setproperty PRETTYPRINT_C_CODE TRUE 
+
+# ---- Generates missing files  and routines 
+
+setproperty PREPROCESSOR_MISSING_FILE_HANDLING "generate"
+
+# Stop as soon as the first user error occurs  
+ 
+setproperty ABORT_ON_USER_ERROR TRUE
+
+
+
+
+# just to insure that all routines are generated.  
+ 
+make CALLGRAPH_FILE[%ALL] 
+
+
+
+# ---- eliminate dead code 
+
+apply SUPPRESS_DEAD_CODE[%ALL]
+
+
+
+#display CALLGRAPH_FILE
+#make  PRINTED_FILE[%ALL] 
+
+
+# ---- ask interprocedural information  
+ 
+activate TRANSFORMERS_INTER_FULL
+activate PRECONDITIONS_INTER_FULL 
+capply PARTIAL_EVAL[%ALL]
+
+
+
+
+activate PRINT_CODE_PRECONDITIONS
+apply UNSPLIT[%PROGRAM] 
+
+activate MUST_REGIONS  
+#activate PRINT_CODE_REGIONS  
+
+display PRINTED_FILE[%ALL]
+
+
+close
+quit
