@@ -73,7 +73,8 @@ class RunAstDecl(object):
 
         vi = IdentifyVarDecl()
         vi.visit(ast)
-        print(vi.datafromdecl)
+        #print(vi.datafromdecl)
+        return vi.datafromdecl
 
 
 

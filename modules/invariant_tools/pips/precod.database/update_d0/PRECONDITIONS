@@ -1,0 +1,10 @@
+8
+8
+0 T78 (R76 "TOP-LEVEL:d0_val" R76 "TOP-LEVEL:d0_ev" R76 "TOP-LEVEL:d0_req_up" )T62 E28 ((1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d0_ev#init 1 TOP-LEVEL:d0_req_up 1 TOP-LEVEL:d0_req_up#init 1 TOP-LEVEL:d0_val 1 TOP-LEVEL:d0_val#init )( (1 TOP-LEVEL:d0_req_up ) (-1 . 1 TOP-LEVEL:d0_val ) (-1 . 1 TOP-LEVEL:d0_req_up#init ))())))2
+0 T78 ()T62 E28 ((1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d0_req_up 1 TOP-LEVEL:d0_val )( (-1 . 1 TOP-LEVEL:d0_req_up ))())))1
+0 T78 ()T62 E28 ((1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d0_req_up 1 TOP-LEVEL:d0_val )( (-1 . 1 TOP-LEVEL:d0_req_up ))())))6
+0 T78 ()T62 E28 ((1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d0_req_up 1 TOP-LEVEL:d0_val )( (-1 . 1 TOP-LEVEL:d0_req_up ) (-1 . 1 TOP-LEVEL:d0_val ))())))7
+0 T78 (R76 "TOP-LEVEL:d0_val" R76 "TOP-LEVEL:d0_ev" )T62 E28 ((1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d0_ev#init 1 TOP-LEVEL:d0_req_up 1 TOP-LEVEL:d0_val 1 TOP-LEVEL:d0_val#init )( (-1 . 1 TOP-LEVEL:d0_req_up ) (-1 . 1 TOP-LEVEL:d0_val ))())))4
+0 T78 ()T62 E28 ((1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d0_req_up 1 TOP-LEVEL:d0_val )( (-1 . 1 TOP-LEVEL:d0_req_up ))())))5
+0 T78 (R76 "TOP-LEVEL:d0_val" )T62 E28 ((1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d0_req_up 1 TOP-LEVEL:d0_val 1 TOP-LEVEL:d0_val#init )( (-1 . 1 TOP-LEVEL:d0_req_up ) (-1 . 1 TOP-LEVEL:d0_val ))())))3
+0 T78 ()T62 E28 ((1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d0_req_up 1 TOP-LEVEL:d0_val )( (-1 . 1 TOP-LEVEL:d0_req_up ))())))

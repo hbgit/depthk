@@ -1,0 +1,808 @@
+Registering file bitcell.c
+Checking C syntax of file "./bitcell.c"
+Preprocessing file ./bitcell.c
+Splitting file    ./precod.database/Tmp/bitcell.cpp_processed.c
+  Module         main
+  Module         init_model
+  Module         start_simulation
+  Module         stop_simulation
+  Module         activate_threads
+  Module         reset_delta_events
+  Module         fire_delta_events
+  Module         eval
+  Module         exists_runnable_thread
+  Module         init_threads
+  Module         update_channels
+  Module         update_z
+  Module         update_d1
+  Module         update_d0
+  Module         update_b1
+  Module         update_b0
+  Module         is_method1_triggered
+  Module         method1
+  Module         error
+  Module         bitcell!
+Workspace precod created and opened.
+Main module PROGRAM "main" selected.
+Module main selected
+setproperty PRETTYPRINT_ALL_DECLARATIONS TRUE  
+setproperty PRETTYPRINT_C_CODE TRUE 
+setproperty PREPROCESSOR_MISSING_FILE_HANDLING "generate"
+setproperty ABORT_ON_USER_ERROR TRUE
+Request: build resource CALLGRAPH_FILE for module activate_threads.
+  BOOTSTRAP                      building   ENTITIES()
+  COMPILATION_UNIT_PARSER        building   DECLARATIONS(bitcell!)
+  C_PARSER                       building   PARSED_CODE(activate_threads)
+                                 building   CALLEES(activate_threads)
+  CONTROLIZER                    building   CODE(activate_threads)
+  C_PARSER                       building   PARSED_CODE(is_method1_triggered)
+                                 building   CALLEES(is_method1_triggered)
+  CONTROLIZER                    building   CODE(is_method1_triggered)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(is_method1_triggered)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(activate_threads)
+CALLGRAPH_FILE made for activate_threads.
+Request: build resource CALLGRAPH_FILE for module bitcell!.
+  CONTROLIZER                    building   CODE(bitcell!)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(bitcell!)
+CALLGRAPH_FILE made for bitcell!.
+Request: build resource CALLGRAPH_FILE for module error.
+  C_PARSER                       building   PARSED_CODE(error)
+                                 building   CALLEES(error)
+  CONTROLIZER                    building   CODE(error)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(error)
+CALLGRAPH_FILE made for error.
+Request: build resource CALLGRAPH_FILE for module eval.
+  C_PARSER                       building   PARSED_CODE(eval)
+                                 building   CALLEES(eval)
+  CONTROLIZER                    building   CODE(eval)
+  C_PARSER                       building   PARSED_CODE(method1)
+                                 building   CALLEES(method1)
+  CONTROLIZER                    building   CODE(method1)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(method1)
+  C_INITIALIZER                  building   C_SOURCE_FILE(__VERIFIER_nondet_int)
+Registering synthesized file __VERIFIER_nondet_int.cpp_processed.c
+Registering synthesized compilation unit __VERIFIER_nondet_int!
+  C_PARSER                       building   PARSED_CODE(__VERIFIER_nondet_int)
+                                 building   CALLEES(__VERIFIER_nondet_int)
+  CONTROLIZER                    building   CODE(__VERIFIER_nondet_int)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(__VERIFIER_nondet_int)
+  C_PARSER                       building   PARSED_CODE(exists_runnable_thread)
+                                 building   CALLEES(exists_runnable_thread)
+  CONTROLIZER                    building   CODE(exists_runnable_thread)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(exists_runnable_thread)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(eval)
+CALLGRAPH_FILE made for eval.
+Request: build resource CALLGRAPH_FILE for module exists_runnable_thread.
+CALLGRAPH_FILE made for exists_runnable_thread.
+Request: build resource CALLGRAPH_FILE for module fire_delta_events.
+  C_PARSER                       building   PARSED_CODE(fire_delta_events)
+                                 building   CALLEES(fire_delta_events)
+  CONTROLIZER                    building   CODE(fire_delta_events)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(fire_delta_events)
+CALLGRAPH_FILE made for fire_delta_events.
+Request: build resource CALLGRAPH_FILE for module init_model.
+  C_PARSER                       building   PARSED_CODE(init_model)
+                                 building   CALLEES(init_model)
+  CONTROLIZER                    building   CODE(init_model)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(init_model)
+CALLGRAPH_FILE made for init_model.
+Request: build resource CALLGRAPH_FILE for module init_threads.
+  C_PARSER                       building   PARSED_CODE(init_threads)
+                                 building   CALLEES(init_threads)
+  CONTROLIZER                    building   CODE(init_threads)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(init_threads)
+CALLGRAPH_FILE made for init_threads.
+Request: build resource CALLGRAPH_FILE for module is_method1_triggered.
+CALLGRAPH_FILE made for is_method1_triggered.
+Request: build resource CALLGRAPH_FILE for module main.
+  C_PARSER                       building   PARSED_CODE(main)
+                                 building   CALLEES(main)
+  CONTROLIZER                    building   CODE(main)
+  C_PARSER                       building   PARSED_CODE(start_simulation)
+                                 building   CALLEES(start_simulation)
+  CONTROLIZER                    building   CODE(start_simulation)
+  C_PARSER                       building   PARSED_CODE(stop_simulation)
+                                 building   CALLEES(stop_simulation)
+  CONTROLIZER                    building   CODE(stop_simulation)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(stop_simulation)
+  C_PARSER                       building   PARSED_CODE(reset_delta_events)
+                                 building   CALLEES(reset_delta_events)
+  CONTROLIZER                    building   CODE(reset_delta_events)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(reset_delta_events)
+  C_PARSER                       building   PARSED_CODE(update_channels)
+                                 building   CALLEES(update_channels)
+  CONTROLIZER                    building   CODE(update_channels)
+  C_PARSER                       building   PARSED_CODE(update_z)
+                                 building   CALLEES(update_z)
+  CONTROLIZER                    building   CODE(update_z)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(update_z)
+  C_PARSER                       building   PARSED_CODE(update_d1)
+                                 building   CALLEES(update_d1)
+  CONTROLIZER                    building   CODE(update_d1)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(update_d1)
+  C_PARSER                       building   PARSED_CODE(update_d0)
+                                 building   CALLEES(update_d0)
+  CONTROLIZER                    building   CODE(update_d0)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(update_d0)
+  C_PARSER                       building   PARSED_CODE(update_b1)
+                                 building   CALLEES(update_b1)
+  CONTROLIZER                    building   CODE(update_b1)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(update_b1)
+  C_PARSER                       building   PARSED_CODE(update_b0)
+                                 building   CALLEES(update_b0)
+  CONTROLIZER                    building   CODE(update_b0)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(update_b0)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(update_channels)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(start_simulation)
+  PRINT_CALL_GRAPH               building   CALLGRAPH_FILE(main)
+CALLGRAPH_FILE made for main.
+Request: build resource CALLGRAPH_FILE for module method1.
+CALLGRAPH_FILE made for method1.
+Request: build resource CALLGRAPH_FILE for module reset_delta_events.
+CALLGRAPH_FILE made for reset_delta_events.
+Request: build resource CALLGRAPH_FILE for module start_simulation.
+CALLGRAPH_FILE made for start_simulation.
+Request: build resource CALLGRAPH_FILE for module stop_simulation.
+CALLGRAPH_FILE made for stop_simulation.
+Request: build resource CALLGRAPH_FILE for module update_b0.
+CALLGRAPH_FILE made for update_b0.
+Request: build resource CALLGRAPH_FILE for module update_b1.
+CALLGRAPH_FILE made for update_b1.
+Request: build resource CALLGRAPH_FILE for module update_channels.
+CALLGRAPH_FILE made for update_channels.
+Request: build resource CALLGRAPH_FILE for module update_d0.
+CALLGRAPH_FILE made for update_d0.
+Request: build resource CALLGRAPH_FILE for module update_d1.
+CALLGRAPH_FILE made for update_d1.
+Request: build resource CALLGRAPH_FILE for module update_z.
+CALLGRAPH_FILE made for update_z.
+Request: build phase/rule SUPPRESS_DEAD_CODE for module __VERIFIER_nondet_int.
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(__VERIFIER_nondet_int)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(__VERIFIER_nondet_int)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(__VERIFIER_nondet_int)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(__VERIFIER_nondet_int)
+  CONTROLIZER                    building   CODE(__VERIFIER_nondet_int!)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(__VERIFIER_nondet_int!)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(__VERIFIER_nondet_int!)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(__VERIFIER_nondet_int!)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(__VERIFIER_nondet_int!)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(is_method1_triggered)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(is_method1_triggered)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(is_method1_triggered)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(activate_threads)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(activate_threads)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(activate_threads)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(activate_threads)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(bitcell!)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(bitcell!)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(bitcell!)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(bitcell!)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(error)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(error)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(error)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(error)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(method1)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(method1)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(method1)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(exists_runnable_thread)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(exists_runnable_thread)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(exists_runnable_thread)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(eval)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(eval)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(eval)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(eval)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(exists_runnable_thread)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(fire_delta_events)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(fire_delta_events)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(fire_delta_events)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(fire_delta_events)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(init_model)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(init_model)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(init_model)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(init_model)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(init_threads)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(init_threads)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(init_threads)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(init_threads)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(is_method1_triggered)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(stop_simulation)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(stop_simulation)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(stop_simulation)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(reset_delta_events)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(reset_delta_events)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(reset_delta_events)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_z)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_z)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_z)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_d1)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_d1)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_d1)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_d0)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_d0)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_d0)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_b1)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_b1)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_b1)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_b0)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_b0)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_b0)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_channels)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_channels)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_channels)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(start_simulation)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(start_simulation)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(start_simulation)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(main)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(main)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(main)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(main)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(method1)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(reset_delta_events)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(start_simulation)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(stop_simulation)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_b0)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_b1)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_channels)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_d0)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_d1)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_z)
+  PROGRAM_PRECONDITION           building   PROGRAM_PRECONDITION()
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(__VERIFIER_nondet_int)
+  CALLGRAPH                      building   CALLERS(__VERIFIER_nondet_int)
+                                 building   CALLERS(__VERIFIER_nondet_int!)
+                                 building   CALLERS(activate_threads)
+                                 building   CALLERS(bitcell!)
+                                 building   CALLERS(error)
+                                 building   CALLERS(eval)
+                                 building   CALLERS(exists_runnable_thread)
+                                 building   CALLERS(fire_delta_events)
+                                 building   CALLERS(init_model)
+                                 building   CALLERS(init_threads)
+                                 building   CALLERS(is_method1_triggered)
+                                 building   CALLERS(main)
+                                 building   CALLERS(method1)
+                                 building   CALLERS(reset_delta_events)
+                                 building   CALLERS(start_simulation)
+                                 building   CALLERS(stop_simulation)
+                                 building   CALLERS(update_b0)
+                                 building   CALLERS(update_b1)
+                                 building   CALLERS(update_channels)
+                                 building   CALLERS(update_d0)
+                                 building   CALLERS(update_d1)
+                                 building   CALLERS(update_z)
+                                 building   HEIGHT(__VERIFIER_nondet_int)
+                                 building   HEIGHT(__VERIFIER_nondet_int!)
+                                 building   HEIGHT(activate_threads)
+                                 building   HEIGHT(bitcell!)
+                                 building   HEIGHT(error)
+                                 building   HEIGHT(eval)
+                                 building   HEIGHT(exists_runnable_thread)
+                                 building   HEIGHT(fire_delta_events)
+                                 building   HEIGHT(init_model)
+                                 building   HEIGHT(init_threads)
+                                 building   HEIGHT(is_method1_triggered)
+                                 building   HEIGHT(main)
+                                 building   HEIGHT(method1)
+                                 building   HEIGHT(reset_delta_events)
+                                 building   HEIGHT(start_simulation)
+                                 building   HEIGHT(stop_simulation)
+                                 building   HEIGHT(update_b0)
+                                 building   HEIGHT(update_b1)
+                                 building   HEIGHT(update_channels)
+                                 building   HEIGHT(update_d0)
+                                 building   HEIGHT(update_d1)
+                                 building   HEIGHT(update_z)
+                                 building   DEPTH(__VERIFIER_nondet_int)
+                                 building   DEPTH(__VERIFIER_nondet_int!)
+                                 building   DEPTH(activate_threads)
+                                 building   DEPTH(bitcell!)
+                                 building   DEPTH(error)
+                                 building   DEPTH(eval)
+                                 building   DEPTH(exists_runnable_thread)
+                                 building   DEPTH(fire_delta_events)
+                                 building   DEPTH(init_model)
+                                 building   DEPTH(init_threads)
+                                 building   DEPTH(is_method1_triggered)
+                                 building   DEPTH(main)
+                                 building   DEPTH(method1)
+                                 building   DEPTH(reset_delta_events)
+                                 building   DEPTH(start_simulation)
+                                 building   DEPTH(stop_simulation)
+                                 building   DEPTH(update_b0)
+                                 building   DEPTH(update_b1)
+                                 building   DEPTH(update_channels)
+                                 building   DEPTH(update_d0)
+                                 building   DEPTH(update_d1)
+                                 building   DEPTH(update_z)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(method1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(exists_runnable_thread)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(eval)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(stop_simulation)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(reset_delta_events)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(is_method1_triggered)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(activate_threads)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(fire_delta_events)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(init_threads)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_z)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_d1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_d0)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_b1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_b0)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_channels)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(start_simulation)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(error)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(init_model)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(main)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(main)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(main)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(start_simulation)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(start_simulation)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(eval)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(eval)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(__VERIFIER_nondet_int)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(__VERIFIER_nondet_int)
+  SUPPRESS_DEAD_CODE             updating   CODE(__VERIFIER_nondet_int)
+                                 building   CALLEES(__VERIFIER_nondet_int)
+* 2 dead code parts have been discarded. *
+Statements removed (directly dead): 2
+Loops: loops removed: 0, loops executed only once: 0
+Structured tests: "if" removed: 0, "if" replaced by side effects: 0
+	("then" removed: 0, "else" removed: 0)
+Unstructured tests: "if" removed: 0, "if" replaced by side effects: 0
+	(unstructured "then" removed: 0, unstructured "else" removed: 0)
+SUPPRESS_DEAD_CODE made for __VERIFIER_nondet_int.
+Request: build phase/rule SUPPRESS_DEAD_CODE for module __VERIFIER_nondet_int!.
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(__VERIFIER_nondet_int)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(__VERIFIER_nondet_int)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(__VERIFIER_nondet_int)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(__VERIFIER_nondet_int)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(eval)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(eval)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(eval)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(eval)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(start_simulation)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(start_simulation)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(start_simulation)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(main)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(main)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(main)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(main)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(start_simulation)
+  PROGRAM_PRECONDITION           building   PROGRAM_PRECONDITION()
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(__VERIFIER_nondet_int!)
+  CALLGRAPH                      building   CALLERS(__VERIFIER_nondet_int)
+                                 building   CALLERS(__VERIFIER_nondet_int!)
+                                 building   CALLERS(activate_threads)
+                                 building   CALLERS(bitcell!)
+                                 building   CALLERS(error)
+                                 building   CALLERS(eval)
+                                 building   CALLERS(exists_runnable_thread)
+                                 building   CALLERS(fire_delta_events)
+                                 building   CALLERS(init_model)
+                                 building   CALLERS(init_threads)
+                                 building   CALLERS(is_method1_triggered)
+                                 building   CALLERS(main)
+                                 building   CALLERS(method1)
+                                 building   CALLERS(reset_delta_events)
+                                 building   CALLERS(start_simulation)
+                                 building   CALLERS(stop_simulation)
+                                 building   CALLERS(update_b0)
+                                 building   CALLERS(update_b1)
+                                 building   CALLERS(update_channels)
+                                 building   CALLERS(update_d0)
+                                 building   CALLERS(update_d1)
+                                 building   CALLERS(update_z)
+                                 building   HEIGHT(__VERIFIER_nondet_int)
+                                 building   HEIGHT(__VERIFIER_nondet_int!)
+                                 building   HEIGHT(activate_threads)
+                                 building   HEIGHT(bitcell!)
+                                 building   HEIGHT(error)
+                                 building   HEIGHT(eval)
+                                 building   HEIGHT(exists_runnable_thread)
+                                 building   HEIGHT(fire_delta_events)
+                                 building   HEIGHT(init_model)
+                                 building   HEIGHT(init_threads)
+                                 building   HEIGHT(is_method1_triggered)
+                                 building   HEIGHT(main)
+                                 building   HEIGHT(method1)
+                                 building   HEIGHT(reset_delta_events)
+                                 building   HEIGHT(start_simulation)
+                                 building   HEIGHT(stop_simulation)
+                                 building   HEIGHT(update_b0)
+                                 building   HEIGHT(update_b1)
+                                 building   HEIGHT(update_channels)
+                                 building   HEIGHT(update_d0)
+                                 building   HEIGHT(update_d1)
+                                 building   HEIGHT(update_z)
+                                 building   DEPTH(__VERIFIER_nondet_int)
+                                 building   DEPTH(__VERIFIER_nondet_int!)
+                                 building   DEPTH(activate_threads)
+                                 building   DEPTH(bitcell!)
+                                 building   DEPTH(error)
+                                 building   DEPTH(eval)
+                                 building   DEPTH(exists_runnable_thread)
+                                 building   DEPTH(fire_delta_events)
+                                 building   DEPTH(init_model)
+                                 building   DEPTH(init_threads)
+                                 building   DEPTH(is_method1_triggered)
+                                 building   DEPTH(main)
+                                 building   DEPTH(method1)
+                                 building   DEPTH(reset_delta_events)
+                                 building   DEPTH(start_simulation)
+                                 building   DEPTH(stop_simulation)
+                                 building   DEPTH(update_b0)
+                                 building   DEPTH(update_b1)
+                                 building   DEPTH(update_channels)
+                                 building   DEPTH(update_d0)
+                                 building   DEPTH(update_d1)
+                                 building   DEPTH(update_z)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(__VERIFIER_nondet_int!)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(__VERIFIER_nondet_int!)
+  SUPPRESS_DEAD_CODE             updating   CODE(__VERIFIER_nondet_int!)
+                                 building   CALLEES(__VERIFIER_nondet_int!)
+Selecting rule: TRANSFORMERS_INTER_FULL
+Selecting rule: PRECONDITIONS_INTER_FULL
+Request: capply PARTIAL_EVAL for module [__VERIFIER_nondet_int,__VERIFIER_nondet_int!,activate_threads,bitcell!,error,eval,exists_runnable_thread,fire_delta_events,init_model,init_threads,is_method1_triggered,main,method1,reset_delta_events,start_simulation,stop_simulation,update_b0,update_b1,update_channels,update_d0,update_d1,update_z].
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(__VERIFIER_nondet_int)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(method1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(exists_runnable_thread)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(eval)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(stop_simulation)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(reset_delta_events)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(is_method1_triggered)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(activate_threads)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(fire_delta_events)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(init_threads)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_z)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_d1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_d0)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_b1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_b0)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_channels)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(start_simulation)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(error)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(init_model)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(main)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(main)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(main)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(start_simulation)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(start_simulation)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(eval)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(eval)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(__VERIFIER_nondet_int)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(__VERIFIER_nondet_int)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(activate_threads)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(activate_threads)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(bitcell!)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(bitcell!)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(bitcell!)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(error)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(error)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(stop_simulation)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(stop_simulation)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(exists_runnable_thread)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(exists_runnable_thread)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(fire_delta_events)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(fire_delta_events)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(init_model)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(init_model)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(init_threads)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(init_threads)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(is_method1_triggered)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(is_method1_triggered)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(method1)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(method1)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(reset_delta_events)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(reset_delta_events)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_channels)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_channels)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_b0)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_b0)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_b1)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_b1)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_d0)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_d0)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_d1)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_d1)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_z)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_z)
+  PARTIAL_EVAL                   updating   CODE(__VERIFIER_nondet_int)
+  PARTIAL_EVAL                   updating   CODE(__VERIFIER_nondet_int!)
+  PARTIAL_EVAL                   updating   CODE(activate_threads)
+  PARTIAL_EVAL                   updating   CODE(bitcell!)
+  PARTIAL_EVAL                   updating   CODE(error)
+  PARTIAL_EVAL                   updating   CODE(eval)
+  PARTIAL_EVAL                   updating   CODE(exists_runnable_thread)
+  PARTIAL_EVAL                   updating   CODE(fire_delta_events)
+  PARTIAL_EVAL                   updating   CODE(init_model)
+  PARTIAL_EVAL                   updating   CODE(init_threads)
+  PARTIAL_EVAL                   updating   CODE(is_method1_triggered)
+  PARTIAL_EVAL                   updating   CODE(main)
+  PARTIAL_EVAL                   updating   CODE(method1)
+  PARTIAL_EVAL                   updating   CODE(reset_delta_events)
+  PARTIAL_EVAL                   updating   CODE(start_simulation)
+  PARTIAL_EVAL                   updating   CODE(stop_simulation)
+  PARTIAL_EVAL                   updating   CODE(update_b0)
+  PARTIAL_EVAL                   updating   CODE(update_b1)
+  PARTIAL_EVAL                   updating   CODE(update_channels)
+  PARTIAL_EVAL                   updating   CODE(update_d0)
+  PARTIAL_EVAL                   updating   CODE(update_d1)
+  PARTIAL_EVAL                   updating   CODE(update_z)
+capply PARTIAL_EVAL made for [__VERIFIER_nondet_int,__VERIFIER_nondet_int!,activate_threads,bitcell!,error,eval,exists_runnable_thread,fire_delta_events,init_model,init_threads,is_method1_triggered,main,method1,reset_delta_events,start_simulation,stop_simulation,update_b0,update_b1,update_channels,update_d0,update_d1,update_z].
+Selecting rule: PRINT_CODE_PRECONDITIONS
+Request: build phase/rule UNSPLIT for module .
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(__VERIFIER_nondet_int)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(__VERIFIER_nondet_int)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(__VERIFIER_nondet_int)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(__VERIFIER_nondet_int)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(__VERIFIER_nondet_int!)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(__VERIFIER_nondet_int!)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(__VERIFIER_nondet_int!)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(__VERIFIER_nondet_int!)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(is_method1_triggered)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(is_method1_triggered)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(is_method1_triggered)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(activate_threads)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(activate_threads)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(activate_threads)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(activate_threads)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(bitcell!)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(bitcell!)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(bitcell!)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(bitcell!)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(error)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(error)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(error)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(error)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(method1)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(method1)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(method1)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(exists_runnable_thread)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(exists_runnable_thread)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(exists_runnable_thread)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(eval)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(eval)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(eval)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(eval)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(exists_runnable_thread)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(fire_delta_events)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(fire_delta_events)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(fire_delta_events)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(fire_delta_events)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(init_model)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(init_model)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(init_model)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(init_model)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(init_threads)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(init_threads)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(init_threads)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(init_threads)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(is_method1_triggered)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(stop_simulation)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(stop_simulation)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(stop_simulation)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(reset_delta_events)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(reset_delta_events)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(reset_delta_events)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_z)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_z)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_z)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_d1)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_d1)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_d1)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_d0)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_d0)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_d0)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_b1)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_b1)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_b1)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_b0)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_b0)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_b0)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(update_channels)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(update_channels)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(update_channels)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(start_simulation)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(start_simulation)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(start_simulation)
+  PROPER_EFFECTS                 building   PROPER_EFFECTS(main)
+  CUMULATED_EFFECTS              building   CUMULATED_EFFECTS(main)
+  SUMMARY_EFFECTS                building   SUMMARY_EFFECTS(main)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(main)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(method1)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(reset_delta_events)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(start_simulation)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(stop_simulation)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_b0)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_b1)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_channels)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_d0)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_d1)
+  INITIAL_PRECONDITION           building   INITIAL_PRECONDITION(update_z)
+  PROGRAM_PRECONDITION           building   PROGRAM_PRECONDITION()
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(__VERIFIER_nondet_int)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(method1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(exists_runnable_thread)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(eval)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(stop_simulation)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(reset_delta_events)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(is_method1_triggered)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(activate_threads)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(fire_delta_events)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(init_threads)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_z)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_d1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_d0)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_b1)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_b0)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(update_channels)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(start_simulation)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(error)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(init_model)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(main)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(main)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(main)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(start_simulation)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(start_simulation)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(eval)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(eval)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(__VERIFIER_nondet_int)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(__VERIFIER_nondet_int)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(__VERIFIER_nondet_int)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(__VERIFIER_nondet_int!)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(__VERIFIER_nondet_int!)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(__VERIFIER_nondet_int!)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(__VERIFIER_nondet_int!)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(activate_threads)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(activate_threads)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(activate_threads)
+  TRANSFORMERS_INTER_FULL        building   TRANSFORMERS(bitcell!)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(bitcell!)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(bitcell!)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(bitcell!)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(error)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(error)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(error)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(eval)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(stop_simulation)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(stop_simulation)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(exists_runnable_thread)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(exists_runnable_thread)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(exists_runnable_thread)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(fire_delta_events)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(fire_delta_events)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(fire_delta_events)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(init_model)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(init_model)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(init_model)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(init_threads)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(init_threads)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(init_threads)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(is_method1_triggered)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(is_method1_triggered)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(is_method1_triggered)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(main)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(method1)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(method1)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(method1)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(reset_delta_events)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(reset_delta_events)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(reset_delta_events)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(start_simulation)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(stop_simulation)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_channels)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_channels)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_b0)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_b0)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(update_b0)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_b1)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_b1)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(update_b1)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(update_channels)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_d0)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_d0)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(update_d0)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_d1)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_d1)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(update_d1)
+  INTERPROCEDURAL_SUMMARY_PRECONDITION building   SUMMARY_PRECONDITION(update_z)
+  PRECONDITIONS_INTER_FULL       building   PRECONDITIONS(update_z)
+  PRINT_CODE_PRECONDITIONS       building   PRINTED_FILE(update_z)
+  UNSPLIT                        building   USER_FILE()
+UNSPLIT made for .
+Selecting rule: MUST_REGIONS
+Module __VERIFIER_nondet_int selected
+Request: build resource PRINTED_FILE for module __VERIFIER_nondet_int.
+PRINTED_FILE made for __VERIFIER_nondet_int.
+Module __VERIFIER_nondet_int! selected
+Request: build resource PRINTED_FILE for module __VERIFIER_nondet_int!.
+PRINTED_FILE made for __VERIFIER_nondet_int!.
+Module activate_threads selected
+Request: build resource PRINTED_FILE for module activate_threads.
+PRINTED_FILE made for activate_threads.
+Module bitcell! selected
+Request: build resource PRINTED_FILE for module bitcell!.
+PRINTED_FILE made for bitcell!.
+Module error selected
+Request: build resource PRINTED_FILE for module error.
+PRINTED_FILE made for error.
+Module eval selected
+Request: build resource PRINTED_FILE for module eval.
+PRINTED_FILE made for eval.
+Module exists_runnable_thread selected
+Request: build resource PRINTED_FILE for module exists_runnable_thread.
+PRINTED_FILE made for exists_runnable_thread.
+Module fire_delta_events selected
+Request: build resource PRINTED_FILE for module fire_delta_events.
+PRINTED_FILE made for fire_delta_events.
+Module init_model selected
+Request: build resource PRINTED_FILE for module init_model.
+PRINTED_FILE made for init_model.
+Module init_threads selected
+Request: build resource PRINTED_FILE for module init_threads.
+PRINTED_FILE made for init_threads.
+Module is_method1_triggered selected
+Request: build resource PRINTED_FILE for module is_method1_triggered.
+PRINTED_FILE made for is_method1_triggered.
+Module main selected
+Request: build resource PRINTED_FILE for module main.
+PRINTED_FILE made for main.
+Module method1 selected
+Request: build resource PRINTED_FILE for module method1.
+PRINTED_FILE made for method1.
+Module reset_delta_events selected
+Request: build resource PRINTED_FILE for module reset_delta_events.
+PRINTED_FILE made for reset_delta_events.
+Module start_simulation selected
+Request: build resource PRINTED_FILE for module start_simulation.
+PRINTED_FILE made for start_simulation.
+Module stop_simulation selected
+Request: build resource PRINTED_FILE for module stop_simulation.
+PRINTED_FILE made for stop_simulation.
+Module update_b0 selected
+Request: build resource PRINTED_FILE for module update_b0.
+PRINTED_FILE made for update_b0.
+Module update_b1 selected
+Request: build resource PRINTED_FILE for module update_b1.
+PRINTED_FILE made for update_b1.
+Module update_channels selected
+Request: build resource PRINTED_FILE for module update_channels.
+PRINTED_FILE made for update_channels.
+Module update_d0 selected
+Request: build resource PRINTED_FILE for module update_d0.
+PRINTED_FILE made for update_d0.
+Module update_d1 selected
+Request: build resource PRINTED_FILE for module update_d1.
+PRINTED_FILE made for update_d1.
+Module update_z selected
+Request: build resource PRINTED_FILE for module update_z.
+PRINTED_FILE made for update_z.
+Deletion of obsolete resources:
+21 destroyed.
+Closing all modules.
+  Closing module __VERIFIER_nondet_int.
+  Closing module __VERIFIER_nondet_int!.
+  Closing module activate_threads.
+  Closing module bitcell!.
+  Closing module error.
+  Closing module eval.
+  Closing module exists_runnable_thread.
+  Closing module fire_delta_events.
+  Closing module init_model.
+  Closing module init_threads.
+  Closing module is_method1_triggered.
+  Closing module main.
+  Closing module method1.
+  Closing module reset_delta_events.
+  Closing module start_simulation.
+  Closing module stop_simulation.
+  Closing module update_b0.
+  Closing module update_b1.
+  Closing module update_channels.
+  Closing module update_d0.
+  Closing module update_d1.
+  Closing module update_z.
+Closing program.
+Closing workspace.
+Workspace precod closed.
+
