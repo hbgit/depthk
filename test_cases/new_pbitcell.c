@@ -16,7 +16,7 @@ int __VERIFIER_nondet_int()
 int __VERIFIER_nondet_int();
 
 //  P() {}
-//int comp_m1_st;
+
 int comp_m1_st;
 
 void activate_threads(void)
@@ -378,6 +378,11 @@ return_label:   return __retres1;
 
 void fire_delta_events(void)
 {
+int z_ev_init;
+int b1_ev_init;
+int d1_ev_init;
+int b0_ev_init;
+int d0_ev_init;
 
 //  P() {}
 
@@ -772,6 +777,7 @@ int main(void)
 
 void method1(void)
 {
+int comp_m1_st_init;
 
 //  P() {comp_m1_st==1}
 
@@ -912,6 +918,11 @@ void method1(void)
 
 void reset_delta_events(void)
 {
+int z_ev_init;
+int b1_ev_init;
+int d1_ev_init;
+int b0_ev_init;
+int d0_ev_init;
 
 //  P() {}
 
@@ -980,6 +991,21 @@ void reset_delta_events(void)
 
 void start_simulation(void)
 {
+int d1_req_up_init;
+int b1_req_up_init;
+int d1_ev_init;
+int b0_ev_init;
+int d0_val_init;
+int d1_val_init;
+int b0_val_init;
+int z_ev_init;
+int b1_val_init;
+int b1_ev_init;
+int b0_req_up_init;
+int z_val_init;
+int d0_req_up_init;
+int z_req_up_init;
+int d0_ev_init;
 
 //  P() {b0_ev==2, b0_req_up==1, b0_val==0, b1_ev==2, b1_req_up==1,
 //    b1_val==0, d0_ev==2, d0_req_up==1, d0_val==0, d1_ev==2,
@@ -1277,6 +1303,7 @@ return_label:   return __retres2;
 
 void update_b0(void)
 {
+int b0_req_up_init;
 
 //  P() {b0_req_up==1}
 
@@ -1306,6 +1333,7 @@ void update_b0(void)
 
 void update_b1(void)
 {
+int b1_req_up_init;
 
 //  P() {b1_req_up==1}
 
@@ -1335,6 +1363,11 @@ void update_b1(void)
 
 void update_channels(void)
 {
+int b0_req_up_init;
+int d1_req_up_init;
+int b1_req_up_init;
+int z_req_up_init;
+int d0_req_up_init;
 
 //  P() {b0_req_up<=1, b1_req_up<=1, d0_req_up<=1, d1_req_up<=1}
 
@@ -1429,6 +1462,7 @@ void update_channels(void)
 
 void update_d0(void)
 {
+int d0_req_up_init;
 
 //  P() {d0_req_up==1}
 
@@ -1458,6 +1492,7 @@ void update_d0(void)
 
 void update_d1(void)
 {
+int d1_req_up_init;
 
 //  P() {d1_req_up==1}
 
@@ -1487,6 +1522,7 @@ void update_d1(void)
 
 void update_z(void)
 {
+int z_req_up_init;
 
 //  P() {z_req_up==1}
 

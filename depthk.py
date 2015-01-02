@@ -27,10 +27,13 @@ from modules.run_ast import ast
 
 
 # TODO:
-# (1) Identify each variable and it type [DONE]
-# (2) Read the code.pips identify #init, save the VAR#init and the function where it was find
+# (1) [DONE] Identify each variable and it type
+# (2) [DONE] Read the code.pips identify #init, save the VAR#init and the function where it was find
 # (3) write new code where for each function identified in (2) we should add the new vars to VAR#init
 # (4) Read the code.pips and translate the annotations to __ESBMC. WARNNING: replace VAR#init to VAR_init
+#
+# Checkout:
+# Set all global vars in the top of the source code, i.e., all global vars should be before to use in a function
 
 
 
@@ -173,7 +176,11 @@ class DepthK(object):
                 if _dicvarinitandloc.has_key(nextline):
                     for var in _dicvarinitandloc[nextline]:
                         #print("INIT: ", var)
-                        print("INIT: ", dict_varsdata[var][0], var+"_init")
+                        # Creating INIT vars
+                        #print("INIT: ", dict_varsdata[var][0], var+"_init")
+                        nametype = ' '.join(dict_varsdata[var][0])
+                        print(nametype+str(" " + var + "_init;"))
+
                     #sys.exit()
 
             count += 1

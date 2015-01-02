@@ -17,6 +17,8 @@ int __VERIFIER_nondet_int();
 
 //  P() {}
 
+int comp_m1_st;
+
 void activate_threads(void)
 {
 
@@ -177,7 +179,7 @@ int z_req_up;
 
 //  P() {0==-1}
 
-int comp_m1_st;
+//int comp_m1_st;
 
 //  P() {0==-1}
 
