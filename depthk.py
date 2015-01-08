@@ -29,7 +29,7 @@ from modules.run_ast import ast
 # TODO:
 # (1) [DONE] Identify each variable and it type
 # (2) [DONE] Read the code.pips identify #init, save the VAR#init and the function where it was find
-# (3) write new code where for each function identified in (2) we should add the new vars to VAR#init
+# (3) [DONE] write new code where for each function identified in (2) we should add the new vars to VAR#init
 # (4) Read the code.pips and translate the annotations to __ESBMC. WARNNING: replace VAR#init to VAR_init
 
 
@@ -140,8 +140,13 @@ class DepthK(object):
 
         :param _cfilepath:
         :param _dicvarinitandloc:
-        :return:
+        :return: pathcodewithinit
         """
+
+        # generating path to save this new code generated
+        pathcodewithinit = "/tmp/" + str(os.path.basename(_cfilepath).replace(".c","_init.c"))
+        filewithinit = open(pathcodewithinit, "w")
+
 
         flag_initpips = True
         if not _dicvarinitandloc:
@@ -162,12 +167,14 @@ class DepthK(object):
         count = 0
         while count < len(linescfile):
 
-            print(linescfile[count],end="")
+            #print(linescfile[count],end="")
+            filewithinit.write(linescfile[count])
 
             nextline = count + 1
             if nextline in self.listnumbeginfunc:
                 # print delimiter
-                print(linescfile[nextline],end="")
+                #print(linescfile[nextline],end="")
+                filewithinit.write(linescfile[nextline])
                 count = nextline
 
                 if _dicvarinitandloc.has_key(nextline):
@@ -176,11 +183,16 @@ class DepthK(object):
                         # Creating INIT vars
                         #print("INIT: ", dict_varsdata[var][0], var+"_init")
                         nametype = ' '.join(dict_varsdata[var][0])
-                        print(nametype+str(" " + var + "_init = " + var + ";"))
+                        #print(nametype+str(" " + var + "_init = " + var + ";"))
+                        filewithinit.write(nametype+str(" " + var + "_init = " + var + "; \n"))
 
                     #sys.exit()
 
             count += 1
+
+        filewithinit.close()
+
+        return pathcodewithinit
 
 
 
@@ -240,6 +252,8 @@ if __name__ == "__main__":
 
             # Applying steps of detphk
             dict_init = rundepthk.identify_initpips(inputCFile)
-            rundepthk.generatecodewithinit(inputCFile,dict_init)
+            pathcodeinit = rundepthk.generatecodewithinit(inputCFile,dict_init)
+            print(pathcodeinit)
+
 
 
