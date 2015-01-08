@@ -4,7 +4,7 @@
 
 //  P() {0==-1}
 
-/* Copyright (C) 1991-2013 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,10 +32,12 @@
    explicitly includes a system header.  GCC knows the name of this
    header in order to preinclude it.  */
 
-/* We do support the IEC 559 math functionality, real and complex.  */
-
-
-
+/* glibc's intent is to support the IEC 559 math functionality, real
+   and complex.  If the GCC (4.9 and later) predefined macros
+   specifying compiler intent are available, use them to determine
+   whether the overall intent is to support these features; otherwise,
+   presume an older compiler has intent to support these features and
+   define these macros by default.  */
 /* wchar_t uses ISO/IEC 10646 (2nd ed., published 2011-03-15) /
    Unicode 6.0.  */
 
@@ -48,6 +50,7 @@
     return (x);
   }
   }*/
+
 
 
 //  P() {0==-1}
@@ -248,108 +251,126 @@ void method1(void)
 
 //  P(s1,s2,s3) {comp_m1_st==1}
 
-   if (b0_val)
+   if (b0_val) {
 
 //  P(s1,s2,s3) {comp_m1_st==1}
 
-      if (d1_val)
+      if (d1_val) {
 
 //  P(s1,s2,s3) {comp_m1_st==1}
 
          s1 = 0;
-      else
+      }
+      else {
 
 //  P(s1,s2,s3) {comp_m1_st==1, d1_val==0}
 
          s1 = 1;
-   else
+      }
+   }
+   else {
 
 //  P(s1,s2,s3) {b0_val==0, comp_m1_st==1}
 
       s1 = 1;
+   }
 
 //  P(s1,s2,s3) {comp_m1_st==1, 0<=s1, s1<=1}
 
-   if (d0_val)
+   if (d0_val) {
 
 //  P(s1,s2,s3) {comp_m1_st==1, 0<=s1, s1<=1}
 
-      if (b1_val)
+      if (b1_val) {
 
 //  P(s1,s2,s3) {comp_m1_st==1, 0<=s1, s1<=1}
 
          s2 = 0;
-      else
+      }
+      else {
 
 //  P(s1,s2,s3) {b1_val==0, comp_m1_st==1, 0<=s1, s1<=1}
 
          s2 = 1;
-   else
+      }
+   }
+   else {
 
 //  P(s1,s2,s3) {comp_m1_st==1, d0_val==0, 0<=s1, s1<=1}
 
       s2 = 1;
+   }
 
 //  P(s1,s2,s3) {comp_m1_st==1, 0<=s1, s1<=1, 0<=s2, s2<=1}
 
-   if (s2)
+   if (s2) {
 
 //  P(s1,s2,s3) {comp_m1_st==1, s2==1, 0<=s1, s1<=1}
 
       s3 = 0;
-   else if (s1)
+   }
+   else if (s1) {
 
 //  P(s1,s2,s3) {comp_m1_st==1, s1==1, s2==0}
 
       s3 = 0;
-   else
+   }
+   else {
 
 //  P(s1,s2,s3) {comp_m1_st==1, s1==0, s2==0}
 
       s3 = 1;
+   }
 
 //  P(s1,s2,s3) {comp_m1_st==1, 1<=s1+s2+s3, s1+s3<=1, s2+s3<=1,
 //    0<=s3}
 
-   if (s2)
+   if (s2) {
 
 //  P(s1,s2,s3) {comp_m1_st==1, 1<=s1+s2+s3, s1+s3<=1, 1<=s2,
 //    s2+s3<=1, 0<=s3}
 
-      if (s1)
+      if (s1) {
 
 //  P(s1,s2,s3) {comp_m1_st==1, 1<=s1, s1+s3<=1, 1<=s2, s2+s3<=1,
 //    0<=s3}
 
          s2 = 1;
-      else
+      }
+      else {
 
 //  P(s1,s2,s3) {comp_m1_st==1, s1==0, 1<=s2, s2+s3<=1, 0<=s3, s3<=1}
 
          s2 = 0;
-   else
+      }
+   }
+   else {
 
 //  P(s1,s2,s3) {comp_m1_st==1, s1+s3==1, s2==0, 0<=s1, s1<=1}
 
       s2 = 0;
+   }
 
 //  P(s1,s2,s3) {comp_m1_st==1, s2<=s1, s1+s3<=1, 0<=s2, 0<=s3}
 
-   if (s2)
+   if (s2) {
 
 //  P(s1,s2,s3) {comp_m1_st==1, s2<=s1, s1+s3<=1, 1<=s2, 0<=s3}
 
       z_val_t = 0;
-   else if (s3)
+   }
+   else if (s3) {
 
 //  P(s1,s2,s3) {comp_m1_st==1, s2==0, 0<=s1, s1+s3<=1, 1<=s3}
 
       z_val_t = 0;
-   else
+   }
+   else {
 
 //  P(s1,s2,s3) {comp_m1_st==1, s2==0, s3==0, 0<=s1, s1<=1}
 
       z_val_t = 1;
+   }
 
 //  P(s1,s2,s3,z_val_t) {comp_m1_st==1, s2+s3+z_val_t==1, s2<=s1,
 //    s1+s3<=1, 0<=s2, 0<=s3}
@@ -580,30 +601,32 @@ void update_channels(void)
 
 //  P() {b0_req_up<=1, b1_req_up<=1, d0_req_up<=1, d1_req_up<=1}
 
-   if (b0_req_up==1)
+   if (b0_req_up==1) {
 
 //  P() {b0_req_up==1, b1_req_up<=1, d0_req_up<=1, d1_req_up<=1}
 
       update_b0();
+   }
 
 //  P(b0_ev,b0_req_up,b0_val) {b0_req_up<=0,
 //    b0_req_up<=b0_req_up#init, b0_req_up#init<=b0_req_up+1,
 //    b1_req_up<=1, d0_req_up<=1, d1_req_up<=1}
 
-   if (b1_req_up==1)
+   if (b1_req_up==1) {
 
 //  P(b0_ev,b0_req_up,b0_val) {b1_req_up==1, b0_req_up<=0,
 //    b0_req_up<=b0_req_up#init, b0_req_up#init<=b0_req_up+1,
 //    d0_req_up<=1, d1_req_up<=1}
 
       update_b1();
+   }
 
 //  P(b0_ev,b0_req_up,b0_val,b1_ev,b1_req_up,b1_val) {b0_req_up<=0,
 //    b0_req_up<=b0_req_up#init, b0_req_up#init<=b0_req_up+1,
 //    b1_req_up<=0, b1_req_up<=b1_req_up#init,
 //    b1_req_up#init<=b1_req_up+1, d0_req_up<=1, d1_req_up<=1}
 
-   if (d0_req_up==1)
+   if (d0_req_up==1) {
 
 //  P(b0_ev,b0_req_up,b0_val,b1_ev,b1_req_up,b1_val) {d0_req_up==1,
 //    b0_req_up<=0, b0_req_up<=b0_req_up#init,
@@ -612,6 +635,7 @@ void update_channels(void)
 //    d1_req_up<=1}
 
       update_d0();
+   }
 
 //  P(b0_ev,b0_req_up,b0_val,b1_ev,b1_req_up,b1_val,d0_ev,d0_req_up,
 //    d0_val) {b0_req_up<=0, b0_req_up<=b0_req_up#init,
@@ -620,7 +644,7 @@ void update_channels(void)
 //    d0_req_up<=0, d0_req_up<=d0_req_up#init,
 //    d0_req_up#init<=d0_req_up+1, d1_req_up<=1}
 
-   if (d1_req_up==1)
+   if (d1_req_up==1) {
 
 //  P(b0_ev,b0_req_up,b0_val,b1_ev,b1_req_up,b1_val,d0_ev,d0_req_up,
 //    d0_val) {d1_req_up==1, b0_req_up<=0, b0_req_up<=b0_req_up#init,
@@ -630,6 +654,7 @@ void update_channels(void)
 //    d0_req_up#init<=d0_req_up+1}
 
       update_d1();
+   }
 
 //  P(b0_ev,b0_req_up,b0_val,b1_ev,b1_req_up,b1_val,d0_ev,d0_req_up,
 //    d0_val,d1_ev,d1_req_up,d1_val) {b0_req_up<=0,
@@ -640,7 +665,7 @@ void update_channels(void)
 //    d1_req_up<=0, d1_req_up<=d1_req_up#init,
 //    d1_req_up#init<=d1_req_up+1}
 
-   if (z_req_up==1)
+   if (z_req_up==1) {
 
 //  P(b0_ev,b0_req_up,b0_val,b1_ev,b1_req_up,b1_val,d0_ev,d0_req_up,
 //    d0_val,d1_ev,d1_req_up,d1_val) {z_req_up==1, b0_req_up<=0,
@@ -652,6 +677,7 @@ void update_channels(void)
 //    d1_req_up#init<=d1_req_up+1}
 
       update_z();
+   }
 
 //  P(b0_ev,b0_req_up,b0_val,b1_ev,b1_req_up,b1_val,d0_ev,d0_req_up,
 //    d0_val,d1_ev,d1_req_up,d1_val,z_ev,z_req_up,z_val)
@@ -674,16 +700,18 @@ void init_threads(void)
 
 //  P() {}
 
-   if (0==1)
+   if (0==1) {
 
 //  P() {0==-1}
 
       comp_m1_st = 0;
-   else
+   }
+   else {
 
 //  P() {}
 
       comp_m1_st = 2;
+   }
 
 //  P(comp_m1_st) {comp_m1_st==2}
 
@@ -801,48 +829,52 @@ void fire_delta_events(void)
 
 //  P() {}
 
-   if (b0_ev==0)
+   if (b0_ev==0) {
 
 //  P() {b0_ev==0}
 
       b0_ev = 1;
+   }
 
 //  P(b0_ev) {b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1}
 
-   if (b1_ev==0)
+   if (b1_ev==0) {
 
 //  P(b0_ev) {b1_ev==0, b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1}
 
       b1_ev = 1;
+   }
 
 //  P(b0_ev,b1_ev) {b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1,
 //    b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1}
 
-   if (d0_ev==0)
+   if (d0_ev==0) {
 
 //  P(b0_ev,b1_ev) {d0_ev==0, b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1,
 //    b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1}
 
       d0_ev = 1;
+   }
 
 //  P(b0_ev,b1_ev,d0_ev) {b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1,
 //    b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1, d0_ev#init<=d0_ev,
 //    d0_ev<=d0_ev#init+1}
 
-   if (d1_ev==0)
+   if (d1_ev==0) {
 
 //  P(b0_ev,b1_ev,d0_ev) {d1_ev==0, b0_ev#init<=b0_ev,
 //    b0_ev<=b0_ev#init+1, b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1,
 //    d0_ev#init<=d0_ev, d0_ev<=d0_ev#init+1}
 
       d1_ev = 1;
+   }
 
 //  P(b0_ev,b1_ev,d0_ev,d1_ev) {b0_ev#init<=b0_ev,
 //    b0_ev<=b0_ev#init+1, b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1,
 //    d0_ev#init<=d0_ev, d0_ev<=d0_ev#init+1, d1_ev#init<=d1_ev,
 //    d1_ev<=d1_ev#init+1}
 
-   if (z_ev==0)
+   if (z_ev==0) {
 
 //  P(b0_ev,b1_ev,d0_ev,d1_ev) {z_ev==0, b0_ev#init<=b0_ev,
 //    b0_ev<=b0_ev#init+1, b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1,
@@ -850,6 +882,7 @@ void fire_delta_events(void)
 //    d1_ev<=d1_ev#init+1}
 
       z_ev = 1;
+   }
 
 //  P(b0_ev,b1_ev,d0_ev,d1_ev,z_ev) {b0_ev#init<=b0_ev,
 //    b0_ev<=b0_ev#init+1, b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1,
@@ -867,48 +900,52 @@ void reset_delta_events(void)
 
 //  P() {}
 
-   if (b0_ev==1)
+   if (b0_ev==1) {
 
 //  P() {b0_ev==1}
 
       b0_ev = 2;
+   }
 
 //  P(b0_ev) {b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1}
 
-   if (b1_ev==1)
+   if (b1_ev==1) {
 
 //  P(b0_ev) {b1_ev==1, b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1}
 
       b1_ev = 2;
+   }
 
 //  P(b0_ev,b1_ev) {b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1,
 //    b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1}
 
-   if (d0_ev==1)
+   if (d0_ev==1) {
 
 //  P(b0_ev,b1_ev) {d0_ev==1, b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1,
 //    b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1}
 
       d0_ev = 2;
+   }
 
 //  P(b0_ev,b1_ev,d0_ev) {b0_ev#init<=b0_ev, b0_ev<=b0_ev#init+1,
 //    b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1, d0_ev#init<=d0_ev,
 //    d0_ev<=d0_ev#init+1}
 
-   if (d1_ev==1)
+   if (d1_ev==1) {
 
 //  P(b0_ev,b1_ev,d0_ev) {d1_ev==1, b0_ev#init<=b0_ev,
 //    b0_ev<=b0_ev#init+1, b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1,
 //    d0_ev#init<=d0_ev, d0_ev<=d0_ev#init+1}
 
       d1_ev = 2;
+   }
 
 //  P(b0_ev,b1_ev,d0_ev,d1_ev) {b0_ev#init<=b0_ev,
 //    b0_ev<=b0_ev#init+1, b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1,
 //    d0_ev#init<=d0_ev, d0_ev<=d0_ev#init+1, d1_ev#init<=d1_ev,
 //    d1_ev<=d1_ev#init+1}
 
-   if (z_ev==1)
+   if (z_ev==1) {
 
 //  P(b0_ev,b1_ev,d0_ev,d1_ev) {z_ev==1, b0_ev#init<=b0_ev,
 //    b0_ev<=b0_ev#init+1, b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1,
@@ -916,6 +953,7 @@ void reset_delta_events(void)
 //    d1_ev<=d1_ev#init+1}
 
       z_ev = 2;
+   }
 
 //  P(b0_ev,b1_ev,d0_ev,d1_ev,z_ev) {b0_ev#init<=b0_ev,
 //    b0_ev<=b0_ev#init+1, b1_ev#init<=b1_ev, b1_ev<=b1_ev#init+1,
@@ -941,11 +979,12 @@ void activate_threads(void)
 
 //  P(tmp) {0<=tmp, tmp<=1}
 
-   if (tmp)
+   if (tmp) {
 
 //  P(tmp) {tmp==1}
 
       comp_m1_st = 0;
+   }
 
 //  P(comp_m1_st,tmp) {0<=tmp, tmp<=1}
 
@@ -1467,7 +1506,7 @@ int main(void)
 //    d1_val_t==1, b0_req_up<=1, b1_req_up<=1, d0_req_up<=1,
 //    d1_req_up<=1}
 
-   if (!(z_val==0))
+   if (!(z_val==0)) {
 
 //  P(__retres1,b0_ev,b0_req_up,b0_val,b0_val_t,b1_ev,b1_req_up,
 //    b1_val,b1_val_t,comp_m1_i,comp_m1_st,d0_ev,d0_req_up,d0_val,
@@ -1477,6 +1516,7 @@ int main(void)
 //    d1_req_up<=1}
 
       error();
+   }
 
 //  P(__retres1,b0_ev,b0_req_up,b0_val,b0_val_t,b1_ev,b1_req_up,
 //    b1_val,b1_val_t,comp_m1_i,comp_m1_st,d0_ev,d0_req_up,d0_val,
