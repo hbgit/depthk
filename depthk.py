@@ -22,6 +22,7 @@ from pipes import quote
 
 # From project
 from modules.run_ast import ast
+from modules.invariant_tools.pips.translate_pips import translate_pips
 
 
 
@@ -195,13 +196,25 @@ class DepthK(object):
         return pathcodewithinit
 
 
+    def translatepipsannot(self, _cpathpipscode):
+
+        # Get the number line where each function begin
+        listnumbeginfunc = self.getnumbeginfuncts(_cpathpipscode)
+        if not self.listnumbeginfunc:
+            print("ERROR. Identifying functions")
+            sys.exit()
+
+        # Call class to translate PIPS annotation
+        runtranslatepips = translate_pips.PipsTranslateAnnot()
+        runtranslatepips.list_beginnumfuct = listnumbeginfunc
+        runtranslatepips.instprecondinprog(_cpathpipscode)
 
 
 
 
 
-
-    def getnumbeginfuncts(self, _cfilepath):
+    @staticmethod
+    def getnumbeginfuncts(_cfilepath):
 
         # result
         listbeginnumfuct = []
@@ -253,7 +266,7 @@ if __name__ == "__main__":
             # Applying steps of detphk
             dict_init = rundepthk.identify_initpips(inputCFile)
             pathcodeinit = rundepthk.generatecodewithinit(inputCFile,dict_init)
-            print(pathcodeinit)
+            rundepthk.translatepipsannot(pathcodeinit)
 
 
 
