@@ -31,9 +31,6 @@ from modules.run_ast import ast
 # (2) [DONE] Read the code.pips identify #init, save the VAR#init and the function where it was find
 # (3) write new code where for each function identified in (2) we should add the new vars to VAR#init
 # (4) Read the code.pips and translate the annotations to __ESBMC. WARNNING: replace VAR#init to VAR_init
-#
-# Checkout:
-# Set all global vars in the top of the source code, i.e., all global vars should be before to use in a function
 
 
 
@@ -63,7 +60,7 @@ class DepthK(object):
             print("ERROR. Identifying functions")
             sys.exit()
 
-        filec = open(_cfilepath,"r")
+        filec = open(_cfilepath, "r")
         linescfile = filec.readlines()
         filec.close()
 
@@ -167,7 +164,7 @@ class DepthK(object):
 
             print(linescfile[count],end="")
 
-            nextline = count+1
+            nextline = count + 1
             if nextline in self.listnumbeginfunc:
                 # print delimiter
                 print(linescfile[nextline],end="")
@@ -179,7 +176,7 @@ class DepthK(object):
                         # Creating INIT vars
                         #print("INIT: ", dict_varsdata[var][0], var+"_init")
                         nametype = ' '.join(dict_varsdata[var][0])
-                        print(nametype+str(" " + var + "_init;"))
+                        print(nametype+str(" " + var + "_init = " + var + ";"))
 
                     #sys.exit()
 
