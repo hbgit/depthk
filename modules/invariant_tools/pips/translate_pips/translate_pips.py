@@ -15,6 +15,7 @@ import re
 class PipsTranslateAnnot(object):
     def __init__(self):
         self.list_beginnumfuct = []
+        self.nameoforicprogram = ""
 
 
     def instprecondinprog(self, _cprogrampath):
@@ -22,6 +23,10 @@ class PipsTranslateAnnot(object):
         fileprogram = open(_cprogrampath, "r")
         listfilec = fileprogram.readlines()
         fileprogram.close()
+
+        # Generating the new code from PIPS
+        pathnewcodepips = "/tmp/new_" + self.nameoforicprogram
+        newcodefrompips = open(pathnewcodepips, "w")
 
         i = 0
         while i < len(listfilec):
@@ -64,40 +69,49 @@ class PipsTranslateAnnot(object):
                             i += 1
                             cntlines -= 1
 
-                    print(annot2betrans)
+                    #print(annot2betrans)
+                    newcodefrompips.write(annot2betrans+"\n")
 
 
                     # annotations with multiples lines
                     if flagmultlines:
                         i += 1
                         # print funct header
-                        print(listfilec[i].strip())
+                        #print(listfilec[i].strip())
+                        newcodefrompips.write(listfilec[i])
 
                         # print the delimiter
                         i += 1
-                        print(listfilec[i].strip())
+                        #print(listfilec[i].strip())
+                        newcodefrompips.write(listfilec[i])
 
                         # print a blank line - just for pretty code
-                        print("")
+                        #print("")
+                        newcodefrompips.write("\n")
                     else:
                         # print blank line
                         i += 1
-                        print(listfilec[i].strip())
+                        #print(listfilec[i].strip())
+                        newcodefrompips.write(listfilec[i])
                         # print funct header
                         i += 1
-                        print(listfilec[i].strip())
+                        #print(listfilec[i].strip())
+                        newcodefrompips.write(listfilec[i])
                         # print the delimiter
                         i += 1
-                        print(listfilec[i].strip())
+                        #print(listfilec[i].strip())
+                        newcodefrompips.write(listfilec[i])
                         # print a blank line - just for pretty code
-                        print("")
+                        #print("")
+                        newcodefrompips.write("\n")
 
 
 
                     # print Precondition translated
                     translateresult = self.translatepreconditionpips(annot2betrans)
                     if translateresult is not None:
-                        print(translateresult)
+                        #print(translateresult)
+                        newcodefrompips.write(translateresult + " \n")
 
                         #i = k
                 else:
@@ -126,15 +140,22 @@ class PipsTranslateAnnot(object):
                             cntlines -= 1
 
                     # First print the original Precondition and then the translated to ASSUME
-                    print(annot2betrans)
+                    #print(annot2betrans)
+                    newcodefrompips.write(annot2betrans + "\n")
 
                     translateresult = self.translatepreconditionpips(annot2betrans)
                     if translateresult is not None:
-                        print(translateresult)
+                        #print(translateresult)
+                        newcodefrompips.write(translateresult + "\n")
 
             else:
-                print(listfilec[i].strip())
+                #print(listfilec[i].strip())
+                newcodefrompips.write(listfilec[i])
             i += 1
+
+        newcodefrompips.close()
+
+        return pathnewcodepips
 
 
     @staticmethod

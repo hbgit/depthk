@@ -41,6 +41,7 @@ class DepthK(object):
         self.cfilepath = _cfilepath
         self.inputisexti = False
         self.listnumbeginfunc = []
+        self.nameoforicprogram = os.path.basename(_cfilepath)
 
 
 
@@ -206,8 +207,10 @@ class DepthK(object):
 
         # Call class to translate PIPS annotation
         runtranslatepips = translate_pips.PipsTranslateAnnot()
+        runtranslatepips.nameoforicprogram = self.nameoforicprogram
         runtranslatepips.list_beginnumfuct = listnumbeginfunc
-        runtranslatepips.instprecondinprog(_cpathpipscode)
+
+        return runtranslatepips.instprecondinprog(_cpathpipscode)
 
 
 
@@ -263,10 +266,11 @@ if __name__ == "__main__":
             if inputCFile.endswith(".i"):
                 rundepthk.inputisexti = True
 
+
             # Applying steps of detphk
             dict_init = rundepthk.identify_initpips(inputCFile)
             pathcodeinit = rundepthk.generatecodewithinit(inputCFile,dict_init)
-            rundepthk.translatepipsannot(pathcodeinit)
+            print( rundepthk.translatepipsannot(pathcodeinit) )
 
 
 
