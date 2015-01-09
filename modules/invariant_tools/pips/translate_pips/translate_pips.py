@@ -4,7 +4,7 @@
 # Class to translate PIPS annotations
 # by Herbert Rocha
 #
-# e-mail: map2check.tool@gmail.com
+# e-mail: herberthb12@gmail.com
 # -------------------------------------------------
 
 from __future__ import print_function

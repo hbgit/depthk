@@ -23,6 +23,7 @@ from pipes import quote
 # From project
 from modules.run_ast import ast
 from modules.invariant_tools.pips.translate_pips import translate_pips
+from modules.bmc_check import esbmccheck
 
 
 
@@ -31,7 +32,9 @@ from modules.invariant_tools.pips.translate_pips import translate_pips
 # (1) [DONE] Identify each variable and it type
 # (2) [DONE] Read the code.pips identify #init, save the VAR#init and the function where it was find
 # (3) [DONE] write new code where for each function identified in (2) we should add the new vars to VAR#init
-# (4) Read the code.pips and translate the annotations to __ESBMC. WARNNING: replace VAR#init to VAR_init
+# (4) [DONE] Read the code.pips and translate the annotations to __ESBMC. WARNNING: replace VAR#init to VAR_init
+# (5) Checking the new code with ESBMC k-induction
+# (6) From counterexample added a new ASSUME in the code
 
 
 
@@ -42,6 +45,8 @@ class DepthK(object):
         self.inputisexti = False
         self.listnumbeginfunc = []
         self.nameoforicprogram = os.path.basename(_cfilepath)
+        self.esbmcpath = ''
+        self.countMAXtry = 10
 
 
 
@@ -237,6 +242,14 @@ class DepthK(object):
         return listbeginnumfuct
 
 
+    def callesbmccheck(self, _cfilepath):
+        runesbmc = esbmccheck.DepthEsbmcCheck()
+        runesbmc.esbmcpath = self.esbmcpath
+        runesbmc.countMAXtry = self.countMAXtry
+        runesbmc.kinductioncheck(_cfilepath)
+
+
+
 
 # -------------------------------------------------
 # Main python program
@@ -246,11 +259,14 @@ if __name__ == "__main__":
 
     ############# Parse args options
     parser = argparse.ArgumentParser(description='Run DepthK v1.0')
-    parser.add_argument('-v','--version', action='version' , version="version 1.0")
+    parser.add_argument('-v','--version', action='version', version="version 1.0")
     parser.add_argument(dest='inputCProgram', metavar='file.c or file.i', type=str,
                         help='the C program file to be analyzed')
+    parser.add_argument('-n','--number-try', metavar='nr', type=int, dest='setNumberTry',
+                        default=10, help='set the number of times to try the depth check with ESBMC')
 
     args = parser.parse_args()
+
 
     inputCFile=''
     if args.inputCProgram:
@@ -262,6 +278,11 @@ if __name__ == "__main__":
             inputCFile = os.path.abspath(quote(args.inputCProgram))
 
             rundepthk = DepthK(inputCFile)
+            # Define ESBMC path
+            rundepthk.esbmcpath = "~/Downloads/BMCs/esbmc/esbmc-v1.24.1/esbmc_vs24"
+            if args.setNumberTry:
+                rundepthk.countMAXtry = args.setNumberTry
+
             # Identify the extension of the C program .c or .i (some code is added in the new instance)
             if inputCFile.endswith(".i"):
                 rundepthk.inputisexti = True
@@ -270,7 +291,9 @@ if __name__ == "__main__":
             # Applying steps of detphk
             dict_init = rundepthk.identify_initpips(inputCFile)
             pathcodeinit = rundepthk.generatecodewithinit(inputCFile,dict_init)
-            print( rundepthk.translatepipsannot(pathcodeinit) )
+            pathcodepipstranslated = rundepthk.translatepipsannot(pathcodeinit)
+            rundepthk.callesbmccheck(pathcodepipstranslated)
+
 
 
 
