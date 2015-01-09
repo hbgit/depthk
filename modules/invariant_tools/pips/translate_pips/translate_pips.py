@@ -36,10 +36,28 @@ class PipsTranslateAnnot(object):
                 # jump to  the next vallid line
                 k += 2
 
-                if k in self.list_beginnumfuct:
-                    # print("//P<<<<<<<<<<<<<<<<")
+                print(k, self.list_beginnumfuct)
+                if (k + 1) in self.list_beginnumfuct:
+                    #print("//P<<<<<<<<<<<<<<<<")
+
+                    # TODO: Identify if the precondition has more than one line
                     # print original Precondition
-                    print(listfilec[i].strip())
+                    # print(listfilec[i].strip())
+                    countlineprecond = self.hasprecondmorelines(listfilec, i)
+                    annot2betrans = ""
+                    if countlineprecond == 1:
+                        annot2betrans = listfilec[i]
+                    else:
+                        cntlines = countlineprecond
+                        while cntlines > 0:
+                            #print(listfilec[i].strip())
+                            annot2betrans += listfilec[i]
+                            i += 1
+                            cntlines -= 1
+
+                    print(annot2betrans)
+
+
                     i += 1
                     # blank line
                     print(listfilec[i].strip())
@@ -55,7 +73,7 @@ class PipsTranslateAnnot(object):
                     print(listfilec[i].strip())
 
                     # print Precondition translated
-                    translateresult = self.translatepreconditionpips(listfilec[i].strip())
+                    translateresult = self.translatepreconditionpips(annot2betrans)
                     if translateresult is not None:
                         print(translateresult)
 
@@ -71,9 +89,23 @@ class PipsTranslateAnnot(object):
                     # print(listfilec[nextidline].strip(), "<<<<<<<<<<<<<<<<<<")
 
                     # print original Precondition
-                    print(listfilec[i].strip())
-                    # print Precondition translated
-                    translateresult = self.translatepreconditionpips(listfilec[i].strip())
+                    # Identify if the precondition has more than one line
+                    countlineprecond = self.hasprecondmorelines(listfilec, i)
+                    annot2betrans = ""
+                    if countlineprecond == 1:
+                        annot2betrans = listfilec[i]
+                    else:
+                        print("::::::::::::::::::")
+                        cntlines = countlineprecond
+                        while cntlines > 0:
+                            #print(listfilec[i].strip())
+                            annot2betrans += listfilec[i]
+                            i += 1
+                            cntlines -= 1
+
+                    # First print the original Precondition and then the translated to ASSUME
+                    print(annot2betrans)
+                    translateresult = self.translatepreconditionpips(annot2betrans)
                     if translateresult is not None:
                         print(translateresult)
 
@@ -83,7 +115,27 @@ class PipsTranslateAnnot(object):
 
 
     @staticmethod
+    def hasprecondmorelines(_listcfile, _actualindex):
+        countlinespre = 1
+        _actualindex += 1
+
+        flagcount = True
+        while flagcount:
+            matchcomment = re.search(r'^//', _listcfile[_actualindex])
+            if matchcomment:
+                countlinespre += 1
+                _actualindex += 1
+            else:
+                flagcount = False
+
+        return countlinespre
+
+
+
+    @staticmethod
     def translatepreconditionpips(_precondtext):
+
+        #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ")
 
         matchannot = re.search(r'//[ ]+P(.*)[ ]+\{(.*)\}', _precondtext)
 
