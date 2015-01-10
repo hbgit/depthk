@@ -19,9 +19,10 @@ import os
 class DepthEsbmcCheck(object):
 
     def __init__(self):
-        self.list_beginnumfuct = []
+        self.list_beginnumfuct = {}
         self.nameoforicprogram = ""
         self.assumeset = ''
+        self.statecurrentfunct = ''
         # depth check options
         self.countMAXtry = 10
         self.esbmcpath = ''
@@ -43,7 +44,7 @@ class DepthEsbmcCheck(object):
             # get the last state
             matchState = re.search(r'cs\$[0-9]+', listfilece[i])
             if matchState:
-    
+
                 flagkeepgettext = True
                 while flagkeepgettext:
     
@@ -60,6 +61,13 @@ class DepthEsbmcCheck(object):
                 flagstop = True
             i -= 1
     
+        # identify the function name where is the state identified
+        matchfunctname = re.search(r'[.]c[:]+new_[a-zA-Z_0-9]+[:]+([a-zA-Z_0-9]+):.*', cestatetext)
+        if matchfunctname:
+            #print(">>>>>>>>>", matchfunctname.group(1))
+            self.statecurrentfunct = matchfunctname.group(1)
+
+
         # handle text state get from CE
         listassign = cestatetext.split(",")
         listnewassign = []
@@ -109,6 +117,9 @@ class DepthEsbmcCheck(object):
         fileprogram = open(_cprogrampath,"r")
         listfilec = fileprogram.readlines()
         fileprogram.close()
+
+        # generate data about the functions
+        self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
     
         # TODO: it is best to write this new instance in the original path of the program
         newfile = open("/tmp/new_instance.c", "w")
@@ -116,24 +127,36 @@ class DepthEsbmcCheck(object):
         i = 0
         while i < len(listfilec):
     
-            matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
-            if matchassumeanot:
-                flagstop = False
-                while matchassumeanot and not flagstop:
-                    #print(listfilec[i],end="")
-                    newfile.write(listfilec[i])
-                    if i <= len(listfilec):
-                        i += 1
-                        matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
-                    else:
-                        flagstop = True
-    
-                #print(self.assumeset+"\n")
-                newfile.write(self.assumeset + "\n \n \n")
-            else:
-                #print(listfilec[i],end="")
-                newfile.write(listfilec[i])
+            # identify where to write the new assume from CE
+            # identifying the function pointed in the CE state
+            #print(self.list_beginnumfuct)
+
+            if i in self.list_beginnumfuct.keys():
+                if self.list_beginnumfuct[i].strip() == self.statecurrentfunct.strip():
+                    print(self.statecurrentfunct, "<<<<<<<<,")
+                    # TODO: when add the new assume
+
+
+            # matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
+            # if matchassumeanot:
+            #     flagstop = False
+            #     while matchassumeanot and not flagstop:
+            #         #print(listfilec[i],end="")
+            #         newfile.write(listfilec[i])
+            #         if i <= len(listfilec):
+            #             i += 1
+            #             matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
+            #         else:
+            #             flagstop = True
+            #
+            #     #print(self.assumeset+"\n")
+            #     newfile.write(self.assumeset + "\n \n \n")
+            # else:
+            #     #print(listfilec[i],end="")
+            #     newfile.write(listfilec[i])
             i += 1
+
+        sys.exit()
     
         newfile.close()
     
@@ -152,6 +175,8 @@ class DepthEsbmcCheck(object):
             # checking CE
             statusce = commands.getoutput("cat /tmp/ce_kinduction.txt | grep -c \"VERIFICATION FAILED\" ")
             if int(statusce) > 0:
+                print("cat /tmp/ce_kinduction.txt")
+
     
                 if count <= self.countMAXtry:
     
@@ -160,11 +185,14 @@ class DepthEsbmcCheck(object):
                     print("")
                     print("FAILED inductive step")
                     print("\t - Get data from CE in the last valid state:")
+                    # todo: IDENTIFY where (function) the last state is
                     self.getlastdatafromce("/tmp/ce_kinduction.txt")
                     print("\t - New assume generated: \n" + self.assumeset)
                     print("\t - Instrument program with assume ...")
-    
+
                     _cprogrampath = self.addassumeinprogram(_cprogrampath)
+
+                    sys.exit()
     
                     count += 1
                 else:
@@ -176,3 +204,23 @@ class DepthEsbmcCheck(object):
                 os.system("cat /tmp/ce_kinduction.txt")
                 #flagstopcheck = True
                 sys.exit()
+
+
+    def getnumbeginfuncts(self, _cfilepath):
+
+        # result
+        listbeginnumfuct = {}
+
+        # get data functions using ctags
+        textdata = commands.getoutput("ctags -x --c-kinds=f " + _cfilepath)
+
+        # generate a list with the data funct
+        listdatafunct = textdata.split("\n")
+        for linedfunct in listdatafunct:
+            # split by space
+            matchlinefuct = re.search(r'(.+)[ ]+function[ ]+([0-9]+)', linedfunct)
+            if matchlinefuct:
+                # a dictionary with the name of the function and the line number where it start
+                listbeginnumfuct[int(matchlinefuct.group(2))-1] = matchlinefuct.group(1)
+
+        return listbeginnumfuct

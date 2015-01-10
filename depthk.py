@@ -29,6 +29,9 @@ from modules.bmc_check import esbmccheck
 
 
 # TODO:
+# Precondition to usage:
+#   - all variables should be declared in top of the function [todo]
+#   - it is necessary to generate the invariante to the code
 # (1) [DONE] Identify each variable and it type
 # (2) [DONE] Read the code.pips identify #init, save the VAR#init and the function where it was find
 # (3) [DONE] write new code where for each function identified in (2) we should add the new vars to VAR#init
