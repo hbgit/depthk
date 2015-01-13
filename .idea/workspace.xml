@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" afterPath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="depthk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,8 +38,8 @@
       <file leaf-file-name="esbmccheck.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.30811808" vertical-offset="4018" max-vertical-offset="5505">
-              <caret line="279" column="46" selection-start-line="279" selection-start-column="46" selection-end-line="279" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.55719554" vertical-offset="4018" max-vertical-offset="5625">
+              <caret line="288" column="81" selection-start-line="288" selection-start-column="81" selection-end-line="288" selection-end-column="81" />
               <folding>
                 <element signature="e#274#311#0" expanded="true" />
               </folding>
@@ -745,8 +744,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30811808" vertical-offset="4018" max-vertical-offset="5505">
-          <caret line="279" column="46" selection-start-line="279" selection-start-column="46" selection-end-line="279" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.55719554" vertical-offset="4018" max-vertical-offset="5625">
+          <caret line="288" column="81" selection-start-line="288" selection-start-column="81" selection-end-line="288" selection-end-column="81" />
           <folding>
             <element signature="e#274#311#0" expanded="true" />
           </folding>

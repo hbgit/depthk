@@ -278,7 +278,15 @@ class DepthEsbmcCheck(object):
 
         # Applying k-induction algorithm
         # TODO: How understand the If's in the algorithm
-        # (1) Checking base-case
+        # The K (unwind) should be defined. I think that is better start in 5
+        # >> (1) Checking base-case, i.e., there is a counterexample?
+        # $ esbmc_v24 --64 --base-case --unwind 1 main.c
+        # >> Only if there is NOT counterexample (2) increase k = k +1
+        # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
+        # >> Only if in the (2) the result is: "The forward condition is unable to prove the property"
+        # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
+        # >> If the result was SUCCESUFUL then STOP verification
+        # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
         #result_basecase = commands.getoutput(self.esbmcpath)
 
     
