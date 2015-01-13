@@ -1,0 +1,23 @@
+21
+589826
+0 T78 ()T62 E28 (()()())))327683
+0 T78 ()T62 E28 (()()())))393217
+0 T78 (R76 "is_method1_triggered:0`__retres1" )T62 E28 ((1 is_method1_triggered:0`__retres1 )( (-1 . 1 is_method1_triggered:0`__retres1 ))())))262145
+0 T78 (R76 "is_method1_triggered:0`__retres1" )T62 E28 ((1 is_method1_triggered:0`__retres1 )( (1 is_method1_triggered:0`__retres1 ))())))327681
+0 T78 ()T62 E28 ((1 TOP-LEVEL:d1_ev )()())))589825
+0 T78 ()T62 E28 ((1 TOP-LEVEL:b1_ev )()())))2
+0 T78 (R76 "is_method1_triggered:0`__retres1" )T62 E28 ((1 is_method1_triggered:0`__retres1 1 *SEMANTICS*:o#0 )()())))458755
+0 T78 ()T62 E28 (()()())))589827
+0 T78 ()T62 E28 (()()())))458754
+0 T78 ()T62 E28 (()()())))1
+0 T78 (R76 "is_method1_triggered:is_method1_triggered" )T62 E28 ((1 TOP-LEVEL:b0_ev 1 TOP-LEVEL:b1_ev 1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d1_ev 1 is_method1_triggered:is_method1_triggered 1 is_method1_triggered:is_method1_triggered#init )()( (-1 is_method1_triggered:is_method1_triggered ) (-1 . 1 is_method1_triggered:is_method1_triggered )))))3
+0 T78 (R76 "is_method1_triggered:0`__retres1" R76 "is_method1_triggered:is_method1_triggered" )T62 E28 ((1 is_method1_triggered:0`__retres1 1 TOP-LEVEL:b0_ev 1 TOP-LEVEL:b1_ev 1 TOP-LEVEL:d0_ev 1 TOP-LEVEL:d1_ev 1 is_method1_triggered:is_method1_triggered 1 is_method1_triggered:is_method1_triggered#init )( (-1 is_method1_triggered:0`__retres1 1 is_method1_triggered:is_method1_triggered ))( (-1 is_method1_triggered:0`__retres1 ) (-1 . 1 is_method1_triggered:0`__retres1 )))))524289
+0 T78 (R76 "is_method1_triggered:0`__retres1" )T62 E28 ((1 is_method1_triggered:0`__retres1 )( (-1 . 1 is_method1_triggered:0`__retres1 ))())))458753
+0 T78 ()T62 E28 ((1 TOP-LEVEL:d0_ev )()())))196609
+0 T78 (R76 "is_method1_triggered:is_method1_triggered" )T62 E28 ((1 is_method1_triggered:0`__retres1 1 is_method1_triggered:is_method1_triggered 1 is_method1_triggered:is_method1_triggered#init )( (-1 is_method1_triggered:0`__retres1 1 is_method1_triggered:is_method1_triggered ))())))65539
+0 T78 ()T62 E28 (()()())))65538
+0 T78 ()T62 E28 (()()())))65537
+0 T78 ()T62 E28 ((1 TOP-LEVEL:b0_ev )()())))131073
+0 T78 (R76 "is_method1_triggered:0`__retres1" )T62 E28 ((1 is_method1_triggered:0`__retres1 )( (-1 . 1 is_method1_triggered:0`__retres1 ))())))655361
+0 T78 (R76 "is_method1_triggered:0`__retres1" )T62 E28 ((1 is_method1_triggered:0`__retres1 )( (-1 . 1 is_method1_triggered:0`__retres1 ))())))327682
+0 T78 ()T62 E28 (()()())))

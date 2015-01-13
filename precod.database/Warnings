@@ -1,0 +1,37 @@
+CONTROLIZER[is_method1_triggered] (control_graph) Some statements are unreachable
+CONTROLIZER[is_method1_triggered] (control_graph) Unreachable statements:
+CONTROLIZER[is_method1_triggered] (control_graph) Statement:
+goto return_label;
+CONTROLIZER[is_method1_triggered] (control_graph) Statement number: 116
+CONTROLIZER[is_method1_triggered] (control_graph) Statement:
+goto return_label;
+CONTROLIZER[is_method1_triggered] (control_graph) Statement number: 112
+CONTROLIZER[is_method1_triggered] (control_graph) Statement:
+goto return_label;
+CONTROLIZER[is_method1_triggered] (control_graph) Statement number: 108
+CONTROLIZER[is_method1_triggered] (control_graph) Statement:
+goto return_label;
+CONTROLIZER[is_method1_triggered] (control_graph) Statement number: 104
+unknown[unknown] (build_real_resources) No source code for module __VERIFIER_nondet_int.
+unknown[unknown] (build_real_resources) No source code for module __VERIFIER_nondet_int.
+C_INITIALIZER[__VERIFIER_nondet_int] (missing_file_initializer) no source file for __VERIFIER_nondet_int: synthetic code is generated
+unknown[unknown] (make_required) More resources are now requested: 3 instead of 2...
+CONTROLIZER[exists_runnable_thread] (control_graph) Some statements are unreachable
+CONTROLIZER[exists_runnable_thread] (control_graph) Unreachable statements:
+CONTROLIZER[exists_runnable_thread] (control_graph) Statement:
+goto return_label;
+CONTROLIZER[exists_runnable_thread] (control_graph) Statement number: 265
+CONTROLIZER[stop_simulation] (control_graph) Some statements are unreachable
+CONTROLIZER[stop_simulation] (control_graph) Unreachable statements:
+CONTROLIZER[stop_simulation] (control_graph) Statement:
+goto return_label;
+CONTROLIZER[stop_simulation] (control_graph) Statement number: 405
+SUPPRESS_DEAD_CODE[__VERIFIER_nondet_int] (suppress_dead_code) This phase has been renamed, please use 'simplify_control' from now. The old alias 'suppress_dead_code' might be removed soon.
+INTERPROCEDURAL_SUMMARY_PRECONDITION[__VERIFIER_nondet_int!] (ordinary_summary_precondition) empty precondition to __VERIFIER_nondet_int! because not in call tree from main.
+SUPPRESS_DEAD_CODE[__VERIFIER_nondet_int!] (suppress_dead_code) This phase has been renamed, please use 'simplify_control' from now. The old alias 'suppress_dead_code' might be removed soon.
+SUPPRESS_DEAD_CODE[__VERIFIER_nondet_int!] (generic_simplify_control) Simplify control isn't intended to run on compilation unit ! Abort...unknown[unknown] (safe_do_something) Request aborted under pipsmake: build phase/rule SUPPRESS_DEAD_CODE for module __VERIFIER_nondet_int!.
+unknown[unknown] (activate_phase) Rule `TRANSFORMERS_INTER_FULL' already active
+unknown[unknown] (activate_phase) Rule `PRECONDITIONS_INTER_FULL' already active
+INTERPROCEDURAL_SUMMARY_PRECONDITION[ori_bitcell!] (ordinary_summary_precondition) empty precondition to ori_bitcell! because not in call tree from main.
+INTERPROCEDURAL_SUMMARY_PRECONDITION[__VERIFIER_nondet_int!] (ordinary_summary_precondition) empty precondition to __VERIFIER_nondet_int! because not in call tree from main.
+INTERPROCEDURAL_SUMMARY_PRECONDITION[ori_bitcell!] (ordinary_summary_precondition) empty precondition to ori_bitcell! because not in call tree from main.
