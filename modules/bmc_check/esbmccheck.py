@@ -27,8 +27,12 @@ class DepthEsbmcCheck(object):
         # depth check options
         self.countMAXtry = 10
         self.esbmcpath = ''
-        self.esbmcoptions = "--64 --no-library --k-induction-parallel --memlimit 4g " \
-                            "--z3 --inductive-step --show-counter-example "
+        self.esbmc_arch = "--64"
+        self.esbmc_extra_op = "--no-library --memlimit 4g --timeout 15m"
+        self.esbmc_solver = "--z3"
+        self.esbmc_basecase_op = "--base-case"
+        self.esbmc_forwardcond_op = "--forward-condition"
+        self.esbmc_inductivestep_op = "--k-induction-parallel  --inductive-step --show-counter-example"
 
 
     @staticmethod
@@ -269,13 +273,23 @@ class DepthEsbmcCheck(object):
         flagstopcheck = False
         count = 0
 
+        actual_ce = "/tmp/ce_kinduction.txt"
+        last_ce = "/tmp/last_ce_kinduction.txt"
+
+        # Applying k-induction algorithm
+        # TODO: How understand the If's in the algorithm
+        # (1) Checking base-case
+        #result_basecase = commands.getoutput(self.esbmcpath)
+
     
         while not flagstopcheck:
 
             if os.path.isfile("/tmp/ce_kinduction.txt"):
                 shutil.copyfile("/tmp/ce_kinduction.txt", "/tmp/last_ce_kinduction.txt")
 
-            result = commands.getoutput(self.esbmcpath + " " + self.esbmcoptions + " " +
+            result = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                        self.esbmc_extra_op + " " +
+                                        self.esbmc_inductivestep_op + " " +
                                         str(_cprogrampath) + " &> /tmp/ce_kinduction.txt")
     
             # checking CE
