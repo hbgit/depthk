@@ -119,22 +119,45 @@ class DepthEsbmcCheck(object):
         # identify the function name where is the state identified
         matchfunctname = re.search(r'[.]c[:]+new_[a-zA-Z_0-9]+[:]+([a-zA-Z_0-9]+):.*', cestatetext)
         if matchfunctname:
-            print(">>>>>>>>>", matchfunctname.group(1))
             self.statecurrentfunct = matchfunctname.group(1)
 
 
         # handle text state get from CE
-        listassign = cestatetext.split(",")
+        #.c::new_main::main::1::SIZE=7
+        #cestatetext = cestatetext.replace(" ", "")
+        #print(cestatetext)
+        #sys.exit()
+        # preprocessing CE text
+        # splitting to remove blank spaces
+        listassign = cestatetext.split(".c")
+
+        #removing blank spaces to deal with arrays
+        countb = 0
+        while countb < len(listassign):
+            listassign[countb] = listassign[countb].replace(" ", "")
+            countb += 1
+
+        textcejoinspace = ' '.join(listassign)
+
+        #print(textcejoinspace)
+        #sys.exit()
+
+        listassign = textcejoinspace.split(" ")
+        #listassign = re.split('\.c[:]+.[^]+')
+
         listnewassign = []
         for item in listassign:
+            #
+            item = item.strip()
+            #print("---------------------",item)
             # get only the assignment in the CE
             skipassign = False
     
-            item = item.replace("}", "")
-            item = item.replace("{", "")
-            item = item.replace(" ", "")
+            #item = item.replace("}", "")
+            #item = item.replace("{", "")
+            #item = item.replace(" ", "")
     
-            matchassign = re.search(r'(.[^\}\{\:]+)$', item)
+            matchassign = re.search(r'(.[^\}\{:]+)$', item)
             if matchassign:
                 # clean assignment
                 ceassign = matchassign.group(1).strip()
@@ -152,15 +175,26 @@ class DepthEsbmcCheck(object):
                 matchskip = re.search(r'return_value_', ceassign)
                 if matchskip:
                     flag_skip = True
+
+                # Skipping arrays <- for while
+                # .c::new_main::main::1::v={ 2147483650, 1, 2147483648, 2147483712}
+                matcharray = re.search(r'[ =]*\{', ceassign)
+                if matcharray:
+                    flag_skip = True
+
+                #matchdenddemiliter = re.search(r'[ =]*\{', ceassign)
     
                 # ------------- END Skipping area
     
                 if not flag_skip:
                     # replace = by !=
                     ceassign = ceassign.replace("=", "!=")
+                    ceassign = ceassign.replace(",","")
+
                     print("\t => " + ceassign)
                     listnewassign.append(ceassign)
     
+        #sys.exit()
         # generating __ASSUME
         txtassume = ' && '.join(listnewassign)
         self.assumeset = "__ESBMC_assume( " + txtassume + " );"
@@ -259,11 +293,15 @@ class DepthEsbmcCheck(object):
                     print("\t - Get data from CE in the last valid state:")
 
                     # IDENTIFY where (function) the last state is
-                    # TODO: Possible BUG cuz the PLACE where the assume is added
+                    # Possible BUG cuz the PLACE where the assume is added
+
+                    # TODO: BUG with .c::new_main::main::1::v={ 2147483650, 1, 2147483648, 2147483712}
+
 
                     if not self.getlastdatafromce("/tmp/ce_kinduction.txt"):
                         print("NO DATA from CE !!!")
                         sys.exit()
+
 
                     print("\t - New assume generated: \n" + self.assumeset)
                     print("\t - Instrument program with assume ...")
@@ -279,13 +317,14 @@ class DepthEsbmcCheck(object):
                     count += 1
                 else:
                     print(">> STOP ============================== MAX == " + str(self.countMAXtry) + " reached !!!")
-                    sys.exit()
+                    flagstopcheck = True
     
             else:
                 # VERIFICATION SUCCESSFUL to inductive step
+                #print()
                 os.system("cat /tmp/ce_kinduction.txt")
                 #flagstopcheck = True
-                sys.exit()
+                flagstopcheck = True
 
 
     def getnumbeginfuncts(self, _cfilepath):
