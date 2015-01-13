@@ -1,25 +1,12 @@
+# PIPS script adopted by DepthK
 # Usage way:
 #            $ source MYPIPS/pipsrc.sh
-#            $ tpips scritp_pips.p > out_pre_code_with_preconditions.c
-
-
-#
-# How solve the problem with the order with the function and global variables?
-#
-# HIP-1: Identify the order (reading the source code top from bottom) and then apply PIPS
-#        in each function.
-#
-# HIP-2: After PIPS identify all global vars and then move this lines to top of the source code
-#
-
-
+#            $ tpips scritp.pips
 
 # ---- prettyprinter settings  
  
 setproperty PRETTYPRINT_ALL_DECLARATIONS TRUE  
-setproperty PRETTYPRINT_C_CODE TRUE 
-
-
+setproperty PRETTYPRINT_C_CODE TRUE
 setproperty PRETTYPRINT_ALL_C_BRACES TRUE
 setproperty PRETTYPRINT_GCC_C_BRACES TRUE
 
@@ -31,13 +18,11 @@ setproperty PREPROCESSOR_MISSING_FILE_HANDLING "generate"
  
 setproperty ABORT_ON_USER_ERROR TRUE
 
-
-
 # ---- Set the file name here
 
 delete precod
 create precod \
-    test_cases/bitcell.c
+    <FILE.C_INPUT>
 
 # just to insure that all routines are generated.  
  
@@ -62,14 +47,12 @@ activate PRINT_CODE_PRECONDITIONS
 
 # 3.4 Regeneration of User Source Files
 # The unsplit 3.4 phase regenerates user files from available printed_file. 
-# The various modules that where initially stored in single file are appended together in a file with the same name.
-# Rebuild the source files after one or several transformations. The files are placed in the ex1.database/Src
+# The various modules that where initially stored in single file are appended
+# together in a file with the same name. Rebuild the source files after
+# one or several transformations. The files are placed in the ex1.database/Src
 # directory
 
 apply UNSPLIT[%ALL]
-
-#display PRINTED_FILE[%PROGRAM]
-
 
 close
 quit
