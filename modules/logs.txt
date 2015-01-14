@@ -3,3 +3,5 @@
         : we got a false negative in main.c (insertion sort)
         ::: BUG cuz multiples ESBMC_ASSUME from CE.
             - HIP1. Just we should try one ESBMC_ASSUME from CE by P'
+                - When we generated a new P' the old ESBMC_ASSUME should be commented
+            - [CHOOSE] HIP2. For each P' generated we need to check to up MAX < k >
