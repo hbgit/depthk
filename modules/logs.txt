@@ -1,0 +1,5 @@
+>>> Fisrt tests
+    - Actual approach. k starts in 1.
+        : we got a false negative in main.c (insertion sort)
+        ::: BUG cuz multiples ESBMC_ASSUME from CE.
+            - HIP1. Just we should try one ESBMC_ASSUME from CE by P'

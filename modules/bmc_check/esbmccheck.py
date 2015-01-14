@@ -23,6 +23,7 @@ class DepthEsbmcCheck(object):
         self.assumeset = ''
         self.statecurrentfunct = ''
         # depth check options
+        self.debug = False
         self.maxk = 50
         self.esbmcpath = ''
         self.esbmc_arch = "--64"
@@ -194,7 +195,7 @@ class DepthEsbmcCheck(object):
                     ceassign = ceassign.replace("=", "!=")
                     ceassign = ceassign.replace(",", "")
 
-                    print("\t => " + ceassign)
+                    #print("\t => " + ceassign)
                     listnewassign.append(ceassign)
 
         # sys.exit()
@@ -222,13 +223,13 @@ class DepthEsbmcCheck(object):
         i = 0
         while i < len(listfilec):
 
-            # just write the new code
-            # newfile.write(str(i)+"->"+listfilec[i])
-            newfile.write(listfilec[i])
-
             # identify where to write the new assume from CE
             if i == _linenumtosetassume:
                 newfile.write(self.assumeset + "\n")
+
+            # just write the new code
+            # newfile.write(str(i)+"->"+listfilec[i])
+            newfile.write(listfilec[i])
 
 
 
@@ -285,21 +286,30 @@ class DepthEsbmcCheck(object):
             - "FALSE"   if there exists a path that violates the safety property
             - "UNKNOWN" if does not succeed in computing and answer "TRUE" or "FALSE"
         """
-
+        self.debug = True
         actual_ce = "/tmp/ce_kinduction.txt"
         last_ce = "/tmp/last_ce_kinduction.txt"
+
+        # TODO: Create an approach to check only if the k-induction,
+        #       and if we not find the solution to certain K then try to use the counterexample
 
         # Checking if we reached the MAX k defined
         while self.esbmc_bound <= self.maxk:
 
+            if self.debug:
+                print("Actual k = " + str(self.esbmc_bound))
+
             if os.path.isfile(actual_ce):
                 shutil.copyfile(actual_ce, last_ce)
 
+
+            if self.debug:
+                print("   Status: base-case")
             # >> (1) Checking base-case, i.e., there is a counterexample?
             # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
             commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                self.esbmc_solver_op + " " +
-                               self.esbmc_unwind_op + " " + self.esbmc_bound + " " +
+                               self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                self.esbmc_extra_op + " " +
                                self.esbmc_basecase_op + " " +
                                _cprogrampath + " &> " + actual_ce)
@@ -319,12 +329,14 @@ class DepthEsbmcCheck(object):
                                                                  "\"No bug has been found in the base case\" "))
                 if statusce_basecase_nobug > 0:
                     # increase k
-                    self.esbmc_bound += 5
+                    self.esbmc_bound += 1
+                    if self.debug:
+                        print("   Status: forward-condition")
                     # Checking the forward condition
                     # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
                     commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                        self.esbmc_solver_op + " " +
-                                       self.esbmc_unwind_op + " " + self.esbmc_bound + " " +
+                                       self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                        self.esbmc_extra_op + " " +
                                        self.esbmc_forwardcond_op + " " +
                                        _cprogrampath + " &> " + actual_ce)
@@ -341,12 +353,14 @@ class DepthEsbmcCheck(object):
 
                     else:
                         # The property was NOT proved
+                        if self.debug:
+                            print("   Status: inductive-step")
                         # >> (3) Only if in the (2) the result is: "The forward condition is unable to prove the property"
                         # Checking the inductive step
                         # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
                         commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                            self.esbmc_solver_op + " " +
-                                           self.esbmc_unwind_op + " " + self.esbmc_bound + " " +
+                                           self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                            self.esbmc_extra_op + " " +
                                            self.esbmc_inductivestep_op + " " +
                                            _cprogrampath + " &> " + actual_ce)
@@ -363,6 +377,8 @@ class DepthEsbmcCheck(object):
                         else:
                             # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
                             # generating a new ESBMC assume
+                            if self.debug:
+                                print("   Status: Generating a new ESBMC assume")
                             # print("\t - Get data from CE in the last valid state:")
                             # Possible BUG cuz the PLACE where the assume is added
                             if not self.getlastdatafromce(actual_ce):
@@ -374,6 +390,7 @@ class DepthEsbmcCheck(object):
                             # print("\t - Instrument program with assume ...")
                             # Getting the last valid location in the counterexample to add the assume
                             linenumtosetassume = self.getlastlinenumfromce(actual_ce)
+                            print(">>>>", linenumtosetassume)
                             # Adding in the new instance of the analyzed program (P') the new assume
                             # generated from the counterexample
                             _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)

@@ -1,13 +1,12 @@
 #include <assert.h>
 
 //#define SIZE 3
-int nondet_uint();
+unsigned int nondet_uint();
 
 
 int main() {
    
-   int SIZE;
-   SIZE = nondet_uint();
+   unsigned int SIZE = nondet_uint();
    
    int i, j, k, key;
    int v[SIZE];   
