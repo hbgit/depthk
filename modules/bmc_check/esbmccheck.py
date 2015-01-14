@@ -12,27 +12,28 @@ from __future__ import print_function
 
 import commands
 import re
-import sys
 import os
 import shutil
 
 
 class DepthEsbmcCheck(object):
-
     def __init__(self):
         self.list_beginnumfuct = {}
         self.nameoforicprogram = ""
         self.assumeset = ''
         self.statecurrentfunct = ''
         # depth check options
-        self.countMAXtry = 10
+        self.maxk = 50
         self.esbmcpath = ''
         self.esbmc_arch = "--64"
+        self.esbmc_bound = 1
+        self.esbmc_unwind_op = "--unwind"
         self.esbmc_extra_op = "--no-library --memlimit 4g --timeout 15m"
-        self.esbmc_solver = "--z3"
+        self.esbmc_solver_op = "--z3"
+        # k-induction options
         self.esbmc_basecase_op = "--base-case"
         self.esbmc_forwardcond_op = "--forward-condition"
-        self.esbmc_inductivestep_op = "--k-induction-parallel  --inductive-step --show-counter-example"
+        self.esbmc_inductivestep_op = "--inductive-step --show-counter-example"
 
 
     @staticmethod
@@ -46,12 +47,12 @@ class DepthEsbmcCheck(object):
         :return: The method return the line number where will be write the ESBMC ASSUME
         """
 
-        filece = open(_esbmccepath,"r")
+        filece = open(_esbmccepath, "r")
         listfilece = filece.readlines()
         filece.close()
 
         # reading file from bottom to top
-        i = len(listfilece)-1
+        i = len(listfilece) - 1
         flagstartpoint = False
 
         while i >= 0:
@@ -61,7 +62,7 @@ class DepthEsbmcCheck(object):
             if matchvp and not flagstartpoint:
                 # identifying the first start to jump and then start to search
                 # line number by state
-                i -= 2 # jump line with ---------
+                i -= 2  # jump line with ---------
                 while not re.search(r'State[ ]+[0-9]+', listfilece[i]):
                     i -= 1
 
@@ -69,51 +70,49 @@ class DepthEsbmcCheck(object):
                 i -= 1
                 flagstartpoint = True
 
-
             matchstate = re.search(r'State[ ]+[0-9]+', listfilece[i])
             if matchstate:
 
                 # identifying if the state has some valid line number
                 matchsline = re.search(r'line[ ]+([0-9]+)', listfilece[i])
                 if matchsline:
-                    #print(matchsline.group(1))
-                    #sys.exit()
+                    # print(matchsline.group(1))
+                    # sys.exit()
                     return int(matchsline.group(1)) - 1
 
             i -= 1
 
 
     def getlastdatafromce(self, _esbmccepath):
-    
-        filece = open(_esbmccepath,"r")
+
+        filece = open(_esbmccepath, "r")
         listfilece = filece.readlines()
         filece.close()
-    
+
         # reading file from bottom to top
-        i = len(listfilece)-1
+        i = len(listfilece) - 1
         flagstop = False
         cestatetext = ''
         flaghasstate = False
 
         while i >= 0 and not flagstop:
             # get the last state
-            matchState = re.search(r'cs\$[0-9]+', listfilece[i])
-            if matchState:
+            matchstate = re.search(r'cs\$[0-9]+', listfilece[i])
+            if matchstate:
                 flaghasstate = True
 
                 flagkeepgettext = True
                 while flagkeepgettext:
-    
+
                     matchblankline = re.search(r'^$', listfilece[i])
                     if matchblankline:
                         flagkeepgettext = False
                     else:
-                        #print(listfilece[i],"++++++=")
+                        # print(listfilece[i],"++++++=")
                         cestatetext += listfilece[i]
-    
+
                     i += 1
-    
-    
+
                 flagstop = True
             i -= 1
 
@@ -127,15 +126,15 @@ class DepthEsbmcCheck(object):
 
 
         # handle text state get from CE
-        #.c::new_main::main::1::SIZE=7
-        #cestatetext = cestatetext.replace(" ", "")
-        #print(cestatetext)
-        #sys.exit()
+        # .c::new_main::main::1::SIZE=7
+        # cestatetext = cestatetext.replace(" ", "")
+        # print(cestatetext)
+        # sys.exit()
         # preprocessing CE text
         # splitting to remove blank spaces
         listassign = cestatetext.split(".c")
 
-        #removing blank spaces to deal with arrays
+        # removing blank spaces to deal with arrays
         countb = 0
         while countb < len(listassign):
             listassign[countb] = listassign[countb].replace(" ", "")
@@ -143,38 +142,38 @@ class DepthEsbmcCheck(object):
 
         textcejoinspace = ' '.join(listassign)
 
-        #print(textcejoinspace)
-        #sys.exit()
+        # print(textcejoinspace)
+        # sys.exit()
 
         listassign = textcejoinspace.split(" ")
-        #listassign = re.split('\.c[:]+.[^]+')
+        # listassign = re.split('\.c[:]+.[^]+')
 
         listnewassign = []
         for item in listassign:
             #
             item = item.strip()
-            #print("---------------------",item)
+            # print("---------------------",item)
             # get only the assignment in the CE
-            skipassign = False
-    
-            #item = item.replace("}", "")
-            #item = item.replace("{", "")
-            #item = item.replace(" ", "")
-    
+            # skipassign = False
+
+            # item = item.replace("}", "")
+            # item = item.replace("{", "")
+            # item = item.replace(" ", "")
+
             matchassign = re.search(r'(.[^\}\{:]+)$', item)
             if matchassign:
                 # clean assignment
                 ceassign = matchassign.group(1).strip()
                 ceassign = ceassign.replace(":", "")
-    
+
                 # ------------- Skipping area
                 flag_skip = False
-    
+
                 # Skipping tmp$ variables
                 matchskip = re.search(r'tmp\$', ceassign)
                 if matchskip:
                     flag_skip = True
-    
+
                 # Skipping return_value___VERIFIER_nondet_int$2=0
                 matchskip = re.search(r'return_value_', ceassign)
                 if matchskip:
@@ -186,19 +185,19 @@ class DepthEsbmcCheck(object):
                 if matcharray:
                     flag_skip = True
 
-                #matchdenddemiliter = re.search(r'[ =]*\{', ceassign)
-    
+                # matchdenddemiliter = re.search(r'[ =]*\{', ceassign)
+
                 # ------------- END Skipping area
-    
+
                 if not flag_skip:
                     # replace = by !=
                     ceassign = ceassign.replace("=", "!=")
-                    ceassign = ceassign.replace(",","")
+                    ceassign = ceassign.replace(",", "")
 
                     print("\t => " + ceassign)
                     listnewassign.append(ceassign)
-    
-        #sys.exit()
+
+        # sys.exit()
         # generating __ASSUME
         txtassume = ' && '.join(listnewassign)
         self.assumeset = "__ESBMC_assume( " + txtassume + " );"
@@ -206,26 +205,25 @@ class DepthEsbmcCheck(object):
         return True
 
 
-
     def addassumeinprogram(self, _cprogrampath, _linenumtosetassume):
-        #print(_linenumtosetassume)
-        #sys.exit()
+        # print(_linenumtosetassume)
+        # sys.exit()
 
-        fileprogram = open(_cprogrampath,"r")
+        fileprogram = open(_cprogrampath, "r")
         listfilec = fileprogram.readlines()
         fileprogram.close()
 
         # generate data about the functions
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
-    
+
         # TODO: it is best to write this new instance in the original path of the program
         newfile = open("/tmp/new_instance.c", "w")
-    
+
         i = 0
         while i < len(listfilec):
-    
+
             # just write the new code
-            #newfile.write(str(i)+"->"+listfilec[i])
+            # newfile.write(str(i)+"->"+listfilec[i])
             newfile.write(listfilec[i])
 
             # identify where to write the new assume from CE
@@ -235,22 +233,22 @@ class DepthEsbmcCheck(object):
 
 
             # identifying the function pointed in the CE state
-            #print(self.list_beginnumfuct)
+            # print(self.list_beginnumfuct)
 
             # if i in self.list_beginnumfuct.keys():
-            #     if self.list_beginnumfuct[i].strip() == self.statecurrentfunct.strip():
-            #         print(self.statecurrentfunct, "<<<<<<<<,")
+            # if self.list_beginnumfuct[i].strip() == self.statecurrentfunct.strip():
+            # print(self.statecurrentfunct, "<<<<<<<<,")
 
 
 
             # matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
             # if matchassumeanot:
-            #     flagstop = False
-            #     while matchassumeanot and not flagstop:
-            #         #print(listfilec[i],end="")
-            #         newfile.write(listfilec[i])
-            #         if i <= len(listfilec):
-            #             i += 1
+            # flagstop = False
+            # while matchassumeanot and not flagstop:
+            # #print(listfilec[i],end="")
+            # newfile.write(listfilec[i])
+            # if i <= len(listfilec):
+            # i += 1
             #             matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
             #         else:
             #             flagstop = True
@@ -262,94 +260,132 @@ class DepthEsbmcCheck(object):
             #     newfile.write(listfilec[i])
             i += 1
 
-
         newfile.close()
-    
+
         return "/tmp/new_instance.c"
-    
-    
+
+
     def kinductioncheck(self, _cprogrampath):
-    
-        flagstopcheck = False
-        count = 0
+
+        """
+         Applying k-induction algorithm
+         The K (unwind) should be defined.
+         >> (1) Checking base-case, i.e., there is a counterexample?
+         $ esbmc_v24 --64 --base-case --unwind 1 main.c
+         >> Only if there is NOT counterexample (2) increase k = k +1
+         $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
+         >> Only if in the (2) the result is: "The forward condition is unable to prove the property"
+         $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
+         >> If the result was SUCCESUFUL then STOP verification
+         >> Else generate a new program P' with an ESBMC_ASSUME from the counterexample and then go to (1)
+
+        :param _cprogrampath: the program <P> with: the safety property <Fi> and invariants <I>
+        :return:
+            - "TRUE"    if there is no path that violates the safety property
+            - "FALSE"   if there exists a path that violates the safety property
+            - "UNKNOWN" if does not succeed in computing and answer "TRUE" or "FALSE"
+        """
 
         actual_ce = "/tmp/ce_kinduction.txt"
         last_ce = "/tmp/last_ce_kinduction.txt"
 
-        # Applying k-induction algorithm
-        # TODO: How understand the If's in the algorithm
-        # The K (unwind) should be defined. I think that is better start in 5
-        # >> (1) Checking base-case, i.e., there is a counterexample?
-        # $ esbmc_v24 --64 --base-case --unwind 1 main.c
-        # >> Only if there is NOT counterexample (2) increase k = k +1
-        # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
-        # >> Only if in the (2) the result is: "The forward condition is unable to prove the property"
-        # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
-        # >> If the result was SUCCESUFUL then STOP verification
-        # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
-        #result_basecase = commands.getoutput(self.esbmcpath)
+        # Checking if we reached the MAX k defined
+        while self.esbmc_bound <= self.maxk:
 
-    
-        while not flagstopcheck:
+            if os.path.isfile(actual_ce):
+                shutil.copyfile(actual_ce, last_ce)
 
-            if os.path.isfile("/tmp/ce_kinduction.txt"):
-                shutil.copyfile("/tmp/ce_kinduction.txt", "/tmp/last_ce_kinduction.txt")
+            # >> (1) Checking base-case, i.e., there is a counterexample?
+            # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
+            commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                               self.esbmc_solver_op + " " +
+                               self.esbmc_unwind_op + " " + self.esbmc_bound + " " +
+                               self.esbmc_extra_op + " " +
+                               self.esbmc_basecase_op + " " +
+                               _cprogrampath + " &> " + actual_ce)
 
-            result = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                        self.esbmc_extra_op + " " +
-                                        self.esbmc_inductivestep_op + " " +
-                                        str(_cprogrampath) + " &> /tmp/ce_kinduction.txt")
-    
-            # checking CE
-            statusce = commands.getoutput("cat /tmp/ce_kinduction.txt | grep -c \"VERIFICATION FAILED\" ")
-            if int(statusce) > 0:
-                print("cat /tmp/ce_kinduction.txt")
+            # >> (1) Identifying if it was generated a counterexample
+            statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
+            if statusce_basecase > 0:
+                # show counterexample
+                os.system("cat " + actual_ce)
+                return "FALSE"
 
-    
-                if count <= self.countMAXtry:
-    
-                    print("")
-                    print("=======> MAX: "+str(count))
-                    print("")
-                    print("FAILED inductive step")
-                    print("\t - Get data from CE in the last valid state:")
-
-                    # IDENTIFY where (function) the last state is
-                    # Possible BUG cuz the PLACE where the assume is added
-
-                    # TODO: BUG with .c::new_main::main::1::v={ 2147483650, 1, 2147483648, 2147483712}
-
-
-                    if not self.getlastdatafromce("/tmp/ce_kinduction.txt"):
-                        print("NO DATA from CE !!!")
-                        sys.exit()
-
-
-                    print("\t - New assume generated: \n" + self.assumeset)
-                    print("\t - Instrument program with assume ...")
-
-                    linenumtosetassume = self.getlastlinenumfromce("/tmp/ce_kinduction.txt")
-
-                    _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
-
-                    #print(_cprogrampath)
-
-                    #sys.exit()
-    
-                    count += 1
-                else:
-                    print(">> STOP ============================== MAX == " + str(self.countMAXtry) + " reached !!!")
-                    flagstopcheck = True
-    
             else:
-                # VERIFICATION SUCCESSFUL to inductive step
-                #print()
-                os.system("cat /tmp/ce_kinduction.txt")
-                #flagstopcheck = True
-                flagstopcheck = True
+                # >> (2) Only if there is NOT counterexample, then  increase k = k +1
+                # only to check if any crash was generated
+                statusce_basecase_nobug = int(commands.getoutput("cat " + actual_ce +
+                                                                 " | grep -c " +
+                                                                 "\"No bug has been found in the base case\" "))
+                if statusce_basecase_nobug > 0:
+                    # increase k
+                    self.esbmc_bound += 5
+                    # Checking the forward condition
+                    # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
+                    commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                       self.esbmc_solver_op + " " +
+                                       self.esbmc_unwind_op + " " + self.esbmc_bound + " " +
+                                       self.esbmc_extra_op + " " +
+                                       self.esbmc_forwardcond_op + " " +
+                                       _cprogrampath + " &> " + actual_ce)
+
+                    # Checking if it was possible to prove the property
+                    #
+                    statusce_forwardcond = int(commands.getoutput("cat " + actual_ce +
+                                                                  " | grep -c " +
+                                                                  "\"The forward condition is unable to prove the property\" "))
+                    if statusce_forwardcond == 0:
+                        # The property was proved
+                        # print("True")
+                        return "TRUE"
+
+                    else:
+                        # The property was NOT proved
+                        # >> (3) Only if in the (2) the result is: "The forward condition is unable to prove the property"
+                        # Checking the inductive step
+                        # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
+                        commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                           self.esbmc_solver_op + " " +
+                                           self.esbmc_unwind_op + " " + self.esbmc_bound + " " +
+                                           self.esbmc_extra_op + " " +
+                                           self.esbmc_inductivestep_op + " " +
+                                           _cprogrampath + " &> " + actual_ce)
+
+                        # checking CE
+                        statusce_inductivestep = int(commands.getoutput("cat " + actual_ce +
+                                                                        " | grep -c " +
+                                                                        "\"VERIFICATION FAILED\" "))
+                        # >> If the result was SUCCESUFUL then STOP verification
+                        if statusce_inductivestep == 0:
+                            #print("True")
+                            return "TRUE"
+
+                        else:
+                            # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
+                            # generating a new ESBMC assume
+                            # print("\t - Get data from CE in the last valid state:")
+                            # Possible BUG cuz the PLACE where the assume is added
+                            if not self.getlastdatafromce(actual_ce):
+                                # >> UNKNOWN
+                                print("ERROR. NO DATA from CE! Sorry about that.")
+                                return "UNKNOWN"
+
+                            # print("\t - New assume generated: \n" + self.assumeset)
+                            # print("\t - Instrument program with assume ...")
+                            # Getting the last valid location in the counterexample to add the assume
+                            linenumtosetassume = self.getlastlinenumfromce(actual_ce)
+                            # Adding in the new instance of the analyzed program (P') the new assume
+                            # generated from the counterexample
+                            _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+
+        # >> END-WHILE
+        # >> UNKNOWN
+        print("MAX k (" + str(self.maxk) + ") reached. ")
+        return "UNKNOWN"
 
 
-    def getnumbeginfuncts(self, _cfilepath):
+    @staticmethod
+    def getnumbeginfuncts(_cfilepath):
 
         # result
         listbeginnumfuct = {}
@@ -364,6 +400,6 @@ class DepthEsbmcCheck(object):
             matchlinefuct = re.search(r'(.+)[ ]+function[ ]+([0-9]+)', linedfunct)
             if matchlinefuct:
                 # a dictionary with the name of the function and the line number where it start
-                listbeginnumfuct[int(matchlinefuct.group(2))-1] = matchlinefuct.group(1)
+                listbeginnumfuct[int(matchlinefuct.group(2)) - 1] = matchlinefuct.group(1)
 
         return listbeginnumfuct
