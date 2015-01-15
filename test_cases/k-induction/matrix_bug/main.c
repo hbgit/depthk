@@ -8,6 +8,8 @@
 #include<string.h>
 #endif
 
+#include <assert.h>
+
 #define NULL 0
 
 
@@ -17,12 +19,13 @@
 unsigned int nondet_uint();
 int nondet_int();
 
-unsigned int N_LIN=nondet_uint();
-unsigned int N_COL=nondet_uint();
+//unsigned int N_LIN=nondet_uint();
+//unsigned int N_COL=nondet_uint();
 
 main()
 {
-      
+  unsigned int N_LIN=nondet_uint();
+  unsigned int N_COL=nondet_uint();     
   unsigned int j,k;
   int matriz[N_COL][N_LIN], maior;
   
