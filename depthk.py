@@ -48,6 +48,7 @@ class DepthK(object):
         self.inputisexti = False
         self.listnumbeginfunc = []
         self.nameoforicprogram = os.path.basename(_cfilepath)
+        self.debug_op = False
         self.esbmcpath = ''
         self.maxk = 10
         self.maxdepthcheck = 25
@@ -215,6 +216,8 @@ class DepthK(object):
             print("ERROR. Identifying functions")
             sys.exit()
 
+        if self.debug_op:
+            print(">> Translating the PIPS annotation with the invariants")
         # Call class to translate PIPS annotation
         runtranslatepips = translate_pips.PipsTranslateAnnot()
         runtranslatepips.nameoforicprogram = self.nameoforicprogram
@@ -249,6 +252,7 @@ class DepthK(object):
         runesbmc.esbmcpath = self.esbmcpath
         runesbmc.maxk = self.maxk
         runesbmc.maxdepthverification = self.maxdepthcheck
+        runesbmc.debug = self.debug_op
         print(runesbmc.kinductioncheck(_cfilepath))
 
 
@@ -271,6 +275,8 @@ class DepthK(object):
         # getting only the name of the file
         namecfile = os.path.basename(_cfilepath)
 
+        if self.debug_op:
+            print(">> Running PIPS to generate the invariants")
         # run script with tpips
         resultpips = commands.getoutput(self.pipscommand + " " + _scriptpips)
 
@@ -317,8 +323,10 @@ if __name__ == "__main__":
                         default=15, help='set the max k time step (default is 15)')
     parser.add_argument('-d', '--max-depth-check', metavar='nr', type=int, dest='setMaxDepthCheck',
                         default=25, help='set the max number of P\' to be generated (default is 25)')
-    parser.add_argument('-s', '--statistics', action="store_true", dest='setInfo',
-                        help='generate data about the DepthK execution', default=False)
+    parser.add_argument('-g', '--debug', action="store_true", dest='setDebug',
+                        help='generates debug information', default=False)
+    # parser.add_argument('-s', '--statistics', action="store_true", dest='setInfo',
+    #                     help='generate data about the DepthK execution', default=False)
 
     args = parser.parse_args()
 
@@ -339,6 +347,8 @@ if __name__ == "__main__":
                 rundepthk.maxk = args.setMaxK
             if args.setMaxDepthCheck:
                 rundepthk.maxdepthcheck = args.setMaxDepthCheck
+            if args.setDebug:
+                rundepthk.debug_op = args.setDebug
 
             # Identify the extension of the C program .c or .i (some code is added in the new instance)
             if inputCFile.endswith(".i"):

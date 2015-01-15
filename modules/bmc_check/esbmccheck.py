@@ -290,7 +290,6 @@ class DepthEsbmcCheck(object):
             - "FALSE"   if there exists a path that violates the safety property
             - "UNKNOWN" if does not succeed in computing and answer "TRUE" or "FALSE"
         """
-        self.debug = True
         actual_detphver = 1
         actual_ce = "/tmp/ce_kinduction.txt"
         last_ce = "/tmp/last_ce_kinduction.txt"
@@ -298,17 +297,19 @@ class DepthEsbmcCheck(object):
         # TODO: Create an approach to check only if the k-induction,
         # and if we not find the solution to certain K then try to use the counterexample
 
+        if self.debug:
+            print(">> Starting the verification of the P\' program")
         # Checking if we reached the MAX k defined
         while self.esbmc_bound <= self.maxk and actual_detphver <= self.maxdepthverification:
 
             if self.debug:
-                print("Actual k = " + str(self.esbmc_bound))
+                print("\t -> Actual k = " + str(self.esbmc_bound))
 
             if os.path.isfile(actual_ce):
                 shutil.copyfile(actual_ce, last_ce)
 
             if self.debug:
-                print("   Status: base-case")
+                print("\t\t Status: checking base case")
             # >> (1) Checking base-case, i.e., there is a counterexample?
             # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
             commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
@@ -335,7 +336,7 @@ class DepthEsbmcCheck(object):
                     # increase k
                     self.esbmc_bound += 1
                     if self.debug:
-                        print("   Status: forward-condition")
+                        print("\t\t Status: checking forward condition")
                     # Checking the forward condition
                     # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
                     commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
@@ -358,7 +359,7 @@ class DepthEsbmcCheck(object):
                     else:
                         # The property was NOT proved
                         if self.debug:
-                            print("   Status: inductive-step")
+                            print("\t\t Status: checking inductive step")
                         # >> (3) Only if in the (2) the result is: "The forward condition is unable to prove the property"
                         # Checking the inductive step
                         # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
@@ -388,12 +389,14 @@ class DepthEsbmcCheck(object):
                                 # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
                                 # generating a new ESBMC assume
                                 if self.debug:
-                                    print("   Status: Generating a new ESBMC assume")
+                                    print("\t\t -> It was reached the MAX k")
+
+                                    print("\t\t Status: generating a new ESBMC assume")
                                 # print("\t - Get data from CE in the last valid state:")
                                 # Possible BUG cuz the PLACE where the assume is added
                                 if not self.getlastdatafromce(actual_ce):
                                     # >> UNKNOWN
-                                    print("ERROR. NO DATA from CE! Sorry about that.")
+                                    print("ERROR. NO DATA from counterexample! Sorry about that.")
                                     return "UNKNOWN"
 
                                 # print("\t - New assume generated: \n" + self.assumeset)
