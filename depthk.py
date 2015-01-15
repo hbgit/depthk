@@ -125,26 +125,35 @@ class DepthK(object):
                 matchpipsinit = re.findall(r'([a-zA-Z0-9_]+)#init', line)
                 if matchpipsinit:
                     flaginit = True
-                    #print(matchpipsinit," ---- FUNCT: ", currentnumfunct)
+                    # print(matchpipsinit," ---- FUNCT: ", currentnumfunct)
                     # remove variables duplicated
                     listcleanvar = list(set(matchpipsinit))
                     for var in listcleanvar:
                         #listsavevar_tmp.append(var)
+                        # Checkig if we have math operation with the variable, e.g., 8num#init
+                        matchmathmult = re.search(r'^[0-9]+(.*)', var)
+                        if matchmathmult:
+                            var = matchmathmult.group(1)
+
+                        matchmathoperation = re.search(r'^[0-9]+[+-\\*/](.*)', var)
+                        if matchmathoperation:
+                            var = matchmathoperation.group(1)
+
                         dict_varinitandloc[currentnumfunct].append(var)
 
                     dict_varinitandloc[currentnumfunct] = list(set(dict_varinitandloc[currentnumfunct]))
 
 
         # removing key without values
-        for key, value in dict_varinitandloc.items():
-            if not value:
-                del dict_varinitandloc[key]
-
+        # for key, value in dict_varinitandloc.items():
+        #     if not value:
+        #         del dict_varinitandloc[key]
+        #
         # for key, value in dict_varinitandloc.items():
         #     print(key, value)
         #     print("")
-
-        #sys.exit()
+        #
+        # sys.exit()
         return dict_varinitandloc
 
 
@@ -172,7 +181,7 @@ class DepthK(object):
         linescfile = filec.readlines()
         filec.close()
 
-        # Get variable data
+        # Get all variable declaration data
         r = ast.RunAstDecl(_cfilepath)
         # output: {'z_val': [['int'], '164']}
         dict_varsdata = r.identify_decl()
@@ -190,7 +199,6 @@ class DepthK(object):
                 filewithinit.write(linescfile[nextline])
                 count = nextline
 
-                #print(dict_varsdata)
                 if _dicvarinitandloc.has_key(nextline):
                     for var in _dicvarinitandloc[nextline]:
                         #print("INIT: ", var)
@@ -226,6 +234,8 @@ class DepthK(object):
         runtranslatepips.nameoforicprogram = self.nameoforicprogram
         runtranslatepips.list_beginnumfuct = listnumbeginfunc
 
+        # print(runtranslatepips.instprecondinprog(_cpathpipscode))
+        # sys.exit()
         return runtranslatepips.instprecondinprog(_cpathpipscode)
 
 

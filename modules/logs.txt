@@ -2,6 +2,7 @@
 
 BUG:
     in translation:
+      ====> kundu + SOLVED
         //  P(C_1_st,P_1_st,P_2_pc,P_2_st,data_0,data_1,e,num,timer)
         //    {P_2_st==2, P_2_st#init==1, 8num#init+8<=i+8num, 0<=i+num#init,
         //    num#init<=num, num<=num#init+1}
@@ -14,7 +15,7 @@ Loading
   Running kundu  [FAILED] (900.00 seconds)
   Running ludcmp_bad  [FAILED] (0.67 seconds)
   Running matrix_bug  [FAILED] (0.19 seconds)
-  Running mem_slave_tlm  [FAILED] (900.00 seconds)
+  Running mem_slave_tlm  [FAILED] (900.00 seconds) << a lot memory
   Running nec24  [FAILED] (900.00 seconds)
   Running pc_sfifo_1  [FAILED] (900.00 seconds)
   Running sum03  [FAILED] (0.09 seconds)
