@@ -24,7 +24,8 @@ class DepthEsbmcCheck(object):
         self.statecurrentfunct = ''
         # depth check options
         self.debug = False
-        self.maxk = 50
+        self.maxk = 15
+        self.maxdepthverification = 25
         self.esbmcpath = ''
         self.esbmc_arch = "--64"
         self.esbmc_bound = 1
@@ -195,7 +196,7 @@ class DepthEsbmcCheck(object):
                     ceassign = ceassign.replace("=", "!=")
                     ceassign = ceassign.replace(",", "")
 
-                    #print("\t => " + ceassign)
+                    # print("\t => " + ceassign)
                     listnewassign.append(ceassign)
 
         # sys.exit()
@@ -250,8 +251,8 @@ class DepthEsbmcCheck(object):
             # newfile.write(listfilec[i])
             # if i <= len(listfilec):
             # i += 1
-            #             matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
-            #         else:
+            # matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
+            # else:
             #             flagstop = True
             #
             #     #print(self.assumeset+"\n")
@@ -278,30 +279,33 @@ class DepthEsbmcCheck(object):
          >> Only if in the (2) the result is: "The forward condition is unable to prove the property"
          $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
          >> If the result was SUCCESUFUL then STOP verification
-         >> Else generate a new program P' with an ESBMC_ASSUME from the counterexample and then go to (1)
+         >> Else
+         >>     IF not k <= maxk and actualdepthverification <= maxdepthverification
+         >>        # I.e., the next P' only is generated if the max k was reached
+         >>        generate a new program P' with an ESBMC_ASSUME from the counterexample and then go to (1)
 
-        :param _cprogrampath: the program <P> with: the safety property <Fi> and invariants <I>
+        :param _cprogrampath: the program <P'> with: the safety property <Fi> and invariants <I>
         :return:
             - "TRUE"    if there is no path that violates the safety property
             - "FALSE"   if there exists a path that violates the safety property
             - "UNKNOWN" if does not succeed in computing and answer "TRUE" or "FALSE"
         """
         self.debug = True
+        actual_detphver = 1
         actual_ce = "/tmp/ce_kinduction.txt"
         last_ce = "/tmp/last_ce_kinduction.txt"
 
         # TODO: Create an approach to check only if the k-induction,
-        #       and if we not find the solution to certain K then try to use the counterexample
+        # and if we not find the solution to certain K then try to use the counterexample
 
         # Checking if we reached the MAX k defined
-        while self.esbmc_bound <= self.maxk:
+        while self.esbmc_bound <= self.maxk and actual_detphver <= self.maxdepthverification:
 
             if self.debug:
                 print("Actual k = " + str(self.esbmc_bound))
 
             if os.path.isfile(actual_ce):
                 shutil.copyfile(actual_ce, last_ce)
-
 
             if self.debug:
                 print("   Status: base-case")
@@ -371,29 +375,34 @@ class DepthEsbmcCheck(object):
                                                                         "\"VERIFICATION FAILED\" "))
                         # >> If the result was SUCCESUFUL then STOP verification
                         if statusce_inductivestep == 0:
-                            #print("True")
+                            # print("True")
                             return "TRUE"
 
                         else:
-                            # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
-                            # generating a new ESBMC assume
-                            if self.debug:
-                                print("   Status: Generating a new ESBMC assume")
-                            # print("\t - Get data from CE in the last valid state:")
-                            # Possible BUG cuz the PLACE where the assume is added
-                            if not self.getlastdatafromce(actual_ce):
-                                # >> UNKNOWN
-                                print("ERROR. NO DATA from CE! Sorry about that.")
-                                return "UNKNOWN"
+                            if not self.esbmc_bound <= self.maxk and \
+                               actual_detphver <= self.maxdepthverification:
 
-                            # print("\t - New assume generated: \n" + self.assumeset)
-                            # print("\t - Instrument program with assume ...")
-                            # Getting the last valid location in the counterexample to add the assume
-                            linenumtosetassume = self.getlastlinenumfromce(actual_ce)
-                            print(">>>>", linenumtosetassume)
-                            # Adding in the new instance of the analyzed program (P') the new assume
-                            # generated from the counterexample
-                            _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+                                # reset k, i.e., the bound go back to 1
+                                self.esbmc_bound = 1
+
+                                # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
+                                # generating a new ESBMC assume
+                                if self.debug:
+                                    print("   Status: Generating a new ESBMC assume")
+                                # print("\t - Get data from CE in the last valid state:")
+                                # Possible BUG cuz the PLACE where the assume is added
+                                if not self.getlastdatafromce(actual_ce):
+                                    # >> UNKNOWN
+                                    print("ERROR. NO DATA from CE! Sorry about that.")
+                                    return "UNKNOWN"
+
+                                # print("\t - New assume generated: \n" + self.assumeset)
+                                # print("\t - Instrument program with assume ...")
+                                # Getting the last valid location in the counterexample to add the assume
+                                linenumtosetassume = self.getlastlinenumfromce(actual_ce)
+                                # Adding in the new instance of the analyzed program (P') the new assume
+                                # generated from the counterexample
+                                _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
 
         # >> END-WHILE
         # >> UNKNOWN

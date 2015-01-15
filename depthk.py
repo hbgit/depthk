@@ -50,6 +50,7 @@ class DepthK(object):
         self.nameoforicprogram = os.path.basename(_cfilepath)
         self.esbmcpath = ''
         self.maxk = 10
+        self.maxdepthcheck = 25
         self.pipsscriptpath = os.path.abspath(".") + \
                               '/modules/invariant_tools/pips/script_template/' + \
                               'script_generate_precod.pips'
@@ -247,6 +248,7 @@ class DepthK(object):
         runesbmc = esbmccheck.DepthEsbmcCheck()
         runesbmc.esbmcpath = self.esbmcpath
         runesbmc.maxk = self.maxk
+        runesbmc.maxdepthverification = self.maxdepthcheck
         print(runesbmc.kinductioncheck(_cfilepath))
 
 
@@ -312,7 +314,9 @@ if __name__ == "__main__":
     parser.add_argument(dest='inputCProgram', metavar='file.c or file.i', type=str,
                         help='the C program file to be analyzed')
     parser.add_argument('-k', '--max-k-step', metavar='nr', type=int, dest='setMaxK',
-                        default=50, help='set the max k time step (default is 50)')
+                        default=15, help='set the max k time step (default is 15)')
+    parser.add_argument('-d', '--max-depth-check', metavar='nr', type=int, dest='setMaxDepthCheck',
+                        default=25, help='set the max number of P\' to be generated (default is 25)')
     parser.add_argument('-s', '--statistics', action="store_true", dest='setInfo',
                         help='generate data about the DepthK execution', default=False)
 
@@ -333,6 +337,8 @@ if __name__ == "__main__":
             #rundepthk.esbmcpath = "~/Downloads/ESBMC/bin/esbmc_v24"
             if args.setMaxK:
                 rundepthk.maxk = args.setMaxK
+            if args.setMaxDepthCheck:
+                rundepthk.maxdepthcheck = args.setMaxDepthCheck
 
             # Identify the extension of the C program .c or .i (some code is added in the new instance)
             if inputCFile.endswith(".i"):
