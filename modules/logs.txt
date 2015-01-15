@@ -11,22 +11,24 @@ BUG:
 
 Log from server:
 Loading
-  Running bist_cell  [FAILED] (900.00 seconds)
-  Running kundu  [FAILED] (900.00 seconds)
-  Running ludcmp_bad  [FAILED] (0.67 seconds)
-  Running matrix_bug  [FAILED] (0.19 seconds)
+  Running bist_cell  [FAILED] (900.00 seconds) >> [TESTED] - OKAY
+  Running kundu  [FAILED] (900.00 seconds) >> [TESTED] - OKAY
+  Running ludcmp_bad  [FAILED] (0.67 seconds) >> [TESTED] - OKAY
+  Running matrix_bug  [FAILED] (0.19 seconds) >> [TESTED] - FAILED ???
   Running mem_slave_tlm  [FAILED] (900.00 seconds) << a lot memory
-  Running nec24  [FAILED] (900.00 seconds)
-  Running pc_sfifo_1  [FAILED] (900.00 seconds)
-  Running sum03  [FAILED] (0.09 seconds)
-  Running sum03_bug  [FAILED] (0.16 seconds)
-  Running token_ring01  [FAILED] (900.00 seconds)
-  Running toy  [FAILED] (900.00 seconds)
-  Running verisec_NetBSD-libc__loop_bad  [OK] (0.16 seconds)
-  Running verisec_NetBSD-libc__loop_ok  [OK] (0.13 seconds)
-  Running verisec_OpenSER__cases1_stripFullBoth_arr_bad  [OK] (0.25 seconds)
-  Running verisec_OpenSER__cases1_stripFullBoth_arr_ok  [OK] (1.06 seconds)
+  Running nec24  [FAILED] (900.00 seconds) >> [TESTED] - k = 500 - NO CE - ERROR
+  Running pc_sfifo_1  [FAILED] (900.00 seconds) >> [TESTED] - ERROR PIPS
+  Running sum03  [FAILED] (0.09 seconds) >> [TESTED] - OKAY
+  Running sum03_bug  [FAILED] (0.16 seconds) >> [TESTED] - OKAY
+  Running token_ring01  [FAILED] (900.00 seconds) >> [TESTED] - OKAY
+  Running toy  [FAILED] (900.00 seconds) >> [TESTED] - ERROR PIPS
+  Running verisec_NetBSD-libc__loop_bad  [OK] (0.16 seconds) >> [TESTED] - FAILED
+  Running verisec_NetBSD-libc__loop_ok  [OK] (0.13 seconds) >> [TESTED] - OKAY
+  Running verisec_OpenSER__cases1_stripFullBoth_arr_bad  [OK] (0.25 seconds) >> [TESTED] - OKAY
+  Running verisec_OpenSER__cases1_stripFullBoth_arr_ok  [OK] (1.06 seconds) >> [TESTED] - OKAY
 make: *** [tests.log] Error 11
+
+15 - 5 NOT OKAY
 
 
 
