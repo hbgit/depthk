@@ -25,6 +25,7 @@ To use this tool is necessary that the system contains the following software al
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
 > - Ctags - http://ctags.sourceforge.net 
 > - PIPS - http://pips4u.org/
+> - ESBMC (v1.24.1 or higher) - http://esbmc.org/
 
 ================
 
@@ -38,7 +39,17 @@ First of all, you need to install the required packages:
 
 > - <b>Pycparser</b>: <br> Ubuntu $ sudo apt-get install python-pycparser <br> Fedora $ sudo yum install python-pycparser
 > - <b>Ctags</b>: <br> Ubuntu $ sudo apt-get install exuberant-ctags <br>Fedora $ sudo apt-get install ctags
-> - <b>PIPS</b>: <br>Available at http://pips4u.org/copy_of_getting-pips/building-and-installing-pips-from%20svn
+> - <b>PIPS</b>: <br>Available at http://pips4u.org/copy_of_getting-pips/building-and-installing-pips-from%20svn <br>
+You should set the environment variable PATH in your .bashrc file. <br> 
+Checkout Step 4: Load the PIPS environment variables from that link<br>
+> - <b>ESBMC</b>: <br>
+In order to install ESBMC on your machine, you should download the archive (e.g., esbmc-v1.24.1.tar.tgz) and <br> 
+save it on your disk. After that, you should type the following command: <br>
+$ tar xfz esbmc-v1.24.1.tar.tgz <br>
+You should set the environment variable PATH in your .bashrc file as follows: <br>
+$ export PATH=$PATH:$HOME/esbmc-v1.24.1/ <br>
+After that, you can run ESBMC from the command line by calling: <br>
+$ esbmc file.c
 
 
 - <b>STEP 1:</b>
@@ -57,7 +68,7 @@ or from https://github.com
 - <b>STEP 2:</b>
 
 <p align="justify">
-Testing tool. DepthK can be invoked through a standard command-line interface. Map2Check should be called 
+Testing tool. DepthK can be invoked through a standard command-line interface. DepthK should be called 
 in the installation directory as follows:  
 </p>
 
