@@ -23,7 +23,7 @@ To use this tool is necessary that the system contains the following software al
 > - grep;
 > - GCC compiler; 
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
-> - Ctags - http://ctags.sourceforge.net - sudo apt-get install exuberant-ctags
+> - Ctags - http://ctags.sourceforge.net 
 > - PIPS - http://pips4u.org/
 
 ================
@@ -36,9 +36,9 @@ First of all, you need to install the required packages:
 
 - <b>STEP 0:</b>
 
-> - Pycparser : Ubuntu $ sudo apt-get install python-pycparser or Fedora $ sudo yum install python-pycparser
-> - Ctags: Ubuntu $ sudo apt-get install exuberant-ctags or Fedora $ sudo apt-get install ctags
-> - PIPS: Available at http://pips4u.org/copy_of_getting-pips/building-and-installing-pips-from%20svn
+> - <b>Pycparser</b>: <br> Ubuntu $ sudo apt-get install python-pycparser <br> Fedora $ sudo yum install python-pycparser
+> - <b>Ctags</b>: <br> Ubuntu $ sudo apt-get install exuberant-ctags <br>Fedora $ sudo apt-get install ctags
+> - <b>PIPS</b>: <br>Available at http://pips4u.org/copy_of_getting-pips/building-and-installing-pips-from%20svn
 
 
 - <b>STEP 1:</b>
@@ -61,7 +61,16 @@ Testing tool. DepthK can be invoked through a standard command-line interface. M
 in the installation directory as follows:  
 </p>
 
-> $ ./depthk.py test_cases/conceptproof/invgen/confuse/confuse.c -g 
+> $ ./depthk.py test_cases/conceptproof/invgen/confuse/confuse.c -g <br> 
+> \>\> Running PIPS to generate the invariants <br>
+> \>\> Translating the PIPS annotation with the invariants <br>
+> \>\> Starting the verification of the P' program <br>
+> 	 \-\> Actual k = 1 <br>
+> 		 Status: checking base case <br>
+> 		 Status: checking forward condition <br>
+> 		 Status: checking inductive step <br>
+> TRUE <br>
+
 
 For help and others options: 
 
