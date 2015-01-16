@@ -52,6 +52,9 @@ class DepthK(object):
         self.onlygeninvs_p = False
         self.esbmcpath = ''
         self.esbmcsolver = ""
+        self.esbmc_memlimit = ""
+        self.esbmc_timeout = ""
+        self.esbmc_extraop = ""
         self.maxk = 10
         self.maxdepthcheck = 25
         self.pipsscriptpath = os.path.abspath(".") + \
@@ -268,6 +271,9 @@ class DepthK(object):
         runesbmc.maxk = self.maxk
         runesbmc.maxdepthverification = self.maxdepthcheck
         runesbmc.debug = self.debug_op
+        runesbmc.esbmc_memlimit_op = self.esbmc_memlimit
+        runesbmc.esbmc_timeout_op = self.esbmc_timeout
+        #runesbmc.esbmc_extra_op = self.esbmc_extraop
 
         if not self.esbmcsolver == "z3":
             runesbmc.esbmc_solver_op = "--" + self.esbmcsolver.strip()
@@ -360,7 +366,13 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--generate-program-inv', action="store_true", dest='setOnlyGenInv',
                         help='generates the program with the invariants', default=False)
     parser.add_argument('-s','--solver', metavar='name', type=str, dest='setESBMCSolver',
-                        help='set the solver to adopted by ESBMC', default="z3")
+                        help='set the solver to adopted by ESBMC (default is Z3)', default="z3")
+    parser.add_argument('-m','--memlimit', metavar='nr', type=str, dest='setMemESBMC',
+                        help='configure memory limit to ESBMC, of form \"100m\" or \"2g\"', default="")
+    parser.add_argument('-t','--timeout', metavar='nr', type=str, dest='setTOESBMC',
+                        help='configure time limit  to ESBMC (default is 15m), integer followed by {s,m,h}', default="15m")
+    # parser.add_argument('-e','--extra-option-esbmc', metavar='options', type=str, dest='setOpESBMC',
+    #                     help='set extra options to ESBMC (default --no-library)', default="--no-library")
     parser.add_argument('-g', '--debug', action="store_true", dest='setDebug',
                         help='generates debug information', default=False)
     # parser.add_argument('-s', '--statistics', action="store_true", dest='setInfo',
@@ -391,6 +403,12 @@ if __name__ == "__main__":
                 rundepthk.debug_op = args.setDebug
             if args.setOnlyGenInv:
                 rundepthk.onlygeninvs_p = args.setOnlyGenInv
+            if args.setMemESBMC:
+                rundepthk.esbmc_memlimit = args.setMemESBMC
+            if args.setTOESBMC:
+                rundepthk.esbmc_timeout = args.setTOESBMC
+            # if args.setOpESBMC:
+            #     rundepthk.esbmc_extraop = args.setOpESBMC
             if args.setESBMCSolver:
                 # Checking if this solver is supported by ESBMC
                 if rundepthk.checkesbmcsolversupport(args.setESBMCSolver):

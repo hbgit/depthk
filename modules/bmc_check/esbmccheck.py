@@ -31,7 +31,9 @@ class DepthEsbmcCheck(object):
         self.esbmc_arch = "--64"
         self.esbmc_bound = 1
         self.esbmc_unwind_op = "--unwind"
-        self.esbmc_extra_op = "--no-library --memlimit 4g --timeout 15m"
+        self.esbmc_memlimit_op = ""
+        self.esbmc_timeout_op = "15m"
+        self.esbmc_extra_op = "--no-library"
         self.esbmc_solver_op = "--z3"
         # k-induction options
         self.esbmc_basecase_op = "--base-case"
@@ -275,6 +277,21 @@ class DepthEsbmcCheck(object):
             filewrite.write(item)
 
 
+    def isdefiniedmemlimit(self):
+        if not self.esbmc_memlimit_op:
+            return " "
+        else:
+            return "--memlimit " + self.esbmc_memlimit_op + " "
+
+    @staticmethod
+    def hasincorrectopesbmc(_esbmcoutput):
+        statusc = int(commands.getoutput("cat " + _esbmcoutput + " | grep -c \"Unrecognized option\" "))
+        if statusc > 0:
+            return True
+        else:
+            return False
+
+
     def kinductioncheck(self, _cprogrampath):
 
         """
@@ -319,14 +336,23 @@ class DepthEsbmcCheck(object):
 
             if self.debug:
                 print("\t\t Status: checking base case")
+
             # >> (1) Checking base-case, i.e., there is a counterexample?
             # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
+            #  --memlimit 4g --timeout 15m "--memlimit " + self.esbmc_memlimit_op + " " +
             result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                                  self.esbmc_solver_op + " " +
                                                  self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                 self.isdefiniedmemlimit() +
+                                                 "--timeout " + self.esbmc_timeout_op + " " +
                                                  self.esbmc_extra_op + " " +
                                                  self.esbmc_basecase_op + " " +
                                                  _cprogrampath)
+
+            # We just check here cuz, the other esbmc call just change specific parameters controlled by us
+            # if self.hasincorrectopesbmc(actual_ce):
+            #     os.system("cat " + actual_ce)
+            #     return "\n ERROR. Unrecognized option to ESBMC"
 
             self.savelist2file(actual_ce, result_basecase)
 
@@ -356,6 +382,8 @@ class DepthEsbmcCheck(object):
                     result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                                             self.esbmc_solver_op + " " +
                                                             self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                            self.isdefiniedmemlimit() +
+                                                            "--timeout " + self.esbmc_timeout_op + " " +
                                                             self.esbmc_extra_op + " " +
                                                             self.esbmc_forwardcond_op + " " +
                                                             _cprogrampath)
@@ -383,6 +411,8 @@ class DepthEsbmcCheck(object):
                                                                   self.esbmc_solver_op + " " +
                                                                   self.esbmc_unwind_op + " " +
                                                                   str(self.esbmc_bound) + " " +
+                                                                  self.isdefiniedmemlimit() +
+                                                                  "--timeout " + self.esbmc_timeout_op + " " +
                                                                   self.esbmc_extra_op + " " +
                                                                   self.esbmc_inductivestep_op + " " +
                                                                   _cprogrampath)
