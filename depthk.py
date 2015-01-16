@@ -51,6 +51,7 @@ class DepthK(object):
         self.debug_op = False
         self.onlygeninvs_p = False
         self.esbmcpath = ''
+        self.esbmcsolver = ""
         self.maxk = 10
         self.maxdepthcheck = 25
         self.pipsscriptpath = os.path.abspath(".") + \
@@ -267,6 +268,10 @@ class DepthK(object):
         runesbmc.maxk = self.maxk
         runesbmc.maxdepthverification = self.maxdepthcheck
         runesbmc.debug = self.debug_op
+
+        if not self.esbmcsolver == "z3":
+            runesbmc.esbmc_solver_op = "--" + self.esbmcsolver.strip()
+
         print(runesbmc.kinductioncheck(_cfilepath))
 
 
@@ -327,6 +332,15 @@ class DepthK(object):
         if os.path.exists(_pathcodeinit):
             os.remove(_pathcodeinit)
 
+    @staticmethod
+    def checkesbmcsolversupport(_namesolver):
+        if _namesolver == "z3":
+            return True
+        if _namesolver == "boolector":
+            return True
+        else:
+            return False
+
 
 # -------------------------------------------------
 # Main python program
@@ -345,10 +359,14 @@ if __name__ == "__main__":
                         default=25, help='set the max number of P\' to be generated (default is 25)')
     parser.add_argument('-p', '--generate-program-inv', action="store_true", dest='setOnlyGenInv',
                         help='generates the program with the invariants', default=False)
+    parser.add_argument('-s','--solver', metavar='name', type=str, dest='setESBMCSolver',
+                        help='set the solver to adopted by ESBMC', default="z3")
     parser.add_argument('-g', '--debug', action="store_true", dest='setDebug',
                         help='generates debug information', default=False)
     # parser.add_argument('-s', '--statistics', action="store_true", dest='setInfo',
     #                     help='generate data about the DepthK execution', default=False)
+
+
 
     args = parser.parse_args()
 
@@ -373,11 +391,17 @@ if __name__ == "__main__":
                 rundepthk.debug_op = args.setDebug
             if args.setOnlyGenInv:
                 rundepthk.onlygeninvs_p = args.setOnlyGenInv
+            if args.setESBMCSolver:
+                # Checking if this solver is supported by ESBMC
+                if rundepthk.checkesbmcsolversupport(args.setESBMCSolver):
+                    rundepthk.esbmcsolver = args.setESBMCSolver
+                else:
+                    print("ERROR. This solver is not supported yet.")
+                    sys.exit()
 
             # Identify the extension of the C program .c or .i (some code is added in the new instance)
             if inputCFile.endswith(".i"):
                 rundepthk.inputisexti = True
-
 
             # Applying steps of DepthK
             # Generating pips script
@@ -396,7 +420,6 @@ if __name__ == "__main__":
                 rundepthk.cleantmpfiles(scriptpipspath, pathcodeinit )
                 os.system("cat " + pathcodepipstranslated)
                 sys.exit()
-
 
             # Execute the k-induction with ESBMC
             rundepthk.callesbmccheck(pathcodepipstranslated)
