@@ -152,7 +152,7 @@ void compute1(void)
     while_1_continue: /* CIL Label */ ;
     c1_st = 2;
     c1_pc = 1;
-
+    
     goto return_label;
     C1_WAIT_LOC: 
     if (! processed) {
@@ -162,14 +162,14 @@ void compute1(void)
         if ((int )e_g == 1) {
           wb_st = 0;
         } else {
-
+			
         }
       } else {
-
+			
       }
       e_g = 2;
     } else {
-
+			
     }
   }
   while_1_break: /* CIL Label */ ;

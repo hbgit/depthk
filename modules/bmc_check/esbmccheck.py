@@ -35,7 +35,7 @@ class DepthEsbmcCheck(object):
         # k-induction options
         self.esbmc_basecase_op = "--base-case"
         self.esbmc_forwardcond_op = "--forward-condition"
-        self.esbmc_inductivestep_op = "--inductive-step --show-counter-example"
+        self.esbmc_inductivestep_op = "--inductive-step --no-slice --show-counter-example"
 
 
     @staticmethod
