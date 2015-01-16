@@ -254,10 +254,10 @@ class DepthEsbmcCheck(object):
             # i += 1
             # matchassumeanot = re.search(r'__ESBMC_assume', listfilec[i])
             # else:
-            #             flagstop = True
+            # flagstop = True
             #
-            #     #print(self.assumeset+"\n")
-            #     newfile.write(self.assumeset + "\n \n \n")
+            # #print(self.assumeset+"\n")
+            # newfile.write(self.assumeset + "\n \n \n")
             # else:
             #     #print(listfilec[i],end="")
             #     newfile.write(listfilec[i])
@@ -266,6 +266,13 @@ class DepthEsbmcCheck(object):
         newfile.close()
 
         return "/tmp/new_instance.c"
+
+
+    @staticmethod
+    def savelist2file(_pathfile, _list2file):
+        filewrite = open(_pathfile, "w")
+        for item in _list2file:
+            filewrite.write(item)
 
 
     def kinductioncheck(self, _cprogrampath):
@@ -314,16 +321,17 @@ class DepthEsbmcCheck(object):
                 print("\t\t Status: checking base case")
             # >> (1) Checking base-case, i.e., there is a counterexample?
             # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
-            commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                               self.esbmc_solver_op + " " +
-                               self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                               self.esbmc_extra_op + " " +
-                               self.esbmc_basecase_op + " " +
-                               _cprogrampath + " &> " + actual_ce)
+            result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                 self.esbmc_solver_op + " " +
+                                                 self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                 self.esbmc_extra_op + " " +
+                                                 self.esbmc_basecase_op + " " +
+                                                 _cprogrampath)
+
+            self.savelist2file(actual_ce, result_basecase)
 
             # TODO: handling with error solvers
             # sys.exit()
-
 
             # >> (1) Identifying if it was generated a counterexample
             statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
@@ -345,12 +353,14 @@ class DepthEsbmcCheck(object):
                         print("\t\t Status: checking forward condition")
                     # Checking the forward condition
                     # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
-                    commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                       self.esbmc_solver_op + " " +
-                                       self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                                       self.esbmc_extra_op + " " +
-                                       self.esbmc_forwardcond_op + " " +
-                                       _cprogrampath + " &> " + actual_ce)
+                    result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                            self.esbmc_solver_op + " " +
+                                                            self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                            self.esbmc_extra_op + " " +
+                                                            self.esbmc_forwardcond_op + " " +
+                                                            _cprogrampath)
+
+                    self.savelist2file(actual_ce, result_forwardcond)
 
                     # Checking if it was possible to prove the property
                     #
@@ -369,12 +379,15 @@ class DepthEsbmcCheck(object):
                         # >> (3) Only if in the (2) the result is: "The forward condition is unable to prove the property"
                         # Checking the inductive step
                         # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
-                        commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                           self.esbmc_solver_op + " " +
-                                           self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                                           self.esbmc_extra_op + " " +
-                                           self.esbmc_inductivestep_op + " " +
-                                           _cprogrampath + " &> " + actual_ce)
+                        result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                                  self.esbmc_solver_op + " " +
+                                                                  self.esbmc_unwind_op + " " +
+                                                                  str(self.esbmc_bound) + " " +
+                                                                  self.esbmc_extra_op + " " +
+                                                                  self.esbmc_inductivestep_op + " " +
+                                                                  _cprogrampath)
+
+                        self.savelist2file(actual_ce, result_inductivestep)
 
                         # checking CE
                         statusce_inductivestep = int(commands.getoutput("cat " + actual_ce +
@@ -387,7 +400,7 @@ class DepthEsbmcCheck(object):
 
                         else:
                             if not self.esbmc_bound <= self.maxk and \
-                               actual_detphver <= self.maxdepthverification:
+                                            actual_detphver <= self.maxdepthverification:
 
                                 # reset k, i.e., the bound go back to 1
                                 self.esbmc_bound = 1

@@ -4,7 +4,6 @@
     <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" afterPath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/logs.txt" afterPath="$PROJECT_DIR$/modules/logs.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="depthk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,21 +27,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="depthk.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="depthk.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/depthk.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5032" max-vertical-offset="6465">
-              <caret line="362" column="64" selection-start-line="362" selection-start-column="30" selection-end-line="362" selection-end-column="64" />
+            <state vertical-scroll-proportion="-0.006756757" vertical-offset="5073" max-vertical-offset="6465">
+              <caret line="346" column="18" selection-start-line="346" selection-start-column="18" selection-end-line="346" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logs.txt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="logs.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/logs.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7944915" vertical-offset="240" max-vertical-offset="1095">
-              <caret line="41" column="103" selection-start-line="41" selection-start-column="103" selection-end-line="41" selection-end-column="103" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="1110">
+              <caret line="12" column="26" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -64,8 +63,8 @@
       <file leaf-file-name="esbmccheck.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4632" max-vertical-offset="6690">
-              <caret line="324" column="24" selection-start-line="324" selection-start-column="24" selection-end-line="324" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2871" max-vertical-offset="6885">
+              <caret line="204" column="23" selection-start-line="204" selection-start-column="22" selection-end-line="204" selection-end-column="23" />
               <folding>
                 <element signature="e#274#311#0" expanded="true" />
               </folding>
@@ -91,8 +90,8 @@
         <option value="$PROJECT_DIR$/modules/invariant_tools/pips/script_template/script_generate_precod.pips" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/depthk.py" />
-        <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
         <option value="$PROJECT_DIR$/modules/logs.txt" />
+        <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
       </list>
     </option>
   </component>
@@ -189,7 +188,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="bmc_check" />
+              <option name="myItemId" value="invariant_tools" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -359,10 +358,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1366" height="636" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20674486" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20674486" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32818532" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -754,35 +753,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/run_ast/ast.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="733" max-vertical-offset="1440">
-          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/run_ast/create_map.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="25531" max-vertical-offset="30060">
-          <caret line="1714" column="44" selection-start-line="1714" selection-start-column="16" selection-end-line="1714" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2935" max-vertical-offset="3570">
-          <caret line="210" column="47" selection-start-line="210" selection-start-column="47" selection-end-line="210" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/script_template/script_generate_precod.pips">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="990">
-          <caret line="9" column="2" selection-start-line="9" selection-start-column="2" selection-end-line="9" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="437" max-vertical-offset="1410">
@@ -794,28 +764,60 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/depthk.py">
+    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5032" max-vertical-offset="6465">
-          <caret line="362" column="64" selection-start-line="362" selection-start-column="30" selection-end-line="362" selection-end-column="64" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="1110">
+          <caret line="12" column="26" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4632" max-vertical-offset="6690">
-          <caret line="324" column="24" selection-start-line="324" selection-start-column="24" selection-end-line="324" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2871" max-vertical-offset="6885">
+          <caret line="204" column="23" selection-start-line="204" selection-start-column="22" selection-end-line="204" selection-end-column="23" />
           <folding>
             <element signature="e#274#311#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
+    <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7944915" vertical-offset="240" max-vertical-offset="1095">
-          <caret line="41" column="103" selection-start-line="41" selection-start-column="103" selection-end-line="41" selection-end-column="103" />
+        <state vertical-scroll-proportion="0.7297297" vertical-offset="3126" max-vertical-offset="3570">
+          <caret line="232" column="40" selection-start-line="232" selection-start-column="39" selection-end-line="232" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/script_template/script_generate_precod.pips">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.030927835" vertical-offset="120" max-vertical-offset="990">
+          <caret line="9" column="2" selection-start-line="9" selection-start-column="2" selection-end-line="9" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/run_ast/ast.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31756756" vertical-offset="774" max-vertical-offset="1440">
+          <caret line="61" column="25" selection-start-line="61" selection-start-column="25" selection-end-line="61" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/run_ast/create_map.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33178654" vertical-offset="10357" max-vertical-offset="30060">
+          <caret line="700" column="25" selection-start-line="700" selection-start-column="24" selection-end-line="700" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/depthk.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.006756757" vertical-offset="5073" max-vertical-offset="6465">
+          <caret line="346" column="18" selection-start-line="346" selection-start-column="18" selection-end-line="346" selection-end-column="18" />
           <folding />
         </state>
       </provider>

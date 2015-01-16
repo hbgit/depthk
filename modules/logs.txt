@@ -1,5 +1,6 @@
 TODO:
     - In the counter example take into account other values that is not in CS << states
+    - Quando a geração de invariantes falhar tentar utilizar somente os dados do contraexemplo para gerar os ASSUMES
 -------------------------------------------------------------------------
 
 
