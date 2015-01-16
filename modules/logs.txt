@@ -38,8 +38,8 @@ OKAY:
   Running invgen/seq-len >> [TESTED] - OKAY
 
 FAILED:
-  Running matrix_bug  [FAILED] (0.19 seconds) >> [TESTED] - FAILED ???
-  Running verisec_NetBSD-libc__loop_bad  [OK] (0.16 seconds) >> [TESTED] - FAILED
+  Running matrix_bug  [FAILED] (0.19 seconds) >> [TESTED] - FAILED (z3 error) ??? -- VERIFICATION FAILED INDUCTIVE STEP PROCESS CRASHED parallel
+  Running verisec_NetBSD-libc__loop_bad  [OK] (0.16 seconds) >> [TESTED] - FAILED -- Transformation ???
 
 ERROR/UNKNOWN:
   Running nec24  [FAILED] (900.00 seconds) >> [TESTED] - k = 500 - NO CE - ERROR

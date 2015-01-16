@@ -13,6 +13,7 @@ from __future__ import print_function
 import commands
 import re
 import os
+import sys
 import shutil
 
 
@@ -297,6 +298,7 @@ class DepthEsbmcCheck(object):
         # TODO: Create an approach to check only if the k-induction,
         # and if we not find the solution to certain K then try to use the counterexample
 
+
         if self.debug:
             print(">> Starting the verification of the P\' program")
         # Checking if we reached the MAX k defined
@@ -318,6 +320,10 @@ class DepthEsbmcCheck(object):
                                self.esbmc_extra_op + " " +
                                self.esbmc_basecase_op + " " +
                                _cprogrampath + " &> " + actual_ce)
+
+            # TODO: handling with error solvers
+            # sys.exit()
+
 
             # >> (1) Identifying if it was generated a counterexample
             statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
