@@ -298,6 +298,14 @@ class DepthEsbmcCheck(object):
             print("VERIFICATION UNKNOWN - Time Out")
             return "UNKNOWN"
 
+    @staticmethod
+    def hassuccessfulfromesbmc(_esbmcoutput):
+        statusc = int(commands.getoutput("cat " + _esbmcoutput + " | grep -c \"VERIFICATION SUCCESSFUL\" "))
+        if statusc > 0:
+            return True
+        else:
+            return False
+
 
 
     def kinductioncheck(self, _cprogrampath):
@@ -367,8 +375,6 @@ class DepthEsbmcCheck(object):
             # Identify a possible timeout
             self.hastimeoutfromesbmc(actual_ce)
 
-            # TODO: handling with error solvers
-            # sys.exit()
 
             # >> (1) Identifying if it was generated a counterexample
             statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
@@ -409,9 +415,13 @@ class DepthEsbmcCheck(object):
                                                                   " | grep -c " +
                                                                   "\"The forward condition is unable to prove the property\" "))
                     if statusce_forwardcond == 0:
-                        # The property was proved
-                        # print("True")
-                        return "TRUE"
+                        if self.hassuccessfulfromesbmc(actual_ce):
+                            # The property was proved
+                            # print("True")
+                            return "TRUE"
+                        else:
+                            # Some ERROR was identified in the verification of forward-condition
+                            return "ERROR. It was identified an error in the verification of forward condition"
 
                     else:
                         # The property was NOT proved
@@ -441,8 +451,12 @@ class DepthEsbmcCheck(object):
                                                                         "\"VERIFICATION FAILED\" "))
                         # >> If the result was SUCCESUFUL then STOP verification
                         if statusce_inductivestep == 0:
-                            # print("True")
-                            return "TRUE"
+                            if self.hassuccessfulfromesbmc(actual_ce):
+                                # print("True")
+                                return "TRUE"
+                            else:
+                                # Some ERROR was identified in the verification of inductive-step
+                                return "ERROR. It was identified an error in the verification of inductive step"
 
                         else:
                             if not self.esbmc_bound <= self.maxk and \
@@ -461,8 +475,8 @@ class DepthEsbmcCheck(object):
                                 # Possible BUG cuz the PLACE where the assume is added
                                 if not self.getlastdatafromce(actual_ce):
                                     # >> UNKNOWN
-                                    print("ERROR. NO DATA from counterexample! Sorry about that.")
-                                    return "UNKNOWN"
+                                    return "ERROR. NO DATA from counterexample! Sorry about that."
+
 
                                 # print("\t - New assume generated: \n" + self.assumeset)
                                 # print("\t - Instrument program with assume ...")
@@ -471,6 +485,10 @@ class DepthEsbmcCheck(object):
                                 # Adding in the new instance of the analyzed program (P') the new assume
                                 # generated from the counterexample
                                 _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+
+                else:
+                    # Some ERROR was identified in the verification of base-case
+                    return "ERROR. It was identified an error in the verification of base-case"
 
         # >> END-WHILE
         # >> UNKNOWN
