@@ -291,6 +291,14 @@ class DepthEsbmcCheck(object):
         else:
             return False
 
+    @staticmethod
+    def hastimeoutfromesbmc(_esbmcoutput):
+        statusc = int(commands.getoutput("cat " + _esbmcoutput + " | grep -c \"Timed out\" "))
+        if statusc > 0:
+            print("VERIFICATION UNKNOWN - Time Out")
+            return "UNKNOWN"
+
+
 
     def kinductioncheck(self, _cprogrampath):
 
@@ -356,6 +364,9 @@ class DepthEsbmcCheck(object):
 
             self.savelist2file(actual_ce, result_basecase)
 
+            # Identify a possible timeout
+            self.hastimeoutfromesbmc(actual_ce)
+
             # TODO: handling with error solvers
             # sys.exit()
 
@@ -389,6 +400,8 @@ class DepthEsbmcCheck(object):
                                                             _cprogrampath)
 
                     self.savelist2file(actual_ce, result_forwardcond)
+                    # Identify a possible timeout
+                    self.hastimeoutfromesbmc(actual_ce)
 
                     # Checking if it was possible to prove the property
                     #
@@ -404,7 +417,8 @@ class DepthEsbmcCheck(object):
                         # The property was NOT proved
                         if self.debug:
                             print("\t\t Status: checking inductive step")
-                        # >> (3) Only if in the (2) the result is: "The forward condition is unable to prove the property"
+                        # >> (3) Only if in the (2) the result is:
+                        # "The forward condition is unable to prove the property"
                         # Checking the inductive step
                         # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
                         result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
@@ -418,6 +432,8 @@ class DepthEsbmcCheck(object):
                                                                   _cprogrampath)
 
                         self.savelist2file(actual_ce, result_inductivestep)
+                        # Identify a possible timeout
+                        self.hastimeoutfromesbmc(actual_ce)
 
                         # checking CE
                         statusce_inductivestep = int(commands.getoutput("cat " + actual_ce +
