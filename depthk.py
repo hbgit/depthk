@@ -19,6 +19,7 @@ import os
 import commands
 import re
 from pipes import quote
+import platform
 
 
 
@@ -57,6 +58,7 @@ class DepthK(object):
         self.esbmc_memlimit = ""
         self.esbmc_timeout = ""
         self.esbmc_extraop = ""
+        self.esbmc_arch = ""
         self.maxk = 10
         self.maxdepthcheck = 25
         self.pipsscriptpath = os.path.abspath(".") + \
@@ -275,6 +277,7 @@ class DepthK(object):
         runesbmc.debug = self.debug_op
         runesbmc.esbmc_memlimit_op = self.esbmc_memlimit
         runesbmc.esbmc_timeout_op = self.esbmc_timeout
+        runesbmc.esbmc_arch = self.esbmc_arch
         #runesbmc.esbmc_extra_op = self.esbmc_extraop
 
         if not self.esbmcsolver == "z3":
@@ -389,6 +392,7 @@ class DepthK(object):
 if __name__ == "__main__":
 
     ############# Parse args options
+
     parser = argparse.ArgumentParser(description='Run DepthK v1.0')
     parser.add_argument('-v', '--version', action='version', version="version 1.0")
     parser.add_argument(dest='inputCProgram', metavar='file.c or file.i (experimental)', type=str,
@@ -399,6 +403,9 @@ if __name__ == "__main__":
                         default=25, help='set the max number of P\' to be generated (default is 25)')
     parser.add_argument('-p', '--generate-program-inv', action="store_true", dest='setOnlyGenInv',
                         help='generates the program with the invariants', default=False)
+    #--16, --32, --64             set width of machine word
+    parser.add_argument('-a', '--arch', metavar='nr', type=int, dest='setArchCheck',
+                        default="64", help='set width of machine word (16, 32 or 64) to ESBMC (default is 64)')
     parser.add_argument('-s','--solver', metavar='name', type=str, dest='setESBMCSolver',
                         help='set the solver to adopted by ESBMC (default is Z3)', default="z3")
     parser.add_argument('-m','--memlimit', metavar='nr', type=str, dest='setMemESBMC',
@@ -454,6 +461,25 @@ if __name__ == "__main__":
                 else:
                     print("ERROR. This solver is not supported yet.")
                     sys.exit()
+            # setArchCheck
+            if not args.setArchCheck == 64:
+                if args.setArchCheck == 16 or args.setArchCheck == 32:
+                    rundepthk.esbmc_arch = "--" + str(args.setArchCheck)
+                else:
+                    print("")
+                    print("ERROR. The width of machine word is not valid")
+                    print("")
+                    parser.parse_args(['-h'])
+                    sys.exit()
+            else:
+                #64bits
+                rundepthk.esbmc_arch = "--" + str(args.setArchCheck)
+
+
+
+
+
+
 
             # Identify the extension of the C program .c or .i
             if inputCFile.endswith(".i"):
