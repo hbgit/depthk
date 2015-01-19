@@ -25,6 +25,7 @@ from pipes import quote
 from modules.run_ast import ast
 from modules.invariant_tools.pips.translate_pips import translate_pips
 from modules.bmc_check import esbmccheck
+from modules.gnu_extension import hack_extensions
 
 
 
@@ -295,7 +296,7 @@ class DepthK(object):
 
         return destscript
 
-    def runpips(self, _scriptpips, _cfilepath):
+    def runpips(self, _scriptpips, _cfilepath, _listfiles2delete):
 
         # getting only the name of the file
         namecfile = os.path.basename(_cfilepath)
@@ -310,9 +311,11 @@ class DepthK(object):
         # Aborted                 (core dumped)
         matcherrorpips2 = re.search(r'(core dumped)', resultpips)
         if matcherrorpips1 or matcherrorpips2:
-            print("ERROR. Generating invariants with PIPS. ")
             if self.debug_op:
                 print(resultpips)
+            print("ERROR. Generating invariants with PIPS. ")
+
+            self.cleantmpfiles(_listfiles2delete)
             sys.exit()
 
         # print(resultpips)
@@ -325,18 +328,23 @@ class DepthK(object):
 
         return codegeneratedbypips
 
-    def cleantmpfiles(self, _scriptpips, _pathcodeinit):
+    def cleantmpfiles(self, _listfiles2delete):
+
         # delete the PIPS database
         if os.path.exists(self.pipsdatabaseresult):
             shutil.rmtree(self.pipsdatabaseresult)
 
-        # delete script to generate the invariants
-        if os.path.exists(_scriptpips):
-            os.remove(_scriptpips)
+        for filepath in _listfiles2delete:
+            if os.path.exists(filepath):
+                os.remove(filepath)
 
-        # delete code with auxiliary code to #init
-        if os.path.exists(_pathcodeinit):
-            os.remove(_pathcodeinit)
+        # delete script to generate the invariants
+        # if os.path.exists(_scriptpips):
+        #     os.remove(_scriptpips)
+        #
+        # # delete code with auxiliary code to #init
+        # if os.path.exists(_pathcodeinit):
+        #     os.remove(_pathcodeinit)
 
     @staticmethod
     def checkesbmcsolversupport(_namesolver):
@@ -348,6 +356,23 @@ class DepthK(object):
             return False
 
 
+    @staticmethod
+    def applygnuhack(_inputcfile):
+        # Mini hack to allow PIPS handle with .i files
+        new_namefile = os.path.basename(_inputcfile).replace(".i", "_depthk_t.c")
+        pathnewfile = os.path.dirname(_inputcfile) + "/" + new_namefile
+        filec = open(inputCFile, 'r')
+        str_filelines = hack_extensions.make_pycparser_compatible(filec.read())
+        filec.close()
+
+        # writing new c file after GNU hacking
+        newfile = open(pathnewfile, "w")
+        newfile.write(str_filelines)
+        newfile.close()
+
+        return pathnewfile
+
+
 # -------------------------------------------------
 # Main python program
 # -------------------------------------------------
@@ -357,7 +382,7 @@ if __name__ == "__main__":
     ############# Parse args options
     parser = argparse.ArgumentParser(description='Run DepthK v1.0')
     parser.add_argument('-v', '--version', action='version', version="version 1.0")
-    parser.add_argument(dest='inputCProgram', metavar='file.c or file.i', type=str,
+    parser.add_argument(dest='inputCProgram', metavar='file.c or file.i (experimental)', type=str,
                         help='the C program file to be analyzed')
     parser.add_argument('-k', '--max-k-step', metavar='nr', type=int, dest='setMaxK',
                         default=15, help='set the max k time step (default is 15)')
@@ -389,9 +414,13 @@ if __name__ == "__main__":
             parser.parse_args(['-h'])
             sys.exit()
         else:
+            list_paths_to_delete =[]
+
             inputCFile = os.path.abspath(quote(args.inputCProgram))
 
             rundepthk = DepthK(inputCFile)
+
+
             # Define ESBMC path
             rundepthk.esbmcpath = "esbmc"
             #rundepthk.esbmcpath = "~/Downloads/ESBMC/bin/esbmc_v24"
@@ -417,25 +446,41 @@ if __name__ == "__main__":
                     print("ERROR. This solver is not supported yet.")
                     sys.exit()
 
-            # Identify the extension of the C program .c or .i (some code is added in the new instance)
+            # Identify the extension of the C program .c or .i
             if inputCFile.endswith(".i"):
+                # Warnning: This is experimental cuz PIPS actually
+                # have some problem with CIL format
+
+                # Apply hacking to handle with GNU extensions
+                # HackGNUext: Generate a copy the analyzed program to a tmp file
+                # now with the extension replaced from .i to .c
+                inputCFile = rundepthk.applygnuhack(inputCFile)
+                list_paths_to_delete.append(inputCFile)
                 rundepthk.inputisexti = True
+                #sys.exit()
+
 
             # Applying steps of DepthK
             # Generating pips script
             scriptpipspath = rundepthk.generatepipsscript(inputCFile)
+            list_paths_to_delete.append(scriptpipspath)
+
             # Generating invariants with PIPS
-            codewithinv = rundepthk.runpips(scriptpipspath, inputCFile)
+            codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
+
             # Identify #init from PIPS in the code with invariants
             dict_init = rundepthk.identify_initpips(codewithinv)
+
             # Generate auxiliary code to support the translation of #init from PIPS
             pathcodeinit = rundepthk.generatecodewithinit(codewithinv, dict_init)
+            list_paths_to_delete.append(pathcodeinit)
+
             # Translate the invariants generated by PIPS
             pathcodepipstranslated = rundepthk.translatepipsannot(pathcodeinit)
 
             if rundepthk.onlygeninvs_p:
                 # Removing tmp files
-                rundepthk.cleantmpfiles(scriptpipspath, pathcodeinit )
+                rundepthk.cleantmpfiles(list_paths_to_delete)
                 os.system("cat " + pathcodepipstranslated)
                 sys.exit()
 
@@ -443,7 +488,7 @@ if __name__ == "__main__":
             rundepthk.callesbmccheck(pathcodepipstranslated)
 
             # Removing tmp files
-            rundepthk.cleantmpfiles(scriptpipspath, pathcodeinit )
+            rundepthk.cleantmpfiles(list_paths_to_delete)
 
 
 

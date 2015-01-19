@@ -381,6 +381,7 @@ class DepthEsbmcCheck(object):
             if statusce_basecase > 0:
                 # show counterexample
                 os.system("cat " + actual_ce)
+                print(" ")
                 return "FALSE"
 
             else:

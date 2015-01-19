@@ -1,7 +1,8 @@
 //#define SIZE 3
 unsigned int nondet_uint();
-unsigned int SIZE=nondet_uint();
+//unsigned int SIZE=nondet_uint();
 int main() {
+   unsigned int SIZE=nondet_uint();
    int i, j, k, key;
    int v[SIZE];   
    for (j=1;j<SIZE;j++) {	  
