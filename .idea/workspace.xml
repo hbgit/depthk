@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/depthk.py" afterPath="$PROJECT_DIR$/depthk.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" afterPath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/logs.txt" afterPath="$PROJECT_DIR$/modules/logs.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_cases/k-induction/insertion_sort_bug/main.c" afterPath="$PROJECT_DIR$/test_cases/k-induction/insertion_sort_bug/main.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="depthk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,8 +31,8 @@
       <file leaf-file-name="depthk.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/depthk.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.25432527" vertical-offset="6588" max-vertical-offset="7410">
-              <caret line="457" column="16" selection-start-line="457" selection-start-column="16" selection-end-line="457" selection-end-column="16" />
+            <state vertical-scroll-proportion="-1.4394463" vertical-offset="5542" max-vertical-offset="7530">
+              <caret line="322" column="26" selection-start-line="322" selection-start-column="26" selection-end-line="322" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -53,8 +53,8 @@
       <file leaf-file-name="logs.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/logs.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1155">
-              <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1170">
+              <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -85,8 +85,8 @@
       <list>
         <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
         <option value="$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py" />
-        <option value="$PROJECT_DIR$/depthk.py" />
         <option value="$PROJECT_DIR$/modules/logs.txt" />
+        <option value="$PROJECT_DIR$/depthk.py" />
       </list>
     </option>
   </component>
@@ -800,16 +800,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/logs.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1155">
-          <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1170">
+          <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/depthk.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.25432527" vertical-offset="6588" max-vertical-offset="7410">
-          <caret line="457" column="16" selection-start-line="457" selection-start-column="16" selection-end-line="457" selection-end-column="16" />
+        <state vertical-scroll-proportion="-1.4394463" vertical-offset="5542" max-vertical-offset="7530">
+          <caret line="322" column="26" selection-start-line="322" selection-start-column="26" selection-end-line="322" selection-end-column="26" />
           <folding />
         </state>
       </provider>

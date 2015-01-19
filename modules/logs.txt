@@ -4,6 +4,7 @@ TODO:
       contraexemplo para gerar os ASSUMES
     - [DONE] Para cada verificação efetuado criar um método para identificar possiveis erros no ESBMC
     - CHECK_C_SYNTAX_BEFORE_RUNNING_PIPS
+    - C syntax errors in file
 -------------------------------------------------------------------------
 
 

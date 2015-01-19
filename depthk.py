@@ -313,7 +313,15 @@ class DepthK(object):
         if matcherrorpips1 or matcherrorpips2:
             if self.debug_op:
                 print(resultpips)
-            print("ERROR. Generating invariants with PIPS. ")
+            # Identify parser errors
+            # C syntax errors in file
+            matcherrorparser = re.search(r"C syntax errors in file", resultpips)
+            if matcherrorparser:
+                print(" ")
+                print("ERROR. C syntax errors in C file. ")
+            else:
+                print(" ")
+                print("ERROR. Generating invariants with PIPS. ")
 
             self.cleantmpfiles(_listfiles2delete)
             sys.exit()
