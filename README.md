@@ -83,6 +83,9 @@ in the installation directory as follows:
 > TRUE <br>
 
 
+By default ESBMC is called, as follows: 
+> $ esbmc --64 --no-library --z3 --unwind \<nr\> --timeout 15m [--base-case|--forward-condition|--inductive-step] <file.c>
+
 For help and others options: 
 
 > $ ./depthk.py --help

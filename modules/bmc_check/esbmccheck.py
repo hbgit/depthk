@@ -422,6 +422,8 @@ class DepthEsbmcCheck(object):
                             return "TRUE"
                         else:
                             # Some ERROR was identified in the verification of forward-condition
+                            os.system("cat " + actual_ce)
+                            print(" ")
                             return "ERROR. It was identified an error in the verification of forward condition"
 
                     else:
@@ -457,6 +459,8 @@ class DepthEsbmcCheck(object):
                                 return "TRUE"
                             else:
                                 # Some ERROR was identified in the verification of inductive-step
+                                os.system("cat " + actual_ce)
+                                print(" ")
                                 return "ERROR. It was identified an error in the verification of inductive step"
 
                         else:
@@ -489,6 +493,8 @@ class DepthEsbmcCheck(object):
 
                 else:
                     # Some ERROR was identified in the verification of base-case
+                    os.system("cat " + actual_ce)
+                    print(" ")
                     return "ERROR. It was identified an error in the verification of base-case"
 
         # >> END-WHILE
