@@ -52,6 +52,8 @@ class DepthK(object):
         self.listnumbeginfunc = []
         self.nameoforicprogram = os.path.basename(_cfilepath)
         self.debug_op = False
+        self.uncrustify_cfg = os.path.dirname(os.path.abspath(__file__)) + \
+                              "/modules/preprocessing/uncrustify_files/ben.cfg"
         self.onlygeninvs_p = False
         self.esbmcpath = ''
         self.esbmcsolver = ""
@@ -114,8 +116,8 @@ class DepthK(object):
 
                 # if flaginit:
                 # flaginit = False
-                #     listsavevar_tmp = list(set(listsavevar_tmp))
-                #     print(lastnumfunct, listsavevar_tmp)
+                # listsavevar_tmp = list(set(listsavevar_tmp))
+                # print(lastnumfunct, listsavevar_tmp)
                 #     listsavevar_tmp = []
                 #     #dict_varinitandloc[lastnumfunct] = listsavevar_tmp
                 # else:
@@ -138,7 +140,7 @@ class DepthK(object):
                     # remove variables duplicated
                     listcleanvar = list(set(matchpipsinit))
                     for var in listcleanvar:
-                        #listsavevar_tmp.append(var)
+                        # listsavevar_tmp.append(var)
                         # Checkig if we have math operation with the variable, e.g., 8num#init
                         matchmathmult = re.search(r'^[0-9]+(.*)', var)
                         if matchmathmult:
@@ -156,10 +158,10 @@ class DepthK(object):
         # removing key without values
         # for key, value in dict_varinitandloc.items():
         # if not value:
-        #         del dict_varinitandloc[key]
+        # del dict_varinitandloc[key]
         #
         # for key, value in dict_varinitandloc.items():
-        #     print(key, value)
+        # print(key, value)
         #     print("")
         #
         # sys.exit()
@@ -204,13 +206,13 @@ class DepthK(object):
             nextline = count + 1
             if nextline in self.listnumbeginfunc:
                 # print delimiter
-                #print(linescfile[nextline],end="")
+                # print(linescfile[nextline],end="")
                 filewithinit.write(linescfile[nextline])
                 count = nextline
 
                 if _dicvarinitandloc.has_key(nextline):
                     for var in _dicvarinitandloc[nextline]:
-                        #print("INIT: ", var)
+                        # print("INIT: ", var)
                         # Creating INIT vars
                         #print(">>>>>> ", dict_varsdata[var][0])
                         #print(var)
@@ -269,7 +271,7 @@ class DepthK(object):
         return listbeginnumfuct
 
 
-    def callesbmccheck(self, _cfilepath):
+    def callesbmccheck(self, _cfilepath, _enableforceassume):
         runesbmc = esbmccheck.DepthEsbmcCheck()
         runesbmc.esbmcpath = self.esbmcpath
         runesbmc.maxk = self.maxk
@@ -279,6 +281,10 @@ class DepthK(object):
         runesbmc.esbmc_timeout_op = self.esbmc_timeout
         runesbmc.esbmc_arch = self.esbmc_arch
         runesbmc.esbmc_extra_op = self.esbmc_extraop
+        if _enableforceassume:
+            runesbmc.forceassume = True
+        else:
+            runesbmc.forceassume = False
         # runesbmc.esbmc_extra_op = self.esbmc_extraop
 
         if not self.esbmcsolver == "z3":
@@ -317,22 +323,29 @@ class DepthK(object):
         matcherrorpips2 = re.search(r'(core dumped)', resultpips)
         if matcherrorpips1 or matcherrorpips2:
             if self.debug_op:
-                print(resultpips)
-            # Identify parser errors
-            # C syntax errors in file
-            matcherrorparser = re.search(r"C syntax errors in file", resultpips)
-            if matcherrorparser:
-                print(" ")
-                print("ERROR. C syntax errors in C file. ")
-            else:
-                print(" ")
-                print("ERROR. Generating invariants with PIPS. ")
+                print("\t - A problem was identified in PIPS.\n\t - Trying check by counterexample")
+            # print(resultpips)
+            # # Identify parser errors
+            # # C syntax errors in file
+            # matcherrorparser = re.search(r"C syntax errors in file", resultpips)
+            # if matcherrorparser:
+            # print(" ")
+            #     print("ERROR. C syntax errors in C file. ")
+            # else:
+            #     print(" ")
+            #     print("ERROR. Generating invariants with PIPS. ")
+            #
+            # self.cleantmpfiles(_listfiles2delete)
+            # sys.exit()
 
-            self.cleantmpfiles(_listfiles2delete)
-            sys.exit()
+            # >> In this, some problem was identified in PIPS.
+            #    This way, we try to check the program adopting only
+            #    the counterexample of ESBMC
+            # The syntax erros and others should be identified by ESBMC
+            return ""
 
-        # print(resultpips)
-        # sys.exit()
+
+
 
         # get the path of the file generated by PIPS
         codegeneratedbypips = self.pipsdatabaseresult + "/Src/" + namecfile
@@ -357,7 +370,7 @@ class DepthK(object):
                 #
                 # # delete code with auxiliary code to #init
                 # if os.path.exists(_pathcodeinit):
-                #     os.remove(_pathcodeinit)
+                # os.remove(_pathcodeinit)
 
     @staticmethod
     def checkesbmcsolversupport(_namesolver):
@@ -386,6 +399,21 @@ class DepthK(object):
         return pathnewfile
 
 
+    def rununcrustify(self, _cfilepath):
+        if self.inputisexti:
+            new_namefile = os.path.basename(_cfilepath).replace("_depthk_t.c", "_depthk_u.c")
+        else:
+            new_namefile = os.path.basename(_cfilepath).replace(".c", "_depthk_u.c")
+
+        pathnewfile = os.path.dirname(_cfilepath) + "/" + new_namefile
+
+        os.system('uncrustify -q -l C -c ' + quote(self.uncrustify_cfg) +
+                  ' -f ' + quote(_cfilepath) + ' > ' + quote(pathnewfile))
+
+        return pathnewfile
+
+
+
 # -------------------------------------------------
 # Main python program
 # -------------------------------------------------
@@ -404,7 +432,7 @@ if __name__ == "__main__":
                         default=25, help='set the max number of P\' to be generated (default is 25)')
     parser.add_argument('-p', '--generate-program-inv', action="store_true", dest='setOnlyGenInv',
                         help='generates the program with the invariants', default=False)
-    #--16, --32, --64             set width of machine word
+    # --16, --32, --64             set width of machine word
     parser.add_argument('-a', '--arch', metavar='nr', type=int, dest='setArchCheck',
                         default="64", help='set width of machine word (16, 32 or 64) to ESBMC (default is 64)')
     parser.add_argument('-s', '--solver', metavar='name', type=str, dest='setESBMCSolver',
@@ -420,7 +448,7 @@ if __name__ == "__main__":
     parser.add_argument('-g', '--debug', action="store_true", dest='setDebug',
                         help='generates debug information', default=False)
     # parser.add_argument('-s', '--statistics', action="store_true", dest='setInfo',
-    #                     help='generate data about the DepthK execution', default=False)
+    # help='generate data about the DepthK execution', default=False)
 
 
 
@@ -479,11 +507,6 @@ if __name__ == "__main__":
                 rundepthk.esbmc_arch = "--" + str(args.setArchCheck)
 
 
-
-
-
-
-
             # Identify the extension of the C program .c or .i
             if inputCFile.endswith(".i"):
                 # Warnning: This is experimental cuz PIPS actually
@@ -506,24 +529,31 @@ if __name__ == "__main__":
             # Generating invariants with PIPS
             codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
 
-            # Identify #init from PIPS in the code with invariants
-            dict_init = rundepthk.identify_initpips(codewithinv)
+            if codewithinv:
+                # Identify #init from PIPS in the code with invariants
+                dict_init = rundepthk.identify_initpips(codewithinv)
 
-            # Generate auxiliary code to support the translation of #init from PIPS
-            pathcodeinit = rundepthk.generatecodewithinit(codewithinv, dict_init)
-            list_paths_to_delete.append(pathcodeinit)
+                # Generate auxiliary code to support the translation of #init from PIPS
+                pathcodeinit = rundepthk.generatecodewithinit(codewithinv, dict_init)
+                list_paths_to_delete.append(pathcodeinit)
 
-            # Translate the invariants generated by PIPS
-            pathcodepipstranslated = rundepthk.translatepipsannot(pathcodeinit)
+                # Translate the invariants generated by PIPS
+                pathcodepipstranslated = rundepthk.translatepipsannot(pathcodeinit)
 
-            if rundepthk.onlygeninvs_p:
-                # Removing tmp files
-                rundepthk.cleantmpfiles(list_paths_to_delete)
-                os.system("cat " + pathcodepipstranslated)
-                sys.exit()
+                if rundepthk.onlygeninvs_p:
+                    # Removing tmp files
+                    rundepthk.cleantmpfiles(list_paths_to_delete)
+                    os.system("cat " + pathcodepipstranslated)
+                    sys.exit()
 
-            # Execute the k-induction with ESBMC
-            rundepthk.callesbmccheck(pathcodepipstranslated)
+                # Execute the k-induction with ESBMC
+                rundepthk.callesbmccheck(pathcodepipstranslated, False)
+
+            else:
+                inputCFile = rundepthk.rununcrustify(inputCFile)
+                list_paths_to_delete.append(inputCFile)
+                # Execute the k-induction with ESBMC
+                rundepthk.callesbmccheck(inputCFile, True)
 
             # Removing tmp files
             rundepthk.cleantmpfiles(list_paths_to_delete)

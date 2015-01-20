@@ -25,6 +25,7 @@ class DepthEsbmcCheck(object):
         self.statecurrentfunct = ''
         # depth check options
         self.debug = False
+        self.forceassume = False
         self.maxk = 15
         self.maxdepthverification = 25
         self.esbmcpath = ''
@@ -334,9 +335,8 @@ class DepthEsbmcCheck(object):
         actual_detphver = 1
         actual_ce = "/tmp/ce_kinduction.txt"
         last_ce = "/tmp/last_ce_kinduction.txt"
+        flag_forceassume = self.forceassume
 
-        # TODO: Create an approach to check only if the k-induction,
-        # and if we not find the solution to certain K then try to use the counterexample
 
 
         if self.debug:
@@ -464,32 +464,66 @@ class DepthEsbmcCheck(object):
                                 return "ERROR. It was identified an error in the verification of inductive step"
 
                         else:
-                            if not self.esbmc_bound <= self.maxk and \
-                                            actual_detphver <= self.maxdepthverification:
 
-                                # reset k, i.e., the bound go back to 1
-                                self.esbmc_bound = 1
+                            if not self.forceassume:
 
-                                # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
-                                # generating a new ESBMC assume
+                                if not self.esbmc_bound <= self.maxk and \
+                                   actual_detphver <= self.maxdepthverification:
+
+
+                                    # reset k, i.e., the bound go back to 1
+                                    self.esbmc_bound = 1
+                                    actual_detphver += 1
+
+
+                                    # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
+                                    # generating a new ESBMC assume
+                                    if self.debug:
+                                        print("\t\t -> It was reached the MAX k")
+                                        print("\t\t Status: generating a new ESBMC assume")
+                                    # print("\t - Get data from CE in the last valid state:")
+                                    # Possible BUG cuz the PLACE where the assume is added
+                                    if not self.getlastdatafromce(actual_ce):
+                                        # >> UNKNOWN
+                                        return "ERROR. NO DATA from counterexample! Sorry about that."
+
+
+                                    # print("\t - New assume generated: \n" + self.assumeset)
+                                    # print("\t - Instrument program with assume ...")
+                                    # Getting the last valid location in the counterexample to add the assume
+                                    linenumtosetassume = self.getlastlinenumfromce(actual_ce)
+                                    # Adding in the new instance of the analyzed program (P') the new assume
+                                    # generated from the counterexample
+                                    _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+
+                            else:
+                                # In this case, when the inductive step fail
+                                # in the first time we force the generation of the ESBMC assume.
+                                # It is worth to say that ONLY in this case we do not adopt
+                                # the D, only K is taken into account.
+
+                                # >> Else generate an ESBMC_ASSUME with the counterexample
+                                # then go to (1) with the actual K
+
                                 if self.debug:
-                                    print("\t\t -> It was reached the MAX k")
-
+                                    print("\t\t -> Force the generation of ESBMC assume")
                                     print("\t\t Status: generating a new ESBMC assume")
-                                # print("\t - Get data from CE in the last valid state:")
+
                                 # Possible BUG cuz the PLACE where the assume is added
                                 if not self.getlastdatafromce(actual_ce):
                                     # >> UNKNOWN
                                     return "ERROR. NO DATA from counterexample! Sorry about that."
 
-
-                                # print("\t - New assume generated: \n" + self.assumeset)
-                                # print("\t - Instrument program with assume ...")
-                                # Getting the last valid location in the counterexample to add the assume
+                                # Getting the last valid location in the counterexample to add
+                                # the assume
                                 linenumtosetassume = self.getlastlinenumfromce(actual_ce)
-                                # Adding in the new instance of the analyzed program (P') the new assume
-                                # generated from the counterexample
+                                # Adding in the new instance of the analyzed program (P')
+                                # the new assume generated from the counterexample
                                 _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+
+
+
+
 
                 else:
                     # Some ERROR was identified in the verification of base-case
