@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test_cases/k-induction/toy/script_depthk.pips" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/depthk.py" afterPath="$PROJECT_DIR$/depthk.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" afterPath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/logs.txt" afterPath="$PROJECT_DIR$/modules/logs.txt" />
     </list>
     <ignored path="depthk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -56,8 +54,8 @@
       <file leaf-file-name="logs.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/logs.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="1170">
-              <caret line="51" column="12" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1320">
+              <caret line="30" column="32" selection-start-line="30" selection-start-column="32" selection-end-line="30" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -66,8 +64,8 @@
       <file leaf-file-name="esbmccheck.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="7342" max-vertical-offset="8370">
-              <caret line="520" column="49" selection-start-line="520" selection-start-column="49" selection-end-line="520" selection-end-column="49" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="9138" max-vertical-offset="9960">
+              <caret line="630" column="33" selection-start-line="630" selection-start-column="33" selection-end-line="630" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -87,10 +85,10 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py" />
-        <option value="$PROJECT_DIR$/modules/logs.txt" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
         <option value="$PROJECT_DIR$/depthk.py" />
+        <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
+        <option value="$PROJECT_DIR$/modules/logs.txt" />
       </list>
     </option>
   </component>
@@ -831,18 +829,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
+    <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="1170">
-          <caret line="51" column="12" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="9138" max-vertical-offset="9960">
+          <caret line="630" column="33" selection-start-line="630" selection-start-column="33" selection-end-line="630" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
+    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="7342" max-vertical-offset="8370">
-          <caret line="520" column="49" selection-start-line="520" selection-start-column="49" selection-end-line="520" selection-end-column="49" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1320">
+          <caret line="30" column="32" selection-start-line="30" selection-start-column="32" selection-end-line="30" selection-end-column="32" />
           <folding />
         </state>
       </provider>

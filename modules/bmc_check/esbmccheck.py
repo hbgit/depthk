@@ -22,6 +22,7 @@ class DepthEsbmcCheck(object):
         self.list_beginnumfuct = {}
         self.nameoforicprogram = ""
         self.assumeset = ''
+        self.dict_dataassume = {} # e.g., {'cs':[162,"assume(x>0)"],'s1':[170:"assume(y < 100)"]}
         self.statecurrentfunct = ''
         # depth check options
         self.debug = False
@@ -43,7 +44,7 @@ class DepthEsbmcCheck(object):
 
 
     @staticmethod
-    def getlastlinenumfromce(_esbmccepath):
+    def getlastlinenumfromce(_esbmccepath, _indexliststartsearch):
         """
         This method get the last line number pointed in the
         counterexample from bottom to top excluding the line number
@@ -58,27 +59,15 @@ class DepthEsbmcCheck(object):
         filece.close()
 
         # reading file from bottom to top
-        i = len(listfilece) - 1
-        flagstartpoint = False
+        #i = len(listfilece) - 1
+        #flagstartpoint = False
 
-        while i >= 0:
+        i = _indexliststartsearch
 
-            # identify Violated property point in the CE
-            matchvp = re.search(r'Violated property', listfilece[i])
-            if matchvp and not flagstartpoint:
-                # identifying the first start to jump and then start to search
-                # line number by state
-                i -= 2  # jump line with ---------
-                while not re.search(r'State[ ]+[0-9]+', listfilece[i]):
-                    i -= 1
-
-                # how is the first state then we jump it
-                i -= 1
-                flagstartpoint = True
+        while i < len(listfilece):
 
             matchstate = re.search(r'State[ ]+[0-9]+', listfilece[i])
             if matchstate:
-
                 # identifying if the state has some valid line number
                 matchsline = re.search(r'line[ ]+([0-9]+)', listfilece[i])
                 if matchsline:
@@ -86,59 +75,60 @@ class DepthEsbmcCheck(object):
                     # sys.exit()
                     return int(matchsline.group(1)) - 1
 
-            i -= 1
+            i += 1
 
 
-    def getlastdatafromce(self, _esbmccepath):
+        # while i >= 0:
+        #
+        #     # identify Violated property point in the CE
+        #     matchvp = re.search(r'Violated property', listfilece[i])
+        #     if matchvp and not flagstartpoint:
+        #         # identifying the first start to jump and then start to search
+        #         # line number by state
+        #         i -= 2  # jump line with ---------
+        #         while not re.search(r'State[ ]+[0-9]+', listfilece[i]):
+        #             i -= 1
+        #
+        #         # how is the first state then we jump it
+        #         i -= 1
+        #         flagstartpoint = True
+        #
+        #     matchstate = re.search(r'State[ ]+[0-9]+', listfilece[i])
+        #     if matchstate:
+        #
+        #         # identifying if the state has some valid line number
+        #         matchsline = re.search(r'line[ ]+([0-9]+)', listfilece[i])
+        #         if matchsline:
+        #             # print(matchsline.group(1))
+        #             # sys.exit()
+        #             return int(matchsline.group(1)) - 1
+        #
+        #     i -= 1
 
-        filece = open(_esbmccepath, "r")
-        listfilece = filece.readlines()
-        filece.close()
 
-        # reading file from bottom to top
-        i = len(listfilece) - 1
-        flagstop = False
-        cestatetext = ''
-        flaghasstate = False
-
-        while i >= 0 and not flagstop:
-            # get the last state
-            matchstate = re.search(r'cs\$[0-9]+', listfilece[i])
-            if matchstate:
-                flaghasstate = True
-
-                flagkeepgettext = True
-                while flagkeepgettext:
-
-                    matchblankline = re.search(r'^$', listfilece[i])
-                    if matchblankline:
-                        flagkeepgettext = False
-                    else:
-                        # print(listfilece[i],"++++++=")
-                        cestatetext += listfilece[i]
-
-                    i += 1
-
-                flagstop = True
-            i -= 1
-
-        if not flaghasstate:
-            return False
-
-        # identify the function name where is the state identified
-        matchfunctname = re.search(r'[.]c[:]+new_[a-zA-Z_0-9]+[:]+([a-zA-Z_0-9]+):.*', cestatetext)
-        if matchfunctname:
-            self.statecurrentfunct = matchfunctname.group(1)
-
+    @staticmethod
+    def handletextfrom_ce(_stringtxtce, _enablescopecheck):
 
         # handle text state get from CE
         # .c::new_main::main::1::SIZE=7
-        # cestatetext = cestatetext.replace(" ", "")
-        # print(cestatetext)
-        # sys.exit()
         # preprocessing CE text
         # splitting to remove blank spaces
-        listassign = cestatetext.split(".c")
+        listassign = _stringtxtce.split(".c")
+
+        if _enablescopecheck:
+            # only consider :: < 2
+            #for i, item in enumerate(listassign):
+            i = 0
+            listselectassign = []
+            while i < len(listassign):
+                tmps = listassign[i].strip().split("::")
+                # 3 cuz the white space when it is applied the split
+                if not len(tmps) > 3:
+                    listselectassign.append(listassign[i])
+                i += 1
+
+            listassign = listselectassign
+            del listselectassign
 
         # removing blank spaces to deal with arrays
         countb = 0
@@ -203,15 +193,130 @@ class DepthEsbmcCheck(object):
                     # print("\t => " + ceassign)
                     listnewassign.append(ceassign)
 
-        # sys.exit()
-        # generating __ASSUME
+
+        return listnewassign
+
+
+    def getlastdatafromce(self, _esbmccepath):
+
+        filece = open(_esbmccepath, "r")
+        listfilece = filece.readlines()
+        filece.close()
+
+        # reading file from bottom to top
+        i = len(listfilece) - 1
+        flagstop = False
+        cestatetext = ''
+        flaghasstate = False
+
+        # data to assumes
+        ce_index2cs = 0
+        ce_cs_line = 0
+        ce_cs_data = ""
+
+        # Gathering data from counter-example to CS
+        while i >= 0 and not flagstop:
+            # get the last state
+            matchstate = re.search(r'cs\$[0-9]+', listfilece[i])
+            if matchstate:
+                ce_index2cs = i
+                flaghasstate = True
+
+                # >> Identifying if the State has the line number
+                # we consider the First one presented
+                # e.g., State 751  thread 0
+                #       c::eval at main_depthk_u.c line 723
+                tmpi = i - 2  # jump the actual line and start with -------
+                while not re.search(r'^State[ ]*[0-9]*', listfilece[tmpi]):
+                    tmpi -= 1
+                tmpi += 1  # jump the line start with State ...
+                matchline_cs = re.search(r'line[ ]*([0-9]*)', listfilece[tmpi])
+                if matchline_cs:
+                    ce_cs_line = int(matchline_cs.group(1))
+
+                flagkeepgettext = True
+                while flagkeepgettext:
+                    matchblankline = re.search(r'^$', listfilece[i])
+                    if matchblankline:
+                        flagkeepgettext = False
+                    else:
+                        cestatetext += listfilece[i]
+                    i += 1
+                flagstop = True
+            i -= 1
+
+        if not flaghasstate:
+            return False
+
+        # identify the function name where is the state identified
+        # TODO: fix this BUG, incorrect way to get the name of the function
+        matchfunctname = re.search(r'[.]c[:]+new_[a-zA-Z_0-9]+[:]+([a-zA-Z_0-9]+):.*', cestatetext)
+        if matchfunctname:
+            self.statecurrentfunct = matchfunctname.group(1)
+
+
+        # >> Handle txt get from CE - CS$
+        listnewassign = self.handletextfrom_ce(cestatetext, True)
+
+
+        # >> Generating ASSUME to the last CS$
         txtassume = ' && '.join(listnewassign)
-        self.assumeset = "__ESBMC_assume( " + txtassume + " );"
+        # identiying it was found the line number in the CS$
+        if ce_cs_line > 0:
+            self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+        else:
+            # Identify a possible location to add the ASSUME to CS$
+            ce_cs_line = self.getlastlinenumfromce(_esbmccepath, ce_index2cs)
+            self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+
+        #print(self.dict_dataassume)
+        #sys.exit()
+
+        #
+        # >> Getting other data after the identification of CS$
+        #    The State just are valid from here if has a valid line number
+        countnxst = ce_index2cs
+        nxt_state_line = 0
+
+        while countnxst < len(listfilece):
+
+            matchstate = re.search(r"^State[ ]*[0-9]+", listfilece[countnxst])
+            matchstateline = re.search(r"line[ ]*([0-9]+)", listfilece[countnxst])
+            if matchstate and matchstateline:
+                nxt_state_line = int(matchstateline.group(1))
+
+                while not re.search(r"^-+", listfilece[countnxst]):
+                    countnxst += 1
+                countnxst += 1  # jump line start with --------------
+
+                # Getting ce txt
+                ce_next_state_txt = ""
+                while not re.search(r"^$", listfilece[countnxst]):
+                    ce_next_state_txt += listfilece[countnxst].strip()
+                    match_detailvalue = re.search(r"[ ]+\(.+\)$", ce_next_state_txt)
+                    if match_detailvalue:
+                        ce_next_state_txt = re.sub(r"[ ]+\(.+\)$", "", ce_next_state_txt)
+                    countnxst += 1
+
+                matchresult_ce = re.search(r"Violated property:", ce_next_state_txt)
+                if not matchresult_ce:
+                    #print(cenxstate_txt)
+                    # >> Handle txt get from CE - next states
+                    listnewassign = self.handletextfrom_ce(ce_next_state_txt, False)
+                    # >> Generating ASSUME to the next states
+                    txtassume = ' && '.join(listnewassign)
+                    #print(txtassume)
+                    self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
+
+            countnxst += 1
+
+        #print(self.dict_dataassume)
+        #sys.exit()
 
         return True
 
 
-    def addassumeinprogram(self, _cprogrampath, _linenumtosetassume):
+    def addassumeinprogram(self, _cprogrampath):
         # print(_linenumtosetassume)
         # sys.exit()
 
@@ -229,8 +334,10 @@ class DepthEsbmcCheck(object):
         while i < len(listfilec):
 
             # identify where to write the new assume from CE
-            if i == _linenumtosetassume:
-                newfile.write(self.assumeset + "\n")
+            #if i == _linenumtosetassume:
+            if self.dict_dataassume.has_key(i):
+                #newfile.write(self.assumeset + "\n")
+                newfile.write(self.dict_dataassume[i] + "\n")
 
             # just write the new code
             # newfile.write(str(i)+"->"+listfilec[i])
@@ -491,10 +598,11 @@ class DepthEsbmcCheck(object):
                                     # print("\t - New assume generated: \n" + self.assumeset)
                                     # print("\t - Instrument program with assume ...")
                                     # Getting the last valid location in the counterexample to add the assume
-                                    linenumtosetassume = self.getlastlinenumfromce(actual_ce)
+                                    # linenumtosetassume = self.getlastlinenumfromce(actual_ce)
                                     # Adding in the new instance of the analyzed program (P') the new assume
                                     # generated from the counterexample
-                                    _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+                                    # _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+                                    _cprogrampath = self.addassumeinprogram(_cprogrampath)
 
                             else:
                                 # In this case, when the inductive step fail
@@ -516,13 +624,11 @@ class DepthEsbmcCheck(object):
 
                                 # Getting the last valid location in the counterexample to add
                                 # the assume
-                                linenumtosetassume = self.getlastlinenumfromce(actual_ce)
+                                # linenumtosetassume = self.getlastlinenumfromce(actual_ce)
                                 # Adding in the new instance of the analyzed program (P')
                                 # the new assume generated from the counterexample
-                                _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
-
-
-
+                                _cprogrampath = self.addassumeinprogram(_cprogrampath)
+                                #sys.exit()
 
 
                 else:
