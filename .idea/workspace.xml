@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" afterPath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/logs.txt" afterPath="$PROJECT_DIR$/modules/logs.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
     </list>
     <ignored path="depthk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,10 +25,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="depthk.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="depthk.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/depthk.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6695502" vertical-offset="3903" max-vertical-offset="8550">
+            <state vertical-scroll-proportion="0.0" vertical-offset="3903" max-vertical-offset="8550">
               <caret line="286" column="40" selection-start-line="286" selection-start-column="40" selection-end-line="286" selection-end-column="40" />
               <folding>
                 <element signature="e#276#313#0" expanded="true" />
@@ -38,14 +37,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="MarkdownPreviewEditor">
             <state />
           </provider>
           <provider editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="860" max-vertical-offset="1455">
-              <caret line="86" column="47" selection-start-line="86" selection-start-column="47" selection-end-line="86" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="270" max-vertical-offset="1485">
+              <caret line="40" column="110" selection-start-line="40" selection-start-column="110" selection-end-line="40" selection-end-column="110" />
               <folding />
             </state>
           </provider>
@@ -85,10 +84,10 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/depthk.py" />
         <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
         <option value="$PROJECT_DIR$/modules/logs.txt" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -811,17 +810,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="860" max-vertical-offset="1455">
-          <caret line="86" column="47" selection-start-line="86" selection-start-column="47" selection-end-line="86" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.58131486" vertical-offset="669" max-vertical-offset="3390">
@@ -847,11 +835,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/depthk.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6695502" vertical-offset="3903" max-vertical-offset="8550">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3903" max-vertical-offset="8550">
           <caret line="286" column="40" selection-start-line="286" selection-start-column="40" selection-end-line="286" selection-end-column="40" />
           <folding>
             <element signature="e#276#313#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="270" max-vertical-offset="1485">
+          <caret line="40" column="110" selection-start-line="40" selection-start-column="110" selection-end-line="40" selection-end-column="110" />
+          <folding />
         </state>
       </provider>
     </entry>
