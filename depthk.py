@@ -18,6 +18,7 @@ import sys
 import os
 import commands
 import re
+import time
 from pipes import quote
 import platform
 
@@ -51,6 +52,8 @@ class DepthK(object):
         self.inputisexti = False
         self.listnumbeginfunc = []
         self.nameoforicprogram = os.path.basename(_cfilepath)
+        self.actual_cprogramname = ""
+        self.depthkname_ext = "_new_depthk_" + str(time.strftime('%H:%M:%S').replace(":", "_")) + ".c"
         self.debug_op = False
         self.uncrustify_cfg = os.path.dirname(os.path.abspath(__file__)) + \
                               "/modules/preprocessing/uncrustify_files/ben.cfg"
@@ -118,7 +121,7 @@ class DepthK(object):
                 # flaginit = False
                 # listsavevar_tmp = list(set(listsavevar_tmp))
                 # print(lastnumfunct, listsavevar_tmp)
-                #     listsavevar_tmp = []
+                # listsavevar_tmp = []
                 #     #dict_varinitandloc[lastnumfunct] = listsavevar_tmp
                 # else:
                 #     lastnumfunct = currentnumfunct
@@ -162,24 +165,27 @@ class DepthK(object):
         #
         # for key, value in dict_varinitandloc.items():
         # print(key, value)
-        #     print("")
+        # print("")
         #
         # sys.exit()
         return dict_varinitandloc
 
 
-    def generatecodewithinit(self, _cfilepath, _dicvarinitandloc):
+    def generatecodewithinit(self, _cfilepath_from_pipsdb, _cfileanalyzed, _dicvarinitandloc):
         """
         write new code where for each function identified in (2) we should add
         the new vars to VAR#init
 
-        :param _cfilepath:
+        :param _cfilepath_from_pipsdb:
         :param _dicvarinitandloc:
         :return: pathcodewithinit
         """
 
         # generating path to save this new code generated
-        pathcodewithinit = "/tmp/" + str(os.path.basename(_cfilepath).replace(".c", "_init.c"))
+        # new_namefile = os.path.basename(_cfilepath).replace(".i", "_depthk_t.c")
+        #pathnewfile = os.path.dirname(_cfilepath) + "/" + new_namefile
+        #pathcodewithinit = "/tmp/" + str(os.path.basename(_cfilepath_from_pipsdb).replace(".c", "_init.c"))
+        pathcodewithinit = _cfileanalyzed
         filewithinit = open(pathcodewithinit, "w")
 
         flag_initpips = True
@@ -188,12 +194,12 @@ class DepthK(object):
 
 
         # Get lines from C file
-        filec = open(_cfilepath, "r")
+        filec = open(_cfilepath_from_pipsdb, "r")
         linescfile = filec.readlines()
         filec.close()
 
         # Get all variable declaration data
-        r = ast.RunAstDecl(_cfilepath)
+        r = ast.RunAstDecl(_cfilepath_from_pipsdb)
         # output: {'z_val': [['int'], '164']}
         dict_varsdata = r.identify_decl()
 
@@ -242,7 +248,7 @@ class DepthK(object):
             print(">> Translating the PIPS annotation with the invariants")
         # Call class to translate PIPS annotation
         runtranslatepips = translate_pips.PipsTranslateAnnot()
-        runtranslatepips.nameoforicprogram = self.nameoforicprogram
+        #runtranslatepips.nameoforicprogram = self.nameoforicprogram
         runtranslatepips.list_beginnumfuct = listnumbeginfunc
 
         # print(runtranslatepips.instprecondinprog(_cpathpipscode))
@@ -330,7 +336,7 @@ class DepthK(object):
             # matcherrorparser = re.search(r"C syntax errors in file", resultpips)
             # if matcherrorparser:
             # print(" ")
-            #     print("ERROR. C syntax errors in C file. ")
+            # print("ERROR. C syntax errors in C file. ")
             # else:
             #     print(" ")
             #     print("ERROR. Generating invariants with PIPS. ")
@@ -382,36 +388,38 @@ class DepthK(object):
             return False
 
 
-    @staticmethod
-    def applygnuhack(_inputcfile):
+    def applygnuhack(self, _inputcfile):
         # Mini hack to allow PIPS handle with .i files
-        new_namefile = os.path.basename(_inputcfile).replace(".i", "_depthk_t.c")
-        pathnewfile = os.path.dirname(_inputcfile) + "/" + new_namefile
+        # new_namefile = os.path.basename(_inputcfile).replace(".i", self.depthkname_ext)
+        # pathnewfile = os.path.dirname(_inputcfile) + "/" + new_namefile
         filec = open(inputCFile, 'r')
         str_filelines = hack_extensions.make_pycparser_compatible(filec.read())
         filec.close()
 
         # writing new c file after GNU hacking
-        newfile = open(pathnewfile, "w")
+        newfile = open(_inputcfile, "w")
         newfile.write(str_filelines)
         newfile.close()
 
-        return pathnewfile
+        return _inputcfile
 
 
     def rununcrustify(self, _cfilepath):
-        if self.inputisexti:
-            new_namefile = os.path.basename(_cfilepath).replace("_depthk_t.c", "_depthk_u.c")
-        else:
-            new_namefile = os.path.basename(_cfilepath).replace(".c", "_depthk_u.c")
+        # if self.inputisexti:
+        # new_namefile = os.path.basename(_cfilepath).replace("_depthk_t.c", "_depthk_u.c")
+        # else:
+        #     new_namefile = os.path.basename(_cfilepath).replace(".c", "_depthk_u.c")
+        #
+        # pathnewfile = os.path.dirname(_cfilepath) + "/" + new_namefile
 
-        pathnewfile = os.path.dirname(_cfilepath) + "/" + new_namefile
+        result_uncrustify = commands.getoutput('uncrustify -q -l C -c ' + quote(self.uncrustify_cfg) +
+                                               ' -f ' + quote(_cfilepath))
 
-        os.system('uncrustify -q -l C -c ' + quote(self.uncrustify_cfg) +
-                  ' -f ' + quote(_cfilepath) + ' > ' + quote(pathnewfile))
+        filewriteunc = open(_cfilepath, "w")
+        filewriteunc.write(result_uncrustify)
+        filewriteunc.close()
 
-        return pathnewfile
-
+        return _cfilepath
 
 
 # -------------------------------------------------
@@ -467,10 +475,9 @@ if __name__ == "__main__":
 
             rundepthk = DepthK(inputCFile)
 
-
             # Define ESBMC path
             rundepthk.esbmcpath = "esbmc"
-            #rundepthk.esbmcpath = "~/Downloads/ESBMC/bin/esbmc_v24"
+            # rundepthk.esbmcpath = "~/Downloads/ESBMC/bin/esbmc_v24"
             if args.setMaxK:
                 rundepthk.maxk = args.setMaxK
             if args.setMaxDepthCheck:
@@ -506,19 +513,31 @@ if __name__ == "__main__":
                 #64bits
                 rundepthk.esbmc_arch = "--" + str(args.setArchCheck)
 
-
             # Identify the extension of the C program .c or .i
             if inputCFile.endswith(".i"):
                 # Warnning: This is experimental cuz PIPS actually
                 # have some problem with CIL format
 
+                # Creating a copy of the analyzed program
+                new_namefile = os.path.basename(inputCFile).replace(".i", rundepthk.depthkname_ext)
+                pathnewinstance_depthk = os.path.dirname(inputCFile) + "/" + new_namefile
+                shutil.copyfile(inputCFile, pathnewinstance_depthk)
+                inputCFile = pathnewinstance_depthk
+                list_paths_to_delete.append(inputCFile)
+
                 # Apply hacking to handle with GNU extensions
                 # HackGNUext: Generate a copy the analyzed program to a tmp file
                 # now with the extension replaced from .i to .c
                 inputCFile = rundepthk.applygnuhack(inputCFile)
-                list_paths_to_delete.append(inputCFile)
                 rundepthk.inputisexti = True
-                #sys.exit()
+
+            else:
+                # Creating a copy of the analyzed program
+                new_namefile = os.path.basename(inputCFile).replace(".c", rundepthk.depthkname_ext)
+                pathnewinstance_depthk = os.path.dirname(inputCFile) + "/" + new_namefile
+                shutil.copyfile(inputCFile, pathnewinstance_depthk)
+                inputCFile = pathnewinstance_depthk
+                list_paths_to_delete.append(inputCFile)
 
 
             # Applying steps of DepthK
@@ -534,16 +553,15 @@ if __name__ == "__main__":
                 dict_init = rundepthk.identify_initpips(codewithinv)
 
                 # Generate auxiliary code to support the translation of #init from PIPS
-                pathcodeinit = rundepthk.generatecodewithinit(codewithinv, dict_init)
-                list_paths_to_delete.append(pathcodeinit)
+                pathcodeinit = rundepthk.generatecodewithinit(codewithinv, inputCFile, dict_init)
 
                 # Translate the invariants generated by PIPS
                 pathcodepipstranslated = rundepthk.translatepipsannot(pathcodeinit)
 
                 if rundepthk.onlygeninvs_p:
                     # Removing tmp files
-                    rundepthk.cleantmpfiles(list_paths_to_delete)
                     os.system("cat " + pathcodepipstranslated)
+                    rundepthk.cleantmpfiles(list_paths_to_delete)
                     sys.exit()
 
                 # Execute the k-induction with ESBMC
@@ -551,7 +569,6 @@ if __name__ == "__main__":
 
             else:
                 inputCFile = rundepthk.rununcrustify(inputCFile)
-                list_paths_to_delete.append(inputCFile)
                 # Execute the k-induction with ESBMC
                 rundepthk.callesbmccheck(inputCFile, True)
 

@@ -15,7 +15,7 @@ import re
 class PipsTranslateAnnot(object):
     def __init__(self):
         self.list_beginnumfuct = []
-        self.nameoforicprogram = ""
+        #self.nameoforicprogram = ""
 
 
     def instprecondinprog(self, _cprogrampath):
@@ -25,7 +25,8 @@ class PipsTranslateAnnot(object):
         fileprogram.close()
 
         # Generating the new code from PIPS
-        pathnewcodepips = "/tmp/new_" + self.nameoforicprogram
+        #pathnewcodepips = "/tmp/new_" + self.nameoforicprogram
+        pathnewcodepips = _cprogrampath
         newcodefrompips = open(pathnewcodepips, "w")
 
         i = 0

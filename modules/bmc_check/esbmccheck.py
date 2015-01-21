@@ -349,7 +349,8 @@ class DepthEsbmcCheck(object):
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
 
         # TODO: it is best to write this new instance in the original path of the program
-        newfile = open("/tmp/new_instance.c", "w")
+        #newfile = open("/tmp/new_instance.c", "w")
+        newfile = open(_cprogrampath, "w")
 
         i = 0
         while i < len(listfilec):
@@ -396,7 +397,7 @@ class DepthEsbmcCheck(object):
 
         newfile.close()
 
-        return "/tmp/new_instance.c"
+        return _cprogrampath
 
 
     @staticmethod

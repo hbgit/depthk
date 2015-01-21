@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/depthk.py" afterPath="$PROJECT_DIR$/depthk.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" afterPath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/logs.txt" afterPath="$PROJECT_DIR$/modules/logs.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py" afterPath="$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py" />
     </list>
     <ignored path="depthk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,12 +27,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="depthk.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="depthk.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/depthk.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3768" max-vertical-offset="8415">
-              <caret line="286" column="40" selection-start-line="286" selection-start-column="40" selection-end-line="286" selection-end-column="40" />
-              <folding />
+            <state vertical-scroll-proportion="0.5657439" vertical-offset="8223" max-vertical-offset="8805">
+              <caret line="570" column="64" selection-start-line="570" selection-start-column="64" selection-end-line="570" selection-end-column="64" />
+              <folding>
+                <element signature="e#276#313#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -49,10 +52,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logs.txt" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="logs.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/logs.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.28546712" vertical-offset="75" max-vertical-offset="1365">
+            <state vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="1365">
               <caret line="16" column="31" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="34" />
               <folding />
             </state>
@@ -62,8 +65,8 @@
       <file leaf-file-name="esbmccheck.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="8778" max-vertical-offset="10275">
-              <caret line="259" column="38" selection-start-line="259" selection-start-column="38" selection-end-line="259" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="7389" max-vertical-offset="10290">
+              <caret line="399" column="28" selection-start-line="399" selection-start-column="28" selection-end-line="399" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -83,10 +86,11 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py" />
-        <option value="$PROJECT_DIR$/depthk.py" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
         <option value="$PROJECT_DIR$/modules/logs.txt" />
+        <option value="$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py" />
+        <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
+        <option value="$PROJECT_DIR$/depthk.py" />
       </list>
     </option>
   </component>
@@ -416,7 +420,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5430">
           <caret line="356" column="0" selection-start-line="356" selection-start-column="0" selection-end-line="356" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -443,7 +449,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2575" max-vertical-offset="5745">
           <caret line="192" column="17" selection-start-line="192" selection-start-column="17" selection-end-line="192" selection-end-column="17" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -459,7 +467,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2575" max-vertical-offset="5745">
           <caret line="192" column="17" selection-start-line="192" selection-start-column="17" selection-end-line="192" selection-end-column="17" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -475,7 +485,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4482" max-vertical-offset="6408">
           <caret line="273" column="20" selection-start-line="273" selection-start-column="20" selection-end-line="273" selection-end-column="20" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -498,7 +510,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4842" max-vertical-offset="6372">
           <caret line="277" column="9" selection-start-line="277" selection-start-column="9" selection-end-line="277" selection-end-column="9" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -514,7 +528,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4155" max-vertical-offset="5430">
           <caret line="277" column="9" selection-start-line="277" selection-start-column="9" selection-end-line="277" selection-end-column="9" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -530,7 +546,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4635">
           <caret line="285" column="66" selection-start-line="285" selection-start-column="66" selection-end-line="285" selection-end-column="66" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -546,7 +564,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3705">
           <caret line="32" column="67" selection-start-line="32" selection-start-column="67" selection-end-line="32" selection-end-column="67" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -562,7 +582,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3498" max-vertical-offset="4575">
           <caret line="244" column="8" selection-start-line="244" selection-start-column="8" selection-end-line="244" selection-end-column="8" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -578,7 +600,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3498" max-vertical-offset="4575">
           <caret line="244" column="8" selection-start-line="244" selection-start-column="8" selection-end-line="244" selection-end-column="8" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -594,7 +618,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3684" max-vertical-offset="4170">
           <caret line="268" column="54" selection-start-line="268" selection-start-column="54" selection-end-line="268" selection-end-column="54" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -602,7 +628,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3684" max-vertical-offset="4170">
           <caret line="268" column="54" selection-start-line="268" selection-start-column="54" selection-end-line="268" selection-end-column="54" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -610,7 +638,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3975">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -618,7 +648,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3765">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -626,7 +658,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="216" max-vertical-offset="3810">
           <caret line="35" column="112" selection-start-line="35" selection-start-column="112" selection-end-line="35" selection-end-column="112" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -634,7 +668,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2463" max-vertical-offset="3765">
           <caret line="178" column="62" selection-start-line="178" selection-start-column="62" selection-end-line="178" selection-end-column="62" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -656,7 +692,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2463" max-vertical-offset="3705">
           <caret line="167" column="49" selection-start-line="167" selection-start-column="49" selection-end-line="167" selection-end-column="49" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -678,7 +716,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3705">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -700,7 +740,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="100">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -722,7 +764,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="9" selection-end-column="37" />
-          <folding />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -737,13 +781,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="585" max-vertical-offset="1410">
           <caret line="47" column="59" selection-start-line="47" selection-start-column="59" selection-end-line="47" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7297297" vertical-offset="3126" max-vertical-offset="3570">
-          <caret line="232" column="40" selection-start-line="232" selection-start-column="39" selection-end-line="232" selection-end-column="40" />
         </state>
       </provider>
     </entry>
@@ -786,27 +823,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/depthk.py">
+    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3768" max-vertical-offset="8415">
-          <caret line="286" column="40" selection-start-line="286" selection-start-column="40" selection-end-line="286" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="1365">
+          <caret line="16" column="31" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.371972" vertical-offset="2737" max-vertical-offset="3585">
+          <caret line="16" column="35" selection-start-line="16" selection-start-column="35" selection-end-line="16" selection-end-column="35" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="8778" max-vertical-offset="10275">
-          <caret line="259" column="38" selection-start-line="259" selection-start-column="38" selection-end-line="259" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="7389" max-vertical-offset="10290">
+          <caret line="399" column="28" selection-start-line="399" selection-start-column="28" selection-end-line="399" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
+    <entry file="file://$PROJECT_DIR$/depthk.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28546712" vertical-offset="75" max-vertical-offset="1365">
-          <caret line="16" column="31" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="34" />
-          <folding />
+        <state vertical-scroll-proportion="0.5657439" vertical-offset="8223" max-vertical-offset="8805">
+          <caret line="570" column="64" selection-start-line="570" selection-start-column="64" selection-end-line="570" selection-end-column="64" />
+          <folding>
+            <element signature="e#276#313#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
