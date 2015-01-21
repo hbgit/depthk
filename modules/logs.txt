@@ -13,9 +13,11 @@ TODO:
 
 BUGs:
 -------------------------------------------------------------------------
+[FIXED]
+- counterexample with no CS$ state
 
 [FIXED]
-In this situation:
+- In this situation:
 State 211 file /home/hrocha/Documents/Projects_DEV/depthk/test_cases/k-induction/pc_sfifo_1/main_depthk_u.c line 53 function is_do_write_p_triggered thread 0
 c::is_do_write_p_triggered at /home/hrocha/Documents/Projects_DEV/depthk/test_cases/k-induction/pc_sfifo_1/main_depthk_u.c line 91
 c::immediate_notify_threads at /home/hrocha/Documents/Projects_DEV/depthk/test_cases/k-induction/pc_sfifo_1/main_depthk_u.c line 213
@@ -51,6 +53,8 @@ OKAY:
   Running invgen/disj_simple >> [TESTED] - OKAY
   Running invgen/mergesort >> [TESTED] - OKAY
   Running invgen/seq-len >> [TESTED] - OKAY
+  Running pc_sfifo_1  [FAILED] (900.00 seconds) >> [TESTED] - OKAY
+  Running toy  [FAILED] (900.00 seconds) >> [TESTED] - OKAY
 
 FAILED:
   Running matrix_bug  [FAILED] (0.19 seconds) >> [TESTED] - FAILED (z3 error) ??? -- VERIFICATION FAILED INDUCTIVE STEP PROCESS CRASHED parallel
@@ -58,8 +62,7 @@ FAILED:
 
 ERROR/UNKNOWN:
   Running nec24  [FAILED] (900.00 seconds) >> [TESTED] - k = 500 - NO CE - ERROR
-  Running pc_sfifo_1  [FAILED] (900.00 seconds) >> [TESTED] - ERROR PIPS --
-  Running toy  [FAILED] (900.00 seconds) >> [TESTED] - ERROR PIPS --
+
 
 TIMEOUT:
   Running invgen/svd >> [TESTED] - Timed out -- Tuple array getting not implemented yet, sorry

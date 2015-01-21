@@ -245,8 +245,6 @@ class DepthEsbmcCheck(object):
                 flagstop = True
             i -= 1
 
-        if not flaghasstate:
-            return False
 
         # identify the function name where is the state identified
         # TODO: fix this BUG, incorrect way to get the name of the function
@@ -255,22 +253,20 @@ class DepthEsbmcCheck(object):
             self.statecurrentfunct = matchfunctname.group(1)
 
 
-        # >> Handle txt get from CE - CS$
-        listnewassign = self.handletextfrom_ce(cestatetext, True)
-
-
-        # >> Generating ASSUME to the last CS$
-        txtassume = ' && '.join(listnewassign)
-        # identiying it was found the line number in the CS$
-        if ce_cs_line > 0:
-            self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
-        else:
-            # Identify a possible location to add the ASSUME to CS$
-            ce_cs_line = self.getlastlinenumfromce(_esbmccepath, ce_index2cs)
-            self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
-
-        #print(self.dict_dataassume)
-        #sys.exit()
+        # When we do not have CS$ state we try with other state
+        if flaghasstate:
+            # >> Handle txt get from CE - CS$
+            listnewassign = self.handletextfrom_ce(cestatetext, True)
+            if len(listnewassign) > 0:
+                # >> Generating ASSUME to the last CS$
+                txtassume = ' && '.join(listnewassign)
+                # identiying it was found the line number in the CS$
+                if ce_cs_line > 0:
+                    self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+                else:
+                    # Identify a possible location to add the ASSUME to CS$
+                    ce_cs_line = self.getlastlinenumfromce(_esbmccepath, ce_index2cs)
+                    self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
 
         #
         # >> Getting other data after the identification of CS$
@@ -283,8 +279,10 @@ class DepthEsbmcCheck(object):
             actual_funname = ""
             matchstate = re.search(r"^State[ ]*[0-9]+", listfilece[countnxst])
             matchstateline = re.search(r"line[ ]*([0-9]+)", listfilece[countnxst])
+            matchstatebuitin = re.search(r"<built-in>", listfilece[countnxst])
             matchstatefunc = re.search(r"function[ ]+([a-zA-Z0-9_]+)", listfilece[countnxst])
-            if matchstate and matchstateline:
+            # Ignore state with State 2 file <built-in> line 54 thread 0
+            if matchstate and matchstateline and not matchstatebuitin:
                 nxt_state_line = int(matchstateline.group(1))
 
                 # get name function
@@ -321,17 +319,22 @@ class DepthEsbmcCheck(object):
                         #print(cenxstate_txt)
                         # >> Handle txt get from CE - next states
                         listnewassign = self.handletextfrom_ce(ce_next_state_txt, False)
-                        # >> Generating ASSUME to the next states
-                        txtassume = ' && '.join(listnewassign)
-                        #print(txtassume)
-                        self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
+                        if len(listnewassign) > 0:
+                            # >> Generating ASSUME to the next states
+                            txtassume = ' && '.join(listnewassign)
+                            #print(txtassume)
+                            self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
 
             countnxst += 1
 
         #print(self.dict_dataassume)
         #sys.exit()
 
-        return True
+        # checking if we have assumes to add in the new instance of the program
+        if self.dict_dataassume:
+            return True
+        else:
+            return False
 
 
     def addassumeinprogram(self, _cprogrampath):
