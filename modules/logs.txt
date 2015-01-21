@@ -72,6 +72,118 @@ TIMEOUT:
 SERVER >>> make: *** [tests.log] Error 11
 
 
+Only DepthK
+==========================================================================
+TODO: Check the PARSING ERROR
+
+array - OKAY
+array_bug - OKAY
+bist_cell - OKAY
+bubble_sort - ERROR: PARSING ERROR
+byte_add_bug - ERROR: SOLVERS
+check_if - OKAY
+check_if_bug - OKAY
+count_down - OKAY
+count_down_02 - OKAY
+count_up_down - OKAY
+count_up_down_bug - OKAY
+digital-controller - ERROR: PARSING ERROR
+eureka_01 - ERROR: PARSING ERROR << depthk BUG
+eureka_01_bug - OKAY
+eureka_05 - OKAY
+for_bounded_loop1 - OKAY
+for_infinite_loop_1 - OKAY
+for_infinite_loop_1 - OKAY
+gcd-with-time - OKAY
+insertion_sort - OKAY
+insertion_sort_bug - Time Out - NO invariants
+invert_string - OKAY
+invert_string_bug - NO invariants. ERROR. NO DATA from counterexample
+kinductor_01 - OKAY
+kundu - ERROR: SOLVERS
+kundu_bug - ERROR: SOLVERS
+linear_search - OKAY
+linear_search_bug - ERROR: constant:
+    unsigned int  SIZE=nondet_uint()/2+1;
+    int linear_search(int *a, int n, int q) {
+ludcmp - OKAY
+ludcmp_bad - OKAY
+matrix - OKAY
+matrix_bug - ERROR: SOLVERS
+mem_slave_tlm - TODO
+nec11 - OKAY
+nec11_bug - OKAY
+nec20_bug - BUG (CE = c::TRUE)
+    - cont issue _Bool k=nondet_bool();
+nec24 - TODO
+nec40 - OKAY
+nec40_bug - OKAY
+pc_sfifo_1 - OKAY
+pc_sfifo_2_BUG - OKAY
+problem01_20_unsafe - ERROR: depthk BUG
+string - OKAY
+string_bug - OKAY
+sum01 - OKAY
+sum01_bug - OKAY
+sum01_bug02 - OKAY
+sum02 - OKAY
+sum03 - OKAY
+sum03_bug - OKAY
+sum04 - OKAY
+sum04_bug - OKAY
+sum05_bug - OKAY
+sum_array - OKAY
+sum_array_bug - OKAY
+terminator_01 - OKAY
+terminator_01_bug - OKAY
+terminator_02 - OKAY
+terminator_02_bug - OKAY
+terminator_03 - OKAY
+terminator_03_bug - OKAY
+terminator_04 - OKAY
+terminator_04_bug - OKAY
+terminator_05 - OKAY
+terminator_05_bug - OKAY
+terminator_06 - OKAY
+terminator_06_bug - OKAY
+token_ring01 - OKAY
+token_ring01_bug - FAILED - NO invariants
+toy - OKAY
+transmitter_bug - FAILED
+trex01 - OKAY
+trex01_bug - OKAY
+trex02 - OKAY
+trex02_bug - OKAY
+trex03 - OKAY
+trex03_bug - OKAY
+trex04 - OKAY
+verisec_NetBSD-libc__loop_bad - FAILED
+verisec_NetBSD-libc__loop_ok - OKAY
+verisec_OpenSER__cases1_stripFullBoth_arr_bad - OKAY
+verisec_OpenSER__cases1_stripFullBoth_arr_ok - OKAY
+verisec_sendmail__tTflag_arr_one_loop_bad - OKAY
+verisec_sendmail__tTflag_arr_one_loop_ok - OKAY
+vogal - OKAY << using CE
+vogal_bug - OKAY
+while_infinite_loop_1 - OKAY
+while_infinite_loop_2 - OKAY
+while_infinite_loop_3 - OKAY
+while_infinite_loop_4 - OKAY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
