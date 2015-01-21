@@ -280,10 +280,16 @@ class DepthEsbmcCheck(object):
 
         while countnxst < len(listfilece):
 
+            actual_funname = ""
             matchstate = re.search(r"^State[ ]*[0-9]+", listfilece[countnxst])
             matchstateline = re.search(r"line[ ]*([0-9]+)", listfilece[countnxst])
+            matchstatefunc = re.search(r"function[ ]+([a-zA-Z0-9_]+)", listfilece[countnxst])
             if matchstate and matchstateline:
                 nxt_state_line = int(matchstateline.group(1))
+
+                # get name function
+                if matchstatefunc:
+                    actual_funname = matchstatefunc.group(1).strip()
 
                 while not re.search(r"^-+", listfilece[countnxst]):
                     countnxst += 1
@@ -293,20 +299,32 @@ class DepthEsbmcCheck(object):
                 ce_next_state_txt = ""
                 while not re.search(r"^$", listfilece[countnxst]):
                     ce_next_state_txt += listfilece[countnxst].strip()
+                    # clean ce txt
                     match_detailvalue = re.search(r"[ ]+\(.+\)$", ce_next_state_txt)
                     if match_detailvalue:
                         ce_next_state_txt = re.sub(r"[ ]+\(.+\)$", "", ce_next_state_txt)
                     countnxst += 1
 
+                # Validating counterexample txt
                 matchresult_ce = re.search(r"Violated property:", ce_next_state_txt)
                 if not matchresult_ce:
-                    #print(cenxstate_txt)
-                    # >> Handle txt get from CE - next states
-                    listnewassign = self.handletextfrom_ce(ce_next_state_txt, False)
-                    # >> Generating ASSUME to the next states
-                    txtassume = ' && '.join(listnewassign)
-                    #print(txtassume)
-                    self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
+                    flag_genassume_nx = True
+                    # Checking if has reference scope
+                    matchrefscope = re.search(r":", ce_next_state_txt)
+                    if matchrefscope:
+                        # validating scope
+                        #matchisinscope = re.search(r"actual_funname", ce_next_state_txt)
+                        if not actual_funname in ce_next_state_txt:
+                            flag_genassume_nx = False
+
+                    if flag_genassume_nx:
+                        #print(cenxstate_txt)
+                        # >> Handle txt get from CE - next states
+                        listnewassign = self.handletextfrom_ce(ce_next_state_txt, False)
+                        # >> Generating ASSUME to the next states
+                        txtassume = ' && '.join(listnewassign)
+                        #print(txtassume)
+                        self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
 
             countnxst += 1
 

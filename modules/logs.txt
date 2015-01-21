@@ -14,8 +14,8 @@ TODO:
 BUGs:
 -------------------------------------------------------------------------
 
+[FIXED]
 In this situation:
-
 State 211 file /home/hrocha/Documents/Projects_DEV/depthk/test_cases/k-induction/pc_sfifo_1/main_depthk_u.c line 53 function is_do_write_p_triggered thread 0
 c::is_do_write_p_triggered at /home/hrocha/Documents/Projects_DEV/depthk/test_cases/k-induction/pc_sfifo_1/main_depthk_u.c line 91
 c::immediate_notify_threads at /home/hrocha/Documents/Projects_DEV/depthk/test_cases/k-induction/pc_sfifo_1/main_depthk_u.c line 213
