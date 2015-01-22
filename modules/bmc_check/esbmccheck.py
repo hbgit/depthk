@@ -23,6 +23,7 @@ class DepthEsbmcCheck(object):
         self.nameoforicprogram = ""
         self.assumeset = ''
         self.dict_dataassume = {} # e.g., {'cs':[162,"assume(x>0)"],'s1':[170:"assume(y < 100)"]}
+        self.dict_extraassume = {}
         self.statecurrentfunct = ''
         # depth check options
         self.debug = False
@@ -106,16 +107,24 @@ class DepthEsbmcCheck(object):
         #     i -= 1
 
 
-    @staticmethod
-    def handletextfrom_ce(_stringtxtce, _enablescopecheck):
+    def handletextfrom_ce(self, _stringtxtce, _enablescopecheck):
 
         # handle text state get from CE
         # .c::new_main::main::1::SIZE=7
         # preprocessing CE text
         # splitting to remove blank spaces
-        listassign = _stringtxtce.split(".c")
+        listassign = _stringtxtce.split(".")
         #print(">>>>", listassign)
-        # BUG
+
+        # TODO: how consider correct refences, but the txt from ce has no line number
+        # e.g.,
+        # State 30  thread 0
+        # <main invocation>
+        # ----------------------------------------------------
+        # cs$1={ .c::MAX=2,.c::main_new_depthk_09_28_09::main::1::cont=0
+        # HIP1: Create a new dict with this data and then check if the function
+        #      that is pointed in the txt is in the scope of the line that will
+        #      identified in the next steps self.dict_extraassume
 
         if _enablescopecheck:
             # only consider :: < 2
@@ -123,15 +132,23 @@ class DepthEsbmcCheck(object):
             i = 0
             listselectassign = []
             while i < len(listassign):
+                #print(listassign[i])
                 tmps = listassign[i].strip().split("::")
                 # 3 cuz the white space when it is applied the split
                 if not len(tmps) > 3:
                     listselectassign.append(listassign[i])
+                else:
+                    # >> save this data to be possible used as assume
+                    # identify function
+                    # print(listassign[i].strip())
+                    matchfuncref = re.search(r"[a-zA-Z0-9_]+::[a-zA-Z0-9_]+::([a-zA-Z0-9_]+)::", listassign[i].strip())
+                    if matchfuncref:
+                        print(matchfuncref.group(1))
                 i += 1
 
             listassign = listselectassign
             del listselectassign
-
+        sys.exit()
         # removing blank spaces to deal with arrays
         countb = 0
         while countb < len(listassign):
@@ -194,7 +211,6 @@ class DepthEsbmcCheck(object):
 
                     # print("\t => " + ceassign)
                     listnewassign.append(ceassign)
-
 
         return listnewassign
 
@@ -259,7 +275,6 @@ class DepthEsbmcCheck(object):
         if flaghasstate:
             # >> Handle txt get from CE - CS$
             listnewassign = self.handletextfrom_ce(cestatetext, True)
-            #print(">>>>>> ", listnewassign)
             if len(listnewassign) > 0:
                 # >> Generating ASSUME to the last CS$
                 txtassume = ' && '.join(listnewassign)
