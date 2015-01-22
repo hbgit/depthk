@@ -573,7 +573,7 @@ if __name__ == "__main__":
                 rundepthk.callesbmccheck(inputCFile, True)
 
             # Removing tmp files
-            # rundepthk.cleantmpfiles(list_paths_to_delete)
+            rundepthk.cleantmpfiles(list_paths_to_delete)
 
 
 
