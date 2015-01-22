@@ -114,6 +114,8 @@ class DepthEsbmcCheck(object):
         # preprocessing CE text
         # splitting to remove blank spaces
         listassign = _stringtxtce.split(".c")
+        #print(">>>>", listassign)
+        # BUG
 
         if _enablescopecheck:
             # only consider :: < 2
@@ -257,6 +259,7 @@ class DepthEsbmcCheck(object):
         if flaghasstate:
             # >> Handle txt get from CE - CS$
             listnewassign = self.handletextfrom_ce(cestatetext, True)
+            #print(">>>>>> ", listnewassign)
             if len(listnewassign) > 0:
                 # >> Generating ASSUME to the last CS$
                 txtassume = ' && '.join(listnewassign)
@@ -282,7 +285,9 @@ class DepthEsbmcCheck(object):
             matchstatebuitin = re.search(r"<built-in>", listfilece[countnxst])
             matchstatefunc = re.search(r"function[ ]+([a-zA-Z0-9_]+)", listfilece[countnxst])
             # Ignore state with State 2 file <built-in> line 54 thread 0
-            if matchstate and matchstateline and not matchstatebuitin:
+            # We match with matchstatefunc, cuz if we do not found is possible that
+            # the variable is in a global scope and then we can add an assume
+            if matchstate and matchstateline and matchstatefunc and not matchstatebuitin:
                 nxt_state_line = int(matchstateline.group(1))
 
                 # get name function

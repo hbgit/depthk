@@ -14,6 +14,10 @@ TODO:
 BUGs:
 -------------------------------------------------------------------------
 [FIXED]
+- add an assume in global scope
+
+
+[FIXED]
 - counterexample with no CS$ state
 
 [FIXED]
@@ -88,7 +92,7 @@ count_down_02 - OKAY
 count_up_down - OKAY
 count_up_down_bug - OKAY
 digital-controller - ERROR: PARSING ERROR
-eureka_01 - ERROR: PARSING ERROR << depthk BUG
+eureka_01 - OKAY
 eureka_01_bug - OKAY
 eureka_05 - OKAY
 for_bounded_loop1 - OKAY
