@@ -5,6 +5,10 @@ TODO:
     - [DONE] Para cada verificação efetuado criar um método para identificar possiveis erros no ESBMC
     - CHECK_C_SYNTAX_BEFORE_RUNNING_PIPS
     - C syntax errors in file
+
+    >>>> Fixing bugs in esbmccheck.py LOC: 261. Now is need to write code to handle with
+         the dictionary with the extra assumes. We should compare the functions identified
+         with the function in the in the line number were the assume to CS$ state will be added
 -------------------------------------------------------------------------
 
 

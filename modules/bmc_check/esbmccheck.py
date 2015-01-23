@@ -107,55 +107,15 @@ class DepthEsbmcCheck(object):
         #     i -= 1
 
 
-    def handletextfrom_ce(self, _stringtxtce, _enablescopecheck):
+    def translatecedata(self, _listlinesfromce):
 
-        # handle text state get from CE
-        # .c::new_main::main::1::SIZE=7
-        # preprocessing CE text
-        # splitting to remove blank spaces
-        listassign = _stringtxtce.split(".")
-        #print(">>>>", listassign)
-
-        # TODO: how consider correct refences, but the txt from ce has no line number
-        # e.g.,
-        # State 30  thread 0
-        # <main invocation>
-        # ----------------------------------------------------
-        # cs$1={ .c::MAX=2,.c::main_new_depthk_09_28_09::main::1::cont=0
-        # HIP1: Create a new dict with this data and then check if the function
-        #      that is pointed in the txt is in the scope of the line that will
-        #      identified in the next steps self.dict_extraassume
-
-        if _enablescopecheck:
-            # only consider :: < 2
-            #for i, item in enumerate(listassign):
-            i = 0
-            listselectassign = []
-            while i < len(listassign):
-                #print(listassign[i])
-                tmps = listassign[i].strip().split("::")
-                # 3 cuz the white space when it is applied the split
-                if not len(tmps) > 3:
-                    listselectassign.append(listassign[i])
-                else:
-                    # >> save this data to be possible used as assume
-                    # identify function
-                    # print(listassign[i].strip())
-                    matchfuncref = re.search(r"[a-zA-Z0-9_]+::[a-zA-Z0-9_]+::([a-zA-Z0-9_]+)::", listassign[i].strip())
-                    if matchfuncref:
-                        print(matchfuncref.group(1))
-                i += 1
-
-            listassign = listselectassign
-            del listselectassign
-        sys.exit()
         # removing blank spaces to deal with arrays
         countb = 0
-        while countb < len(listassign):
-            listassign[countb] = listassign[countb].replace(" ", "")
+        while countb < len(_listlinesfromce):
+            _listlinesfromce[countb] = _listlinesfromce[countb].replace(" ", "")
             countb += 1
 
-        textcejoinspace = ' '.join(listassign)
+        textcejoinspace = ' '.join(_listlinesfromce)
 
         # print(textcejoinspace)
         # sys.exit()
@@ -167,7 +127,7 @@ class DepthEsbmcCheck(object):
         for item in listassign:
             #
             item = item.strip()
-            # print("---------------------",item)
+            #print("---------------------", item)
             # get only the assignment in the CE
             # skipassign = False
 
@@ -175,11 +135,21 @@ class DepthEsbmcCheck(object):
             # item = item.replace("{", "")
             # item = item.replace(" ", "")
 
-            matchassign = re.search(r'(.[^\}\{:]+)$', item)
-            if matchassign:
-                # clean assignment
-                ceassign = matchassign.group(1).strip()
+            #matchassign = re.search(r'(.[^\}\{:]+)$', item)
+            #if matchassign:
+            # clean assignment
+            #ceassign = matchassign.group(1).strip()
+            ceassign = item.strip()
+            #print(">>>> ", ceassign)
+            #
+            #ceassign = ceassign.replace(":", "")
+            # Getting only the assignment
+            matchlastpart = re.search(r"(.[^:]+)$", ceassign)
+            if matchlastpart:
+                ceassign = matchlastpart.group(1)
+                # Cuz the greed .* now remove this ":"
                 ceassign = ceassign.replace(":", "")
+                #print(ceassign)
 
                 # ------------- Skipping area
                 flag_skip = False
@@ -208,10 +178,88 @@ class DepthEsbmcCheck(object):
                     # replace = by !=
                     ceassign = ceassign.replace("=", "!=")
                     ceassign = ceassign.replace(",", "")
+                    # The last symbol from CS$ state
+                    ceassign = ceassign.replace("}", "")
 
-                    # print("\t => " + ceassign)
+                    #print("\t => " + ceassign)
                     listnewassign.append(ceassign)
 
+        return listnewassign
+
+
+
+    def handletextfrom_ce(self, _stringtxtce, _enablescopecheck):
+
+        # handle text state get from CE
+        # .c::new_main::main::1::SIZE=7
+        # preprocessing CE text
+        # splitting to remove blank spaces
+        listassign = _stringtxtce.split(".")
+        #print(">>>>", listassign)
+
+        # TODO: how consider correct refences, but the txt from ce has no line number
+        # e.g.,
+        # State 30  thread 0
+        # <main invocation>
+        # ----------------------------------------------------
+        # cs$1={ .c::MAX=2,.c::main_new_depthk_09_28_09::main::1::cont=0
+        # HIP1: Create a new dict with this data and then check if the function
+        #      that is pointed in the txt is in the scope of the line that will
+        #      identified in the next steps self.dict_extraassume
+
+        namefuncref_exas = ""
+        flag_exas = False
+        count_exas = 1
+
+        if _enablescopecheck:
+            # only consider :: < 2
+            #for i, item in enumerate(listassign):
+            i = 0
+            listselectassign = []
+            while i < len(listassign):
+                tmps = listassign[i].strip().split("::")
+                # 3 cuz the white space when it is applied the split
+                if not len(tmps) > 3:
+                    listselectassign.append(listassign[i])
+                else:
+                    # >> save this data to be possible used as assume
+                    # identify function
+                    # print(listassign[i].strip())
+                    matchfuncref = re.search(r"[a-zA-Z0-9_]+::[a-zA-Z0-9_]+::([a-zA-Z0-9_]+)::", listassign[i].strip())
+                    if matchfuncref:
+                        flag_exas = True
+                        self.dict_extraassume[count_exas] = [matchfuncref.group(1), listassign[i]]
+                        count_exas += 1
+
+
+                i += 1
+
+            listassign = listselectassign
+            del listselectassign
+
+
+        # Translate data from counterexample pre-selected
+        listnewassign = self.translatecedata(listassign)
+
+        # Translate data from counterexample that have possibility to selected
+        if flag_exas:
+            #listselecassign_exas = self.translatecedata(listassign)
+            list_keys2remove_exas = []
+            for key, value in self.dict_extraassume.items():
+                resulttrans_exas = self.translatecedata([value[1]])
+                #print(self.translatecedata([value[1]]))
+                if len(resulttrans_exas) > 0:
+                    self.dict_extraassume[key][1] = " ".join(resulttrans_exas)
+                else:
+                    list_keys2remove_exas.append(key)
+
+            # Cleanning dictionary
+            for key in list_keys2remove_exas:
+                del self.dict_extraassume[key]
+
+
+        print(self.dict_extraassume)
+        sys.exit()
         return listnewassign
 
 
