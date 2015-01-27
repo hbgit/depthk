@@ -257,10 +257,30 @@ class DepthEsbmcCheck(object):
             for key in list_keys2remove_exas:
                 del self.dict_extraassume[key]
 
-
-        print(self.dict_extraassume)
-        sys.exit()
+        # print(self.dict_extraassume)
+        # sys.exit()
         return listnewassign
+
+
+    def getfunctnamebylinenum(self, _linenum):
+
+        _linenum += 1 # cuz we consider the ctags result
+        keyslist = self.list_beginnumfuct.keys()
+        keyslist.sort()
+        #print(keyslist, _linenum)
+        i = 0
+
+        while i < len(keyslist):
+            if i + 1 < len(keyslist):
+                if _linenum >= keyslist[i] and _linenum < keyslist[i+1]:
+                    return self.list_beginnumfuct[keyslist[i]]
+            else:
+                # the list has only onde value or is the end of the list
+                if _linenum >= keyslist[i]:
+                    return self.list_beginnumfuct[keyslist[i]]
+            i += 1
+
+
 
 
     def getlastdatafromce(self, _esbmccepath):
@@ -289,16 +309,23 @@ class DepthEsbmcCheck(object):
                 flaghasstate = True
 
                 # >> Identifying if the State has the line number
-                # we consider the First one presented
-                # e.g., State 751  thread 0
-                #       c::eval at main_depthk_u.c line 723
+                # we consider the following format
+                # e.g., State 751  thread 0 line 9
+                # If we not found we consider the next state the has that format
                 tmpi = i - 2  # jump the actual line and start with -------
                 while not re.search(r'^State[ ]*[0-9]*', listfilece[tmpi]):
                     tmpi -= 1
-                tmpi += 1  # jump the line start with State ...
+
+                # print(listfilece[tmpi])
+                # tmpi += 1  # jump the line start with State ...
+                # matchline_cs = re.search(r'line[ ]*([0-9]*)', listfilece[tmpi])
+                # if matchline_cs:
+                #     ce_cs_line = int(matchline_cs.group(1)) - 1
+
+                #print(listfilece[tmpi])
                 matchline_cs = re.search(r'line[ ]*([0-9]*)', listfilece[tmpi])
                 if matchline_cs:
-                    ce_cs_line = int(matchline_cs.group(1))
+                    ce_cs_line = int(matchline_cs.group(1)) - 1
 
                 flagkeepgettext = True
                 while flagkeepgettext:
@@ -312,6 +339,7 @@ class DepthEsbmcCheck(object):
             i -= 1
 
 
+
         # identify the function name where is the state identified
         # TODO: fix this BUG, incorrect way to get the name of the function
         matchfunctname = re.search(r'[.]c[:]+new_[a-zA-Z_0-9]+[:]+([a-zA-Z_0-9]+):.*', cestatetext)
@@ -322,18 +350,50 @@ class DepthEsbmcCheck(object):
         # When we do not have CS$ state we try with other state
         if flaghasstate:
             # >> Handle txt get from CE - CS$
+
             listnewassign = self.handletextfrom_ce(cestatetext, True)
+
+            # print(listnewassign)
+            # print(self.getfunctnamebylinenum(8))
+            # print(self.list_beginnumfuct)
+            # BUG in extra assumes
+            # print(self.dict_extraassume)
+            # sys.exit()
+
+            # WARNNING:  some value are not included because
+            #            how we can not get the location where to add, then we avoid this value
             if len(listnewassign) > 0:
                 # >> Generating ASSUME to the last CS$
-                txtassume = ' && '.join(listnewassign)
+                # txtassume = ' && '.join(listnewassign)
                 # identiying it was found the line number in the CS$
                 if ce_cs_line > 0:
+
+                    #print("Has line")
+                    # Validating the extra assume identified
+                    functnametoassu = self.getfunctnamebylinenum(ce_cs_line)
+                    if functnametoassu is not None:
+                        for key, value in self.dict_extraassume.items():
+                           if value[0] == functnametoassu:
+                                listnewassign.append(value[1])
+
+                    txtassume = ' && '.join(listnewassign)
                     self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+
                 else:
                     # Identify a possible location to add the ASSUME to CS$
                     ce_cs_line = self.getlastlinenumfromce(_esbmccepath, ce_index2cs)
+                    #print("Last line found: " + str(ce_cs_line))
+                    functnametoassu = self.getfunctnamebylinenum(ce_cs_line)
+                    if functnametoassu is not None:
+                        for key, value in self.dict_extraassume.items():
+                           if value[0] == functnametoassu:
+                                listnewassign.append(value[1])
+
+                    txtassume = ' && '.join(listnewassign)
                     self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
 
+        #print(self.dict_dataassume)
+        #sys.exit()
         #
         # >> Getting other data after the identification of CS$
         #    The State just are valid from here if has a valid line number
@@ -395,8 +455,9 @@ class DepthEsbmcCheck(object):
 
             countnxst += 1
 
-        #print(self.dict_dataassume)
-        #sys.exit()
+        # print(" ")
+        # print(self.dict_dataassume)
+        # sys.exit()
 
         # checking if we have assumes to add in the new instance of the program
         if self.dict_dataassume:
@@ -533,6 +594,8 @@ class DepthEsbmcCheck(object):
         actual_ce = "/tmp/ce_kinduction.txt"
         last_ce = "/tmp/last_ce_kinduction.txt"
         flag_forceassume = self.forceassume
+        # generate data about the functions
+        self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
 
 
 
@@ -749,6 +812,6 @@ class DepthEsbmcCheck(object):
             matchlinefuct = re.search(r'(.+)[ ]+function[ ]+([0-9]+)', linedfunct)
             if matchlinefuct:
                 # a dictionary with the name of the function and the line number where it start
-                listbeginnumfuct[int(matchlinefuct.group(2)) - 1] = matchlinefuct.group(1)
+                listbeginnumfuct[int(matchlinefuct.group(2)) - 1] = matchlinefuct.group(1).strip()
 
         return listbeginnumfuct
