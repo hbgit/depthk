@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" afterPath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/logs.txt" afterPath="$PROJECT_DIR$/modules/logs.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_cases/k-induction/nec20_bug/main.c" afterPath="$PROJECT_DIR$/test_cases/k-induction/nec20_bug/main.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/depthk.py" afterPath="$PROJECT_DIR$/depthk.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py" afterPath="$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="depthk.iws" />
@@ -31,8 +30,18 @@
       <file leaf-file-name="depthk.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/depthk.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="8184" max-vertical-offset="8700">
-              <caret line="578" column="12" selection-start-line="578" selection-start-column="12" selection-end-line="578" selection-end-column="12" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3248" max-vertical-offset="8700">
+              <caret line="255" column="41" selection-start-line="255" selection-start-column="41" selection-end-line="255" selection-end-column="41" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="translate_pips.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.52100843" vertical-offset="3157" max-vertical-offset="3855">
+              <caret line="229" column="52" selection-start-line="229" selection-start-column="52" selection-end-line="229" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -51,11 +60,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logs.txt" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="logs.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/logs.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5964215" vertical-offset="1440" max-vertical-offset="3060">
-              <caret line="116" column="44" selection-start-line="116" selection-start-column="44" selection-end-line="116" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1530" max-vertical-offset="3060">
+              <caret line="123" column="19" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -86,10 +95,10 @@
       <list>
         <option value="$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py" />
         <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
-        <option value="$PROJECT_DIR$/depthk.py" />
         <option value="$PROJECT_DIR$/modules/logs.txt" />
+        <option value="$PROJECT_DIR$/depthk.py" />
+        <option value="$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py" />
       </list>
     </option>
   </component>
@@ -783,13 +792,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.371972" vertical-offset="2737" max-vertical-offset="3585">
-          <caret line="16" column="35" selection-start-line="16" selection-start-column="35" selection-end-line="16" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2454" max-vertical-offset="12435">
@@ -798,18 +800,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/depthk.py">
+    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="8184" max-vertical-offset="8700">
-          <caret line="578" column="12" selection-start-line="578" selection-start-column="12" selection-end-line="578" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1530" max-vertical-offset="3060">
+          <caret line="123" column="19" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
+    <entry file="file://$PROJECT_DIR$/depthk.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5964215" vertical-offset="1440" max-vertical-offset="3060">
-          <caret line="116" column="44" selection-start-line="116" selection-start-column="44" selection-end-line="116" selection-end-column="44" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3248" max-vertical-offset="8700">
+          <caret line="255" column="41" selection-start-line="255" selection-start-column="41" selection-end-line="255" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.52100843" vertical-offset="3157" max-vertical-offset="3855">
+          <caret line="229" column="52" selection-start-line="229" selection-start-column="52" selection-end-line="229" selection-end-column="52" />
           <folding />
         </state>
       </provider>

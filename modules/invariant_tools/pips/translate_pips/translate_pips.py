@@ -207,20 +207,38 @@ class PipsTranslateAnnot(object):
                             list_leftright = re.split("[=<>!+-/]+", predicate)
 
                             # wrong form to C program
+                            print(list_leftright)
                             for value in list_leftright:
 
                                 newpreform = ''
-                                matchwrongpre = re.search(r'^(([0-9]+)([a-zA-Z_#]+))', value.strip())
+                                ## matchwrongpre = re.search(r'^(([0-9]+)([a-zA-Z0-9_#]+))', value.strip())
                                 # matchwrongpre = re.search(r'^(([0-9]+)([a-zA-Z_#]+))', predicate.strip())
-                                if matchwrongpre:
-                                    # invert the strings
-                                    newpreform = matchwrongpre.group(3) + "*" + matchwrongpre.group(2)
+                                #for matchwrongpre in re.finditer(r'(([0-9]+)([a-zA-Z_]+[a-zA-Z0-9_#]+))', value.strip()):
+                                #print(value)
+                                # BUG in 1*4 where is 14
 
-                                    # print(newpreform)
-                                    #print(matchwrongpre.group(1))
-                                    #print(predicate)
+                                matchwrongpre = re.search(r'^(([0-9]+)([a-zA-Z0-9_#]+))', value.strip())
+                                if matchwrongpre:
+
+                                    newpreform = matchwrongpre.group(2) + "*" + matchwrongpre.group(3)
+                                    print(newpreform)
+                                    #print("F:: ",matchwrongpre.group(1))
+                                    #print(newpreform, matchwrongpre.group(1), predicate)
+                                    # BUG is not CORRECT
+                                    print(predicate)
                                     predicate = re.sub(matchwrongpre.group(1), newpreform, predicate)
-                                    #print(predicate)
+                                    print(predicate)
+
+                                # if matchwrongpre:
+                                #     # invert the strings
+                                #     #newpreform = matchwrongpre.group(3) + "*" + matchwrongpre.group(2)
+                                #     newpreform = matchwrongpre.group(2) + "*" + matchwrongpre.group(3)
+                                #
+                                #     # print(newpreform)
+                                #     #print(matchwrongpre.group(1))
+                                #     #print(predicate)
+                                #     predicate = re.sub(matchwrongpre.group(1), newpreform, predicate)
+                                #     #print(predicate)
 
                                 # Rename vars in this form comp_m1_st#init
                                 matchinit = re.search(r'#init', predicate)
