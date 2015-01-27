@@ -1,14 +1,7 @@
 TODO:
-    - In the counter example take into account other values that is not in CS << states
-    - Quando a geração de invariantes falhar tentar utilizar somente os dados do
-      contraexemplo para gerar os ASSUMES
-    - [DONE] Para cada verificação efetuado criar um método para identificar possiveis erros no ESBMC
-    - CHECK_C_SYNTAX_BEFORE_RUNNING_PIPS
-    - C syntax errors in file
+    -  How improve the verification take into account the FALSE NEGATIVES, e.g., in k-induction/invert_string_bug/main.c
 
-    >>>> Fixing bugs in esbmccheck.py LOC: 261. Now is need to write code to handle with
-         the dictionary with the extra assumes. We should compare the functions identified
-         with the function in the in the line number were the assume to CS$ state will be added
+
 -------------------------------------------------------------------------
 
 
@@ -106,7 +99,7 @@ gcd-with-time - OKAY
 insertion_sort - OKAY
 insertion_sort_bug - Time Out - NO invariants
 invert_string - OKAY
-invert_string_bug - NO invariants. ERROR. NO DATA from counterexample
+invert_string_bug - FAILED
 kinductor_01 - OKAY
 kundu - ERROR: SOLVERS
 kundu_bug - ERROR: SOLVERS

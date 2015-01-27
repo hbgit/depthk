@@ -525,10 +525,6 @@ if __name__ == "__main__":
                 inputCFile = pathnewinstance_depthk
                 list_paths_to_delete.append(inputCFile)
 
-                # Apply hacking to handle with GNU extensions
-                # HackGNUext: Generate a copy the analyzed program to a tmp file
-                # now with the extension replaced from .i to .c
-                inputCFile = rundepthk.applygnuhack(inputCFile)
                 rundepthk.inputisexti = True
 
             else:
@@ -539,6 +535,14 @@ if __name__ == "__main__":
                 inputCFile = pathnewinstance_depthk
                 list_paths_to_delete.append(inputCFile)
 
+
+            # Apply hacking to handle with GNU extensions
+            # HackGNUext: Generate a copy the analyzed program to a tmp file
+            # now with the extension replaced from .i to .c
+            inputCFile = rundepthk.applygnuhack(inputCFile)
+
+            # Applying the preprocess code - Define a specific format to code
+            inputCFile = rundepthk.rununcrustify(inputCFile)
 
             # Applying steps of DepthK
             # Generating pips script
@@ -568,7 +572,6 @@ if __name__ == "__main__":
                 rundepthk.callesbmccheck(pathcodepipstranslated, False)
 
             else:
-                inputCFile = rundepthk.rununcrustify(inputCFile)
                 # Execute the k-induction with ESBMC
                 rundepthk.callesbmccheck(inputCFile, True)
 
