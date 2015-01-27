@@ -1,7 +1,8 @@
 int b;
 _Bool nondet_bool();
-_Bool k=nondet_bool();
+//_Bool k=nondet_bool();
 int main(){
+   _Bool k=nondet_bool();
    int i,n,j;
    int a[1025];
    

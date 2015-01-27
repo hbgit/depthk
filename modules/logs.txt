@@ -114,7 +114,7 @@ matrix_bug - ERROR: SOLVERS
 mem_slave_tlm - TODO
 nec11 - OKAY
 nec11_bug - OKAY
-nec20_bug - BUG (CE = c::TRUE)
+nec20_bug - OKAY [SOLVED BUG (CE = c::TRUE)]
     - cont issue _Bool k=nondet_bool();
 nec24 - TODO
 nec40 - OKAY
