@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="" />
+    <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test_cases/k-induction/verisec_NetBSD-libc__loop_bad/new_main.c" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/depthk.py" afterPath="$PROJECT_DIR$/depthk.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_cases/k-induction/invert_string_bug/main_new_depthk_14_45_13.c" afterPath="$PROJECT_DIR$/test_cases/k-induction/invert_string_bug/main_new_depthk_14_45_13.c" />
+    </list>
     <ignored path="depthk.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -26,8 +30,8 @@
       <file leaf-file-name="depthk.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/depthk.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.02586207" vertical-offset="7965" max-vertical-offset="8880">
-              <caret line="542" column="20" selection-start-line="542" selection-start-column="20" selection-end-line="542" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.15517241" vertical-offset="4230" max-vertical-offset="8910">
+              <caret line="298" column="8" selection-start-line="298" selection-start-column="8" selection-end-line="298" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -49,8 +53,8 @@
       <file leaf-file-name="logs.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/logs.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2100" max-vertical-offset="3075">
-              <caret line="161" column="0" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1380" max-vertical-offset="3075">
+              <caret line="102" column="17" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -59,7 +63,7 @@
       <file leaf-file-name="esbmccheck.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3075" max-vertical-offset="12720">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="12630">
               <caret line="205" column="55" selection-start-line="205" selection-start-column="55" selection-end-line="205" selection-end-column="55" />
               <folding />
             </state>
@@ -794,16 +798,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/logs.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2100" max-vertical-offset="3075">
-          <caret line="161" column="0" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1380" max-vertical-offset="3075">
+          <caret line="102" column="17" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/depthk.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.02586207" vertical-offset="7965" max-vertical-offset="8880">
-          <caret line="542" column="20" selection-start-line="542" selection-start-column="20" selection-end-line="542" selection-end-column="20" />
+        <state vertical-scroll-proportion="0.15517241" vertical-offset="4230" max-vertical-offset="8910">
+          <caret line="298" column="8" selection-start-line="298" selection-start-column="8" selection-end-line="298" selection-end-column="8" />
           <folding />
         </state>
       </provider>

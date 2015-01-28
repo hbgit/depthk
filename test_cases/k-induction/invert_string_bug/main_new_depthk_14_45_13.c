@@ -11,6 +11,8 @@ int main()
 {
    char str1[MAX], str2[MAX];
    int  cont, i, j;
+   
+   __ESBMC_assume( MAX!=2 && cont!=0 && i!=1 && j!=0 );
 
    cont = 0;
 
@@ -32,7 +34,7 @@ int main()
    j = MAX - 1;
    for (i=0; i < MAX; i++)
    {
-__ESBMC_assume( MAX!=2 && cont!=0 && i!=1 && j!=0 );
+//__ESBMC_assume( MAX!=2 && cont!=0 && i!=1 && j!=0 );
       assert(str1[i] == str2[j]);
       j--;
    }
