@@ -100,7 +100,7 @@ gcd-with-time - OKAY
 insertion_sort - OKAY
 insertion_sort_bug - Time Out - NO invariants
 invert_string - OKAY
-invert_string_bug - FAILED
+invert_string_bug - FAILED/OKAY
 kinductor_01 - OKAY
 kundu - ERROR: SOLVERS
 kundu_bug - ERROR: SOLVERS
