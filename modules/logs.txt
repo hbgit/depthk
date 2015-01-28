@@ -83,7 +83,7 @@ TODO: Check the PARSING ERROR
 array - OKAY
 array_bug - OKAY
 bist_cell - OKAY
-bubble_sort - ERROR: PARSING ERROR
+bubble_sort - OKAY
 byte_add_bug - ERROR: SOLVERS
 check_if - OKAY
 check_if_bug - OKAY
@@ -91,7 +91,7 @@ count_down - OKAY
 count_down_02 - OKAY
 count_up_down - OKAY
 count_up_down_bug - OKAY
-digital-controller - ERROR: PARSING ERROR
+digital-controller - OKAY
 eureka_01 - OKAY
 eureka_01_bug - OKAY
 eureka_05 - OKAY

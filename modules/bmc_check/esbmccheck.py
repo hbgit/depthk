@@ -181,10 +181,10 @@ class DepthEsbmcCheck(object):
                     # The last symbol from CS$ state
                     ceassign = ceassign.replace("}", "")
 
-                    # This for ESBMC
+                    # ------- This for ESBMC
                     # WARNNING: we need to improve this because the user can define TRUE and FALSE in the program
                     # Translate result from _Bool nondet_bool();
-                    match_bool = re.search(r"(TRUE)|(FALSE)",ceassign)
+                    match_bool = re.search(r"(TRUE)|(FALSE)", ceassign)
                     if match_bool:
                         try_bool = ceassign.split("!=")
                         if match_bool.group(1) is not None:
@@ -192,6 +192,19 @@ class DepthEsbmcCheck(object):
                         else:
                             try_bool[1] = "0"
                         ceassign = '!='.join(try_bool)
+
+                    # FOR float 0f
+                    match_float = re.search(r"f$", ceassign)
+                    if match_float:
+                        listfloat = ceassign.split("!=")
+                        matchdotfloat = re.search(r"\.", listfloat[1])
+                        if not matchdotfloat:
+                            listfloat[1] = listfloat[1].replace("f", ".0")
+                        else:
+                            listfloat[1] = listfloat[1].replace("f", "")
+
+                        ceassign = '!='.join(listfloat)
+
 
                     #print("\t => " + ceassign)
                     listnewassign.append(ceassign)
