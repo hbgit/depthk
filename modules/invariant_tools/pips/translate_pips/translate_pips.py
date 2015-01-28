@@ -191,7 +191,11 @@ class PipsTranslateAnnot(object):
 
         # Skip this //  P() {0==-1}
         if not matchannot is None:
-            if not matchannot.group(2) == "0==-1":
+
+            # IMPROVE THIS: Skip annotation in this format //  P(0`1`5`i,N) {0<=0`1`5`i, 0`1`5`i+1<=N}
+            matchlinevar = re.search(r'[0-9a-zA-Z_]+`', matchannot.group(1))
+
+            if not matchannot.group(2) == "0==-1" and not matchlinevar:
 
                 if matchannot:
                     listprecond = matchannot.group(2).split(",")

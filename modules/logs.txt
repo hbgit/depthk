@@ -1,5 +1,8 @@
 TODO:
     -  How improve the verification take into account the FALSE NEGATIVES, e.g., in k-induction/invert_string_bug/main.c
+    - Translation not executed in test_cases/k-induction/bubble_sort because of this format
+      //  P(0`1`5`i,N) {0<=0`1`5`i, 0`1`5`i+1<=N} what means 0' ?
+      [SOLVED PARTIAL] it was added a trigger to avoid this annotation type
 
 
 -------------------------------------------------------------------------
@@ -121,7 +124,7 @@ nec40 - OKAY
 nec40_bug - OKAY
 pc_sfifo_1 - OKAY
 pc_sfifo_2_BUG - OKAY
-problem01_20_unsafe - ERROR: depthk BUG
+problem01_20_unsafe - FAILED
 string - OKAY
 string_bug - OKAY
 sum01 - OKAY
