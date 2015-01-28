@@ -441,6 +441,8 @@ if __name__ == "__main__":
                         default=25, help='set the max number of P\' to be generated (default is 25)')
     parser.add_argument('-p', '--generate-program-inv', action="store_true", dest='setOnlyGenInv',
                         help='generates the program with the invariants', default=False)
+    parser.add_argument('-o', '--only-counter-example', action="store_true", dest='setOnlyCEUse',
+                        help='adopt only the counterexample to generate the assumes', default=False)
     # --16, --32, --64             set width of machine word
     parser.add_argument('-a', '--arch', metavar='nr', type=int, dest='setArchCheck',
                         default="64", help='set width of machine word (16, 32 or 64) to ESBMC (default is 64)')
@@ -545,13 +547,18 @@ if __name__ == "__main__":
             # Applying the preprocess code - Define a specific format to code
             inputCFile = rundepthk.rununcrustify(inputCFile)
 
-            # Applying steps of DepthK
-            # Generating pips script
-            scriptpipspath = rundepthk.generatepipsscript(inputCFile)
-            list_paths_to_delete.append(scriptpipspath)
+            codewithinv = ""
+            if not args.setOnlyCEUse:
+                # Applying steps of DepthK
+                # Generating pips script
+                scriptpipspath = rundepthk.generatepipsscript(inputCFile)
+                list_paths_to_delete.append(scriptpipspath)
 
-            # Generating invariants with PIPS
-            codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
+                # Generating invariants with PIPS
+                codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
+
+            if args.setOnlyCEUse and rundepthk.debug_op:
+                print(">> Adopting only the ESBMC counterexample to generate assumes")
 
             if codewithinv:
                 # Identify #init from PIPS in the code with invariants

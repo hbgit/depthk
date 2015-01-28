@@ -78,8 +78,6 @@ SERVER >>> make: *** [tests.log] Error 11
 
 Only DepthK
 ==========================================================================
-TODO: Check the PARSING ERROR
-
 array - OKAY
 array_bug - OKAY
 bist_cell - OKAY
