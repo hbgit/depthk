@@ -207,7 +207,7 @@ class PipsTranslateAnnot(object):
                             list_leftright = re.split("[=<>!+-/]+", predicate)
 
                             # wrong form to C program
-                            print(list_leftright)
+                            #print(list_leftright)
                             for value in list_leftright:
 
                                 newpreform = ''
@@ -217,17 +217,19 @@ class PipsTranslateAnnot(object):
                                 #print(value)
                                 # BUG in 1*4 where is 14
 
-                                matchwrongpre = re.search(r'^(([0-9]+)([a-zA-Z0-9_#]+))', value.strip())
+                                matchwrongpre = re.search(r'^(([0-9]+)([a-zA-Z_#]+))', value.strip())
                                 if matchwrongpre:
 
                                     newpreform = matchwrongpre.group(2) + "*" + matchwrongpre.group(3)
-                                    print(newpreform)
-                                    #print("F:: ",matchwrongpre.group(1))
-                                    #print(newpreform, matchwrongpre.group(1), predicate)
+                                    # replace in value first
+                                    new_value = re.sub(matchwrongpre.group(1), newpreform, value.strip())
+
+                                    #print("value: ", value)
+                                    #print("NEW v: ", new_value)
                                     # BUG is not CORRECT
-                                    print(predicate)
-                                    predicate = re.sub(matchwrongpre.group(1), newpreform, predicate)
-                                    print(predicate)
+                                    #print(predicate)
+                                    predicate = re.sub(value.strip(), new_value, predicate)
+                                    #print(predicate)
 
                                 # if matchwrongpre:
                                 #     # invert the strings
@@ -240,10 +242,10 @@ class PipsTranslateAnnot(object):
                                 #     predicate = re.sub(matchwrongpre.group(1), newpreform, predicate)
                                 #     #print(predicate)
 
-                                # Rename vars in this form comp_m1_st#init
-                                matchinit = re.search(r'#init', predicate)
-                                if matchinit:
-                                    predicate = predicate.replace("#init", "_init")
+                            # Rename vars in this form comp_m1_st#init
+                            matchinit = re.search(r'#init', predicate)
+                            if matchinit:
+                                predicate = predicate.replace("#init", "_init")
 
                             # print(predicate.strip())
                             listnewpreform.append(predicate.strip())
