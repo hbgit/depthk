@@ -220,8 +220,19 @@ class DepthEsbmcCheck(object):
         # preprocessing CE text
         # splitting to remove blank spaces
         listassign = _stringtxtce.split(".")
-        if listassign > 0:
-            del listassign[0]
+
+        #print(">>>>", listassign)
+        listdelassig = []
+        for index, item in enumerate(listassign):
+            matchassignvalid = re.search(r"=", item)
+            if matchassignvalid:
+                listdelassig.append(index)
+
+        tmplist = []
+        for i in listdelassig:
+            tmplist.append(listassign[i])
+        listassign = tmplist
+        del tmplist
         #print(">>>>", listassign)
 
         # TODO: how consider correct refences, but the txt from ce has no line number
@@ -251,10 +262,14 @@ class DepthEsbmcCheck(object):
                 else:
                     # >> save this data to be possible used as assume
                     # identify function
-                    matchfuncref = re.search(r"[a-zA-Z0-9_-]+::[a-zA-Z0-9_-]+::([a-zA-Z0-9_-]+)::", listassign[i].strip())
+                    matchfuncref = re.search(r"[a-zA-Z0-9_.-]+::([a-zA-Z0-9_.-]+)::([a-zA-Z0-9_.-]+)::", listassign[i].strip())
                     if matchfuncref:
                         flag_exas = True
-                        self.dict_extraassume[count_exas] = [matchfuncref.group(1), listassign[i]]
+                        matchisnum = re.search(r"^[0-9]+$", matchfuncref.group(2))
+                        if matchisnum:
+                            self.dict_extraassume[count_exas] = [matchfuncref.group(1), listassign[i]]
+                        else:
+                            self.dict_extraassume[count_exas] = [matchfuncref.group(2), listassign[i]]
                         count_exas += 1
 
 
@@ -308,7 +323,7 @@ class DepthEsbmcCheck(object):
 
     def checkscopeextraassume(self, _linenumber):
         listnewassign = []
-
+        print(self.dict_extraassume)
         functnametoassu = self.getfunctnamebylinenum(_linenumber)
         if functnametoassu is not None:
             for key, value in self.dict_extraassume.items():
@@ -344,6 +359,7 @@ class DepthEsbmcCheck(object):
 
 
             i += 1
+        return 0
 
 
 
@@ -363,6 +379,9 @@ class DepthEsbmcCheck(object):
         ce_index2cs = 0
         ce_cs_line = 0
         ce_cs_data = ""
+
+        # reset dictionary with data assumes
+        self.dict_dataassume = {}
 
         # Gathering data from counter-example to CS
         while i >= 0 and not flagstop:
@@ -443,6 +462,7 @@ class DepthEsbmcCheck(object):
                     #        if value[0] == functnametoassu:
                     #             listnewassign.append(value[1])
 
+                    # print(validdataexas)
                     if len(validdataexas) > 0:
                         listnewassign = listnewassign + validdataexas
 
@@ -453,7 +473,7 @@ class DepthEsbmcCheck(object):
                 else:
                     # Identify a possible location to add the ASSUME to CS$
                     ce_cs_line = self.getlastlinenumfromce(_esbmccepath, ce_index2cs)
-                    # print("Last line found: " + str(ce_cs_line))
+                    #print("Last line found: " + str(ce_cs_line))
                     validdataexas = self.checkscopeextraassume(ce_cs_line)
                     # functnametoassu = self.getfunctnamebylinenum(ce_cs_line)
                     # if functnametoassu is not None:
@@ -461,12 +481,15 @@ class DepthEsbmcCheck(object):
                     #        if value[0] == functnametoassu:
                     #             listnewassign.append(value[1])
 
+                    print(validdataexas)
                     if len(validdataexas) > 0:
                         listnewassign = listnewassign + validdataexas
                     else:
+                        #print("Try one more time")
                         # Last try to identify a valid line number in the
                         # counterexample to add the assume
                         rslastline = self.lastsearchbylinetoassume(_esbmccepath, ce_index2cs)
+                        #print("======= ", rslastline)
                         if rslastline > 0:
                             ce_cs_line = rslastline
                             validdataexas = self.checkscopeextraassume(ce_cs_line)
@@ -490,14 +513,23 @@ class DepthEsbmcCheck(object):
 
             actual_funname = ""
             matchstate = re.search(r"^State[ ]*[0-9]+", listfilece[countnxst])
-            matchstateline = re.search(r"line[ ]*([0-9]+)", listfilece[countnxst])
             matchstatebuitin = re.search(r"<built-in>", listfilece[countnxst])
             matchstatefunc = re.search(r"function[ ]+([a-zA-Z0-9_]+)", listfilece[countnxst])
+
+            matchstateline = re.search(r"line[ ]*([0-9]+)", listfilece[countnxst])
+            # TODO if in the CE text has reference c:: get the last line to this value
+            preciselinenum = 0
+            preciselinenum = self.lastsearchbylinetoassume(_esbmccepath, countnxst)
+            # print("==========> ", preciselinenum)
+
             # Ignore state with State 2 file <built-in> line 54 thread 0
             # We match with matchstatefunc, cuz if we do not found is possible that
             # the variable is in a global scope and then we can add an assume
             if matchstate and matchstateline and matchstatefunc and not matchstatebuitin:
-                nxt_state_line = int(matchstateline.group(1))
+                if preciselinenum > 0:
+                    nxt_state_line = preciselinenum
+                else:
+                    nxt_state_line = int(matchstateline.group(1))
 
                 # get name function
                 if matchstatefunc:
@@ -536,7 +568,6 @@ class DepthEsbmcCheck(object):
                         if len(listnewassign) > 0:
                             # >> Generating ASSUME to the next states
                             txtassume = ' && '.join(listnewassign)
-                            #print(txtassume)
                             self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
 
             countnxst += 1
@@ -563,7 +594,6 @@ class DepthEsbmcCheck(object):
         # generate data about the functions
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
 
-        # TODO: it is best to write this new instance in the original path of the program
         #newfile = open("/tmp/new_instance.c", "w")
         newfile = open(_cprogrampath, "w")
 

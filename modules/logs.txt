@@ -30,12 +30,12 @@ SVCOMP simulation Loops-SET:
 
 
 - [OKAY] loops/veris.c_OpenSER__cases1_stripFullBoth_arr_true-unreach-call.c [failed to find symbol `c::veris_new_depthk_12_26_52']
-- loops/terminator_03_true-unreach-call_true-termination.c [line 112 function main: failed to find symbol `c::y']
-- loops/sum01_bug02_sum01_bug02_base.case_false-unreach-call_true-termination.c [failed to find symbol, but with .i execution okay but FN]
-- loops/n.c24_false-unreach-call.c [failed to find symbol, but with .i ESBMC: this program contains dynamic memory allocation, so we are not applying the inductive step to this program!]
-- loop-acceleration/functions_false-unreach-call1.c [failed to find symbol `c::x']
-- loop-acceleration/functions_true-unreach-call1.c [failed to find symbol `c::x']
-- loop-acceleration/multivar_true-unreach-call1.c [failed to find symbol `c::y']
+- [OKAY] loops/terminator_03_true-unreach-call_true-termination.c [line 112 function main: failed to find symbol `c::y']
+- [OKAY] loops/sum01_bug02_sum01_bug02_base.case_false-unreach-call_true-termination.c [failed to find symbol, but with .i execution okay but FN]
+- [OKAY] loops/n.c24_false-unreach-call.c [failed to find symbol, but with .i ESBMC: this program contains dynamic memory allocation, so we are not applying the inductive step to this program!]
+- [OKAY] loop-acceleration/functions_false-unreach-call1.c [failed to find symbol `c::x']
+- [OKAY] loop-acceleration/functions_true-unreach-call1.c [failed to find symbol `c::x']
+- [OKAY] loop-acceleration/multivar_true-unreach-call1.c [failed to find symbol `c::y']
 
 
 
