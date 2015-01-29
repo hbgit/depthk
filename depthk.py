@@ -296,8 +296,6 @@ class DepthK(object):
         if not self.esbmcsolver == "z3":
             runesbmc.esbmc_solver_op = "--" + self.esbmcsolver.strip()
 
-        runesbmc.esbmc_solver_op = ""
-
         print(runesbmc.kinductioncheck(_cfilepath))
 
 
