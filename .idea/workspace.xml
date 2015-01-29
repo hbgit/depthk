@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f95d8914-aeef-4210-8080-5d39e2071f0d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" afterPath="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/preprocessing/uncrustify_files/ben.cfg" afterPath="$PROJECT_DIR$/modules/preprocessing/uncrustify_files/ben.cfg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/depthk.py" afterPath="$PROJECT_DIR$/depthk.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/logs.txt" afterPath="$PROJECT_DIR$/modules/logs.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -27,11 +28,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="depthk.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="depthk.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/depthk.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4305" max-vertical-offset="8880">
-              <caret line="297" column="0" selection-start-line="297" selection-start-column="0" selection-end-line="297" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="7850" max-vertical-offset="8925">
+              <caret line="550" column="13" selection-start-line="550" selection-start-column="13" selection-end-line="550" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="hack_extensions.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2300" max-vertical-offset="3375">
+              <caret line="26" column="4" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -40,18 +51,18 @@
       <file leaf-file-name="esbmccheck.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5115" max-vertical-offset="13515">
+            <state vertical-scroll-proportion="0.0" vertical-offset="11330" max-vertical-offset="13515">
               <caret line="411" column="10" selection-start-line="411" selection-start-column="10" selection-end-line="411" selection-end-column="10" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logs.txt" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="logs.txt" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/modules/logs.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5" max-vertical-offset="3435">
-              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.5086207" vertical-offset="140" max-vertical-offset="3630">
+              <caret line="29" column="9" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -73,10 +84,10 @@
         <option value="$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py" />
-        <option value="$PROJECT_DIR$/depthk.py" />
         <option value="$PROJECT_DIR$/modules/utils_exp/svcomp_simulation.py" />
         <option value="$PROJECT_DIR$/wrapper_script_tests.sh" />
         <option value="$PROJECT_DIR$/modules/bmc_check/esbmccheck.py" />
+        <option value="$PROJECT_DIR$/depthk.py" />
         <option value="$PROJECT_DIR$/modules/logs.txt" />
       </list>
     </option>
@@ -745,13 +756,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.58131486" vertical-offset="669" max-vertical-offset="3390">
-          <caret line="67" column="17" selection-start-line="67" selection-start-column="17" selection-end-line="67" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/modules/invariant_tools/pips/translate_pips/translate_pips.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.622093" vertical-offset="2559" max-vertical-offset="3945">
@@ -787,24 +791,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/bmc_check/esbmccheck.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5115" max-vertical-offset="13515">
+        <state vertical-scroll-proportion="0.0" vertical-offset="11330" max-vertical-offset="13515">
           <caret line="411" column="10" selection-start-line="411" selection-start-column="10" selection-end-line="411" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
+    <entry file="file://$PROJECT_DIR$/modules/gnu_extension/hack_extensions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5" max-vertical-offset="3435">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2300" max-vertical-offset="3375">
+          <caret line="26" column="4" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/depthk.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="8302" max-vertical-offset="8880">
-          <caret line="297" column="0" selection-start-line="297" selection-start-column="0" selection-end-line="297" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="7850" max-vertical-offset="8925">
+          <caret line="550" column="13" selection-start-line="550" selection-start-column="13" selection-end-line="550" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/logs.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5086207" vertical-offset="140" max-vertical-offset="3630">
+          <caret line="29" column="9" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
           <folding />
         </state>
       </provider>

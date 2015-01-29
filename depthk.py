@@ -547,9 +547,12 @@ if __name__ == "__main__":
             # HackGNUext: Generate a copy the analyzed program to a tmp file
             # now with the extension replaced from .i to .c
             inputCFile = rundepthk.applygnuhack(inputCFile)
+            #print(inputCFile)
+            #sys.exit()
 
             # Applying the preprocess code - Define a specific format to code
             inputCFile = rundepthk.rununcrustify(inputCFile)
+
 
             codewithinv = ""
             if not args.setOnlyCEUse:
