@@ -5,6 +5,30 @@ TODO:
       [SOLVED PARTIAL] it was added a trigger to avoid this annotation type
 
 
+SVCOMP simulation Loops-SET: -> Adopt .i is in most case better than .c
+- loop-new/count_by_2_true-unreach-call.c [MAX k (15) reached.]
+- loops/veris.c_OpenSER__cases1_stripFullBoth_arr_true-unreach-call.c [failed to find symbol `c::veris_new_depthk_12_26_52']
+- loops/terminator_03_true-unreach-call_true-termination.c [line 112 function main: failed to find symbol `c::y']
+- loops/bubble_sort_false-unreach-call.c [BUG no Pycparser better adopt .i]
+- loops/matrix_false-unreach-call_true-termination.c [Z3 and Boolector error]
+- loops/heavy_true-unreach-call.c [ESBMC: array size `1048576' is probably too large]
+- loops/sum01_bug02_sum01_bug02_base.case_false-unreach-call_true-termination.c [failed to find symbol, but with .i execution okay but FN]
+- loops/n.c24_false-unreach-call.c [failed to find symbol, but with .i ESBMC: this program contains dynamic memory allocation, so we are not applying the inductive step to this program!]
+- loops/heavy_false-unreach-call.c [ESBMC: array size `1048576' is probably too large]
+- loop-acceleration/array_true-unreach-call1.c [MAX k (15) reached]
+- loop-acceleration/nested_false-unreach-call1.c [OKAY - FN -- after assumes from CE]
+- loop-acceleration/simple_true-unreach-call3.c [ESBMC: solver error]
+- loop-acceleration/array_false-unreach-call1.c [MAX k (15) reached]
+- loop-acceleration/functions_false-unreach-call1.c [failed to find symbol `c::x']
+- loop-acceleration/functions_true-unreach-call1.c [failed to find symbol `c::x']
+- loop-acceleration/multivar_true-unreach-call1.c [failed to find symbol `c::y']
+- loop-acceleration/simple_true-unreach-call2.c [MAX k (15) reached]
+- loop-invgen/apache-get-tag_true-unreach-call.c [line 82: syntax error before `}']
+- loop-invgen/heapsort_true-unreach-call.c [Z3 erro. Boolector OKAY]
+- loop-invgen/apache-escape-absolute_true-unreach-call.c [line 104: syntax error before `}']
+
+
+
 -------------------------------------------------------------------------
 
 

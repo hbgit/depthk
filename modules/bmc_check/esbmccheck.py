@@ -249,8 +249,7 @@ class DepthEsbmcCheck(object):
                 else:
                     # >> save this data to be possible used as assume
                     # identify function
-                    # print(listassign[i].strip())
-                    matchfuncref = re.search(r"[a-zA-Z0-9_]+::[a-zA-Z0-9_]+::([a-zA-Z0-9_]+)::", listassign[i].strip())
+                    matchfuncref = re.search(r"[a-zA-Z0-9_-]+::[a-zA-Z0-9_-]+::([a-zA-Z0-9_-]+)::", listassign[i].strip())
                     if matchfuncref:
                         flag_exas = True
                         self.dict_extraassume[count_exas] = [matchfuncref.group(1), listassign[i]]
@@ -261,7 +260,6 @@ class DepthEsbmcCheck(object):
 
             listassign = listselectassign
             del listselectassign
-
 
         # Translate data from counterexample pre-selected
         listnewassign = self.translatecedata(listassign)
@@ -305,6 +303,45 @@ class DepthEsbmcCheck(object):
                     return self.list_beginnumfuct[keyslist[i]]
             i += 1
 
+
+    def checkscopeextraassume(self, _linenumber):
+        listnewassign = []
+
+        functnametoassu = self.getfunctnamebylinenum(_linenumber)
+        if functnametoassu is not None:
+            for key, value in self.dict_extraassume.items():
+               if value[0] == functnametoassu:
+                    listnewassign.append(value[1])
+
+        return listnewassign
+
+
+    @staticmethod
+    def lastsearchbylinetoassume(_esbmccepath, _indexliststartsearch):
+
+        filece = open(_esbmccepath, "r")
+        listfilece = filece.readlines()
+        filece.close()
+
+        i = _indexliststartsearch
+        savelastline = 0
+        while i < len(listfilece):
+            matchpoint = re.search(r'^c::', listfilece[i])
+            matchlinepoint = re.search(r'line[ ]+([0-9]+)', listfilece[i])
+            if matchpoint and matchlinepoint:
+                savelastline = matchlinepoint.group(1)
+
+            matchdotline = re.search(r'^-+', listfilece[i])
+            if matchdotline and savelastline > 0:
+                return int(savelastline) - 1
+
+            # stop search
+            matchstop = re.search(r'Violated property', listfilece[i])
+            if matchstop:
+                return 0
+
+
+            i += 1
 
 
 
@@ -372,6 +409,7 @@ class DepthEsbmcCheck(object):
             self.statecurrentfunct = matchfunctname.group(1)
 
 
+        # print("++++++++++++++++++++ ", cestatetext)
         # When we do not have CS$ state we try with other state
         if flaghasstate:
             # >> Handle txt get from CE - CS$
@@ -387,35 +425,56 @@ class DepthEsbmcCheck(object):
 
             # WARNNING:  some value are not included because
             #            how we can not get the location where to add, then we avoid this value
-            if len(listnewassign) > 0:
+            if len(listnewassign) > 0 or self.dict_extraassume:
                 # >> Generating ASSUME to the last CS$
                 # txtassume = ' && '.join(listnewassign)
                 # identiying it was found the line number in the CS$
+                # print("============================= ", ce_cs_line)
                 if ce_cs_line > 0:
 
-                    #print("Has line")
+                    # print("Has line")
+                    validdataexas = self.checkscopeextraassume(ce_cs_line)
                     # Validating the extra assume identified
-                    functnametoassu = self.getfunctnamebylinenum(ce_cs_line)
-                    if functnametoassu is not None:
-                        for key, value in self.dict_extraassume.items():
-                           if value[0] == functnametoassu:
-                                listnewassign.append(value[1])
+                    # functnametoassu = self.getfunctnamebylinenum(ce_cs_line)
+                    # if functnametoassu is not None:
+                    #     for key, value in self.dict_extraassume.items():
+                    #        if value[0] == functnametoassu:
+                    #             listnewassign.append(value[1])
 
-                    txtassume = ' && '.join(listnewassign)
-                    self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+                    if len(validdataexas) > 0:
+                        listnewassign = listnewassign + validdataexas
+
+                    if len(listnewassign) > 0:
+                        txtassume = ' && '.join(listnewassign)
+                        self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
 
                 else:
                     # Identify a possible location to add the ASSUME to CS$
                     ce_cs_line = self.getlastlinenumfromce(_esbmccepath, ce_index2cs)
-                    #print("Last line found: " + str(ce_cs_line))
-                    functnametoassu = self.getfunctnamebylinenum(ce_cs_line)
-                    if functnametoassu is not None:
-                        for key, value in self.dict_extraassume.items():
-                           if value[0] == functnametoassu:
-                                listnewassign.append(value[1])
+                    # print("Last line found: " + str(ce_cs_line))
+                    validdataexas = self.checkscopeextraassume(ce_cs_line)
+                    # functnametoassu = self.getfunctnamebylinenum(ce_cs_line)
+                    # if functnametoassu is not None:
+                    #     for key, value in self.dict_extraassume.items():
+                    #        if value[0] == functnametoassu:
+                    #             listnewassign.append(value[1])
 
-                    txtassume = ' && '.join(listnewassign)
-                    self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+                    if len(validdataexas) > 0:
+                        listnewassign = listnewassign + validdataexas
+                    else:
+                        # Last try to identify a valid line number in the
+                        # counterexample to add the assume
+                        rslastline = self.lastsearchbylinetoassume(_esbmccepath, ce_index2cs)
+                        if rslastline > 0:
+                            ce_cs_line = rslastline
+                            validdataexas = self.checkscopeextraassume(ce_cs_line)
+                            if len(validdataexas) > 0:
+                                listnewassign = listnewassign + validdataexas
+
+
+                    if len(listnewassign) > 0:
+                        txtassume = ' && '.join(listnewassign)
+                        self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
 
         #print(self.dict_dataassume)
         #sys.exit()
