@@ -220,6 +220,8 @@ class DepthEsbmcCheck(object):
         # preprocessing CE text
         # splitting to remove blank spaces
         listassign = _stringtxtce.split(".")
+        if listassign > 0:
+            del listassign[0]
         #print(">>>>", listassign)
 
         # TODO: how consider correct refences, but the txt from ce has no line number

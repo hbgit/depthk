@@ -14,6 +14,10 @@ SVCOMP simulation Loops-SET:
 - [OKAY] loop-acceleration/array_true-unreach-call1.c [MAX k (15) reached]
 - [OKAY] loop-acceleration/simple_true-unreach-call2.c [MAX k (15) reached]
 - [OKAY] loop-acceleration/array_false-unreach-call1.c [MAX k (15) reached]
+- [OKAY] loops/bubble_sort_false-unreach-call.c [BUG no Pycparser better adopt .i]
+- [OKAY] loop-invgen/apache-get-tag_true-unreach-call.c [line 82: syntax error before `}']
+- [OKAY] loop-invgen/apache-escape-absolute_true-unreach-call.c [line 104: syntax error before `}']
+
 
 - loops/heavy_true-unreach-call.c [ESBMC: array size `1048576' is probably too large]
 - loops/heavy_false-unreach-call.c [ESBMC: array size `1048576' is probably too large]
@@ -22,15 +26,10 @@ SVCOMP simulation Loops-SET:
 - loop-invgen/heapsort_true-unreach-call.c [Z3 erro. Boolector OKAY]
 
 
-
 - loop-acceleration/nested_false-unreach-call1.c [OKAY - FN -- after assumes from CE]
 
-- [OKAY] loops/bubble_sort_false-unreach-call.c [BUG no Pycparser better adopt .i]
-- [OKAY] loop-invgen/apache-get-tag_true-unreach-call.c [line 82: syntax error before `}']
-- [OKAY] loop-invgen/apache-escape-absolute_true-unreach-call.c [line 104: syntax error before `}']
 
-
-- loops/veris.c_OpenSER__cases1_stripFullBoth_arr_true-unreach-call.c [failed to find symbol `c::veris_new_depthk_12_26_52']
+- [OKAY] loops/veris.c_OpenSER__cases1_stripFullBoth_arr_true-unreach-call.c [failed to find symbol `c::veris_new_depthk_12_26_52']
 - loops/terminator_03_true-unreach-call_true-termination.c [line 112 function main: failed to find symbol `c::y']
 - loops/sum01_bug02_sum01_bug02_base.case_false-unreach-call_true-termination.c [failed to find symbol, but with .i execution okay but FN]
 - loops/n.c24_false-unreach-call.c [failed to find symbol, but with .i ESBMC: this program contains dynamic memory allocation, so we are not applying the inductive step to this program!]
