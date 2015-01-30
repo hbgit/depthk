@@ -24,6 +24,7 @@ class DepthEsbmcCheck(object):
         self.assumeset = ''
         self.dict_dataassume = {} # e.g., {'cs':[162,"assume(x>0)"],'s1':[170:"assume(y < 100)"]}
         self.dict_extraassume = {}
+        self.disable_csstate = True
         self.statecurrentfunct = ''
         # depth check options
         self.debug = False
@@ -390,35 +391,36 @@ class DepthEsbmcCheck(object):
             matchstate = re.search(r'cs\$[0-9]+', listfilece[i])
             if matchstate:
                 ce_index2cs = i
-                flaghasstate = True
+                if not self.disable_csstate:
+                    flaghasstate = True
 
-                # >> Identifying if the State has the line number
-                # we consider the following format
-                # e.g., State 751  thread 0 line 9
-                # If we not found we consider the next state the has that format
-                tmpi = i - 2  # jump the actual line and start with -------
-                while not re.search(r'^State[ ]*[0-9]*', listfilece[tmpi]):
-                    tmpi -= 1
+                    # >> Identifying if the State has the line number
+                    # we consider the following format
+                    # e.g., State 751  thread 0 line 9
+                    # If we not found we consider the next state the has that format
+                    tmpi = i - 2  # jump the actual line and start with -------
+                    while not re.search(r'^State[ ]*[0-9]*', listfilece[tmpi]):
+                        tmpi -= 1
 
-                # print(listfilece[tmpi])
-                # tmpi += 1  # jump the line start with State ...
-                # matchline_cs = re.search(r'line[ ]*([0-9]*)', listfilece[tmpi])
-                # if matchline_cs:
-                #     ce_cs_line = int(matchline_cs.group(1)) - 1
+                    # print(listfilece[tmpi])
+                    # tmpi += 1  # jump the line start with State ...
+                    # matchline_cs = re.search(r'line[ ]*([0-9]*)', listfilece[tmpi])
+                    # if matchline_cs:
+                    #     ce_cs_line = int(matchline_cs.group(1)) - 1
 
-                #print(listfilece[tmpi])
-                matchline_cs = re.search(r'line[ ]*([0-9]*)', listfilece[tmpi])
-                if matchline_cs:
-                    ce_cs_line = int(matchline_cs.group(1)) - 1
+                    #print(listfilece[tmpi])
+                    matchline_cs = re.search(r'line[ ]*([0-9]*)', listfilece[tmpi])
+                    if matchline_cs:
+                        ce_cs_line = int(matchline_cs.group(1)) - 1
 
-                flagkeepgettext = True
-                while flagkeepgettext:
-                    matchblankline = re.search(r'^$', listfilece[i])
-                    if matchblankline:
-                        flagkeepgettext = False
-                    else:
-                        cestatetext += listfilece[i]
-                    i += 1
+                    flagkeepgettext = True
+                    while flagkeepgettext:
+                        matchblankline = re.search(r'^$', listfilece[i])
+                        if matchblankline:
+                            flagkeepgettext = False
+                        else:
+                            cestatetext += listfilece[i]
+                        i += 1
                 flagstop = True
             i -= 1
 
