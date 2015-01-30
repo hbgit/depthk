@@ -438,7 +438,7 @@ if __name__ == "__main__":
     parser.add_argument(dest='inputCProgram', metavar='file.c or file.i (experimental)', type=str,
                         help='the C program file to be analyzed')
     parser.add_argument('-k', '--max-k-step', metavar='nr', type=int, dest='setMaxK',
-                        default=15, help='set the max k time step (default is 15)')
+                        default=100, help='set the max k time step (default is 100)')
     parser.add_argument('-d', '--max-depth-check', metavar='nr', type=int, dest='setMaxDepthCheck',
                         default=25, help='set the max number of P\' to be generated (default is 25)')
     parser.add_argument('-p', '--generate-program-inv', action="store_true", dest='setOnlyGenInv',
