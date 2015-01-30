@@ -186,7 +186,7 @@ def set_codes_to_experiment(pathCPrograms):
     # Get number total of the programs 
     for root, dirs, files in os.walk(pathCPrograms):                
         for file in files:
-            if file.endswith(".c"):
+            if file.endswith(".i"):
                 total_num_programs += 1
                 
     TOTAL_FILES = total_num_programs
@@ -194,7 +194,7 @@ def set_codes_to_experiment(pathCPrograms):
     
     for root, dirs, files in os.walk(pathCPrograms):                
         for file in files:
-            if file.endswith(".c"):
+            if file.endswith(".i"):
                 print(file, end=" -> ")
                 print(" "+str(id_count)+" from "+str(total_num_programs))
                 get_path_program = os.path.join(root, file)

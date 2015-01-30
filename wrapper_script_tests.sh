@@ -4,7 +4,7 @@
 # Usage: ./wrapper_script_tests.sh <file.c|file.i>
 
 # Path to the DepthK tool
-path_to_depthk=/home/hrocha/Documents/Projects_DEV/depthk/depthk.py
+path_to_depthk=/home/hrocha/servarq/Docs/tools/depthk/depthk.py
 
 
 while getopts "c:mh" arg; do
