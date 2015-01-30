@@ -28,6 +28,7 @@ class DepthEsbmcCheck(object):
         # depth check options
         self.debug = False
         self.forceassume = False
+        self.disableuse_ce = False
         self.maxk = 15
         self.maxdepthverification = 25
         self.esbmcpath = ''
@@ -839,7 +840,8 @@ class DepthEsbmcCheck(object):
                                 print(" ")
                                 return "ERROR. It was identified an error in the verification of inductive step"
 
-                        else:
+                        elif not self.disableuse_ce:
+                        #else:
 
                             if not self.forceassume:
 
