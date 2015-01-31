@@ -25,7 +25,7 @@ done
 
 
 # Command line, common to all tests.
-depthk_options="--debug --disable-counter-example --memlimit 4g --extra-option-esbmc=\"--error-label ERROR\""
+depthk_options="--debug --disable-counter-example --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""
 
 
 # Store the path to the file we're going to be checking.

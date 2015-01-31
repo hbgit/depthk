@@ -23,7 +23,7 @@ ABS_PATH_FILE = os.path.dirname(os.path.abspath(__file__))
 # Name of the final report
 OUTPUT_REPORT_FILE = ABS_PATH_FILE+"/<name_>report.html"
 # Name of the tmp report that is generated according to tests execution
-id = random.choice(string.letters)
+id = random.choice(string.letters) + str(int(round(time.time() * 1000)))
 TMP_REPORT_FILE = ABS_PATH_FILE+'/tmp_result_'+id.strip()+'.html'
 
 # HTML Model Report
@@ -186,15 +186,22 @@ def set_codes_to_experiment(pathCPrograms):
     # Get number total of the programs 
     for root, dirs, files in os.walk(pathCPrograms):                
         for file in files:
-            if file.endswith(".i"):
+            if file.endswith(".c"):
                 total_num_programs += 1
+
+
                 
     TOTAL_FILES = total_num_programs
     
     
     for root, dirs, files in os.walk(pathCPrograms):                
         for file in files:
-            if file.endswith(".i"):
+            if file.endswith(".c"):
+                # checking if there is a .i
+                file_i = re.sub(".c$",".i", file)
+                if os.path.exists(file_i):
+                    file = file_i
+
                 print(file, end=" -> ")
                 print(" "+str(id_count)+" from "+str(total_num_programs))
                 get_path_program = os.path.join(root, file)
