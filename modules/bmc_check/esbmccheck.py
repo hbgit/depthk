@@ -683,6 +683,13 @@ class DepthEsbmcCheck(object):
             return False
 
 
+    @staticmethod
+    def cleantmpfiles(_listfiles2delete):
+        for filepath in _listfiles2delete:
+            if os.path.exists(filepath):
+                os.remove(filepath)
+
+
 
     def kinductioncheck(self, _cprogrampath):
 
@@ -707,10 +714,16 @@ class DepthEsbmcCheck(object):
             - "FALSE"   if there exists a path that violates the safety property
             - "UNKNOWN" if does not succeed in computing and answer "TRUE" or "FALSE"
         """
+        listtmpfiles = []
         actual_detphver = 1
-        actual_ce = "/tmp/ce_kinduction.txt"
-        last_ce = "/tmp/last_ce_kinduction.txt"
+        actual_ce = _cprogrampath.replace(".c", ".acce")
+        listtmpfiles.append(actual_ce)
+        #actual_ce = "/tmp/ce_kinduction.txt"
+        last_ce = _cprogrampath.replace(".c", ".ltce")
+        listtmpfiles.append(last_ce)
+        #last_ce = "/tmp/last_ce_kinduction.txt"
         flag_forceassume = self.forceassume
+
         # generate data about the functions
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
 
@@ -759,6 +772,7 @@ class DepthEsbmcCheck(object):
                 # show counterexample
                 os.system("cat " + actual_ce)
                 print(" ")
+                self.cleantmpfiles(listtmpfiles)
                 return "FALSE"
 
             else:
@@ -796,11 +810,13 @@ class DepthEsbmcCheck(object):
                         if self.hassuccessfulfromesbmc(actual_ce):
                             # The property was proved
                             # print("True")
+                            self.cleantmpfiles(listtmpfiles)
                             return "TRUE"
                         else:
                             # Some ERROR was identified in the verification of forward-condition
                             os.system("cat " + actual_ce)
                             print(" ")
+                            self.cleantmpfiles(listtmpfiles)
                             return "ERROR. It was identified an error in the verification of forward condition"
 
                     else:
@@ -833,11 +849,13 @@ class DepthEsbmcCheck(object):
                         if statusce_inductivestep == 0:
                             if self.hassuccessfulfromesbmc(actual_ce):
                                 # print("True")
+                                self.cleantmpfiles(listtmpfiles)
                                 return "TRUE"
                             else:
                                 # Some ERROR was identified in the verification of inductive-step
                                 os.system("cat " + actual_ce)
                                 print(" ")
+                                self.cleantmpfiles(listtmpfiles)
                                 return "ERROR. It was identified an error in the verification of inductive step"
 
                         elif not self.disableuse_ce:
@@ -863,6 +881,7 @@ class DepthEsbmcCheck(object):
                                     # Possible BUG cuz the PLACE where the assume is added
                                     if not self.getlastdatafromce(actual_ce):
                                         # >> UNKNOWN
+                                        self.cleantmpfiles(listtmpfiles)
                                         return "ERROR. NO DATA from counterexample! Sorry about that."
 
 
@@ -891,6 +910,7 @@ class DepthEsbmcCheck(object):
                                 # Possible BUG cuz the PLACE where the assume is added
                                 if not self.getlastdatafromce(actual_ce):
                                     # >> UNKNOWN
+                                    self.cleantmpfiles(listtmpfiles)
                                     return "ERROR. NO DATA from counterexample! Sorry about that."
 
                                 # Getting the last valid location in the counterexample to add
@@ -906,11 +926,13 @@ class DepthEsbmcCheck(object):
                     # Some ERROR was identified in the verification of base-case
                     os.system("cat " + actual_ce)
                     print(" ")
+                    self.cleantmpfiles(listtmpfiles)
                     return "ERROR. It was identified an error in the verification of base-case"
 
         # >> END-WHILE
         # >> UNKNOWN
         print("MAX k (" + str(self.maxk) + ") reached. ")
+        self.cleantmpfiles(listtmpfiles)
         return "UNKNOWN"
 
 
