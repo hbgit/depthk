@@ -22,8 +22,8 @@ setproperty ABORT_ON_USER_ERROR TRUE
 
 # ---- Set the file name here
 
-delete precod
-create precod \
+delete <PIPS.DB>
+create <PIPS.DB> \
     <FILE.C_INPUT>
 
 # just to insure that all routines are generated.  

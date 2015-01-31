@@ -316,6 +316,9 @@ class DepthK(object):
         # Write the name of the C program in the PIPS script
         os.system("sed -i \'s@<FILE.C_INPUT>@" + _cfilepath + "@g\' " + destscript)
 
+        # Write the name of the PIPS DB in the PIPS script
+        os.system("sed -i \'s@<PIPS.DB>@" + self.pipsdatabaseresult + "@g\' " + destscript)
+
         return destscript
 
     def runpips(self, _scriptpips, _cfilepath, _listfiles2delete):
