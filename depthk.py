@@ -19,6 +19,8 @@ import os
 import commands
 import re
 import time
+import random
+import string
 from pipes import quote
 import platform
 
@@ -71,7 +73,8 @@ class DepthK(object):
                               '/modules/invariant_tools/pips/script_template/' + \
                               'script_generate_precod.pips'
         self.pipscommand = "tpips"
-        self.pipsdatabaseresult = os.path.abspath(".") + '/precod.database'
+        self.idresultpipsdb = random.choice(string.letters) + str(int(round(time.time() * 1000)))
+        self.pipsdatabaseresult = os.path.abspath(".") + '/precod_' + self.idresultpipsdb + '.database'
 
 
     def identify_initpips(self, _cfilepath):
