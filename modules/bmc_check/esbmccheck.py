@@ -37,7 +37,8 @@ class DepthEsbmcCheck(object):
         self.esbmc_unwind_op = "--unwind"
         self.esbmc_memlimit_op = ""
         self.esbmc_timeout_op = "15m"
-        self.esbmc_nolibrary = "--no-library"
+        #self.esbmc_nolibrary = "--no-library"
+        self.esbmc_nolibrary = ""
         self.esbmc_extra_op = ""
         self.esbmc_solver_op = "--z3"
         # k-induction options
@@ -718,10 +719,10 @@ class DepthEsbmcCheck(object):
         listtmpfiles = []
         actual_detphver = 1
         actual_ce = _cprogrampath.replace(".c", ".acce")
-        listtmpfiles.append(actual_ce)
+        #listtmpfiles.append(actual_ce)
         #actual_ce = "/tmp/ce_kinduction.txt"
         last_ce = _cprogrampath.replace(".c", ".ltce")
-        listtmpfiles.append(last_ce)
+        #listtmpfiles.append(last_ce)
         #last_ce = "/tmp/last_ce_kinduction.txt"
         flag_forceassume = self.forceassume
 
@@ -747,6 +748,16 @@ class DepthEsbmcCheck(object):
             # >> (1) Checking base-case, i.e., there is a counterexample?
             # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
             #  --memlimit 4g --timeout 15m "--memlimit " + self.esbmc_memlimit_op + " " +
+            # print(self.esbmcpath + " " + self.esbmc_arch + " " +
+            #                                      self.esbmc_solver_op + " " +
+            #                                      self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+            #                                      self.isdefiniedmemlimit() +
+            #                                      "--timeout " + self.esbmc_timeout_op + " " +
+            #                                      self.esbmc_nolibrary + " " +
+            #                                      self.esbmc_extra_op + " " +
+            #                                      self.esbmc_basecase_op + " " +
+            #                                      _cprogrampath)
+
             result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                                  self.esbmc_solver_op + " " +
                                                  self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
@@ -770,6 +781,9 @@ class DepthEsbmcCheck(object):
 
             # >> (1) Identifying if it was generated a counterexample
             statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
+
+            #print(actual_ce)
+
             if statusce_basecase > 0:
                 # show counterexample
                 os.system("cat " + actual_ce)
@@ -790,6 +804,17 @@ class DepthEsbmcCheck(object):
                         print("\t\t Status: checking forward condition")
                     # Checking the forward condition
                     # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
+
+                    # print(self.esbmcpath + " " + self.esbmc_arch + " " +
+                    #                                         self.esbmc_solver_op + " " +
+                    #                                         self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                    #                                         self.isdefiniedmemlimit() +
+                    #                                         "--timeout " + self.esbmc_timeout_op + " " +
+                    #                                         self.esbmc_nolibrary + " " +
+                    #                                         self.esbmc_extra_op + " " +
+                    #                                         self.esbmc_forwardcond_op + " " +
+                    #                                         _cprogrampath)
+
                     result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                                             self.esbmc_solver_op + " " +
                                                             self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
@@ -799,6 +824,8 @@ class DepthEsbmcCheck(object):
                                                             self.esbmc_extra_op + " " +
                                                             self.esbmc_forwardcond_op + " " +
                                                             _cprogrampath)
+
+                    #print(result_forwardcond)
 
                     self.savelist2file(actual_ce, result_forwardcond)
                     # Identify a possible timeout
@@ -830,6 +857,18 @@ class DepthEsbmcCheck(object):
                         # "The forward condition is unable to prove the property"
                         # Checking the inductive step
                         # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
+
+                        # print(self.esbmcpath + " " + self.esbmc_arch + " " +
+                        #                                           self.esbmc_solver_op + " " +
+                        #                                           self.esbmc_unwind_op + " " +
+                        #                                           str(self.esbmc_bound) + " " +
+                        #                                           self.isdefiniedmemlimit() +
+                        #                                           "--timeout " + self.esbmc_timeout_op + " " +
+                        #                                           self.esbmc_nolibrary + " " +
+                        #                                           self.esbmc_extra_op + " " +
+                        #                                           self.esbmc_inductivestep_op + " " +
+                        #                                           _cprogrampath)
+
                         result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                                                   self.esbmc_solver_op + " " +
                                                                   self.esbmc_unwind_op + " " +
@@ -840,6 +879,8 @@ class DepthEsbmcCheck(object):
                                                                   self.esbmc_extra_op + " " +
                                                                   self.esbmc_inductivestep_op + " " +
                                                                   _cprogrampath)
+
+                        #print(result_inductivestep)
 
                         self.savelist2file(actual_ce, result_inductivestep)
                         # Identify a possible timeout
