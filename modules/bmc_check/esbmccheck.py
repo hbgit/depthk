@@ -37,7 +37,8 @@ class DepthEsbmcCheck(object):
         self.esbmc_unwind_op = "--unwind"
         self.esbmc_memlimit_op = ""
         self.esbmc_timeout_op = "15m"
-        self.esbmc_extra_op = "--no-library"
+        self.esbmc_nolibrary = "--no-library"
+        self.esbmc_extra_op = ""
         self.esbmc_solver_op = "--z3"
         # k-induction options
         self.esbmc_basecase_op = "--base-case"
@@ -751,6 +752,7 @@ class DepthEsbmcCheck(object):
                                                  self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                  self.isdefiniedmemlimit() +
                                                  "--timeout " + self.esbmc_timeout_op + " " +
+                                                 self.esbmc_nolibrary + " " +
                                                  self.esbmc_extra_op + " " +
                                                  self.esbmc_basecase_op + " " +
                                                  _cprogrampath)
@@ -793,6 +795,7 @@ class DepthEsbmcCheck(object):
                                                             self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                             self.isdefiniedmemlimit() +
                                                             "--timeout " + self.esbmc_timeout_op + " " +
+                                                            self.esbmc_nolibrary + " " +
                                                             self.esbmc_extra_op + " " +
                                                             self.esbmc_forwardcond_op + " " +
                                                             _cprogrampath)
@@ -833,6 +836,7 @@ class DepthEsbmcCheck(object):
                                                                   str(self.esbmc_bound) + " " +
                                                                   self.isdefiniedmemlimit() +
                                                                   "--timeout " + self.esbmc_timeout_op + " " +
+                                                                  self.esbmc_nolibrary + " " +
                                                                   self.esbmc_extra_op + " " +
                                                                   self.esbmc_inductivestep_op + " " +
                                                                   _cprogrampath)
