@@ -11,6 +11,7 @@ int main(void) {
   unsigned int x = 1; 
   //__ESBMC_assume( x!=1 ); // FROM counterexample   
   unsigned int y = 0; //LINE  20 ???
+  __ESBMC_assume( y!=1 ); // FROM counterexample
   //__ESBMC_assume( y!=0 ); // FROM counterexample
 
   while (y < 1024) {

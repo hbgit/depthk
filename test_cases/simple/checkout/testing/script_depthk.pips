@@ -22,9 +22,9 @@ setproperty ABORT_ON_USER_ERROR TRUE
 
 # ---- Set the file name here
 
-delete precody00000000000000121212_db 
-create precody00000000000000121212_db \
-    s3_clnt_1_false-unreach-call.cil.c
+delete precody00121212_db 
+create precody00121212_db \
+    ori_const_false-unreach-call1.c
 
 # just to insure that all routines are generated.  
  

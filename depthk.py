@@ -309,10 +309,12 @@ class DepthK(object):
     def generatepipsscript(self, _cfilepath):
 
         # Getting path from C file
-        cpathnamefile = os.path.dirname(_cfilepath)
+        # cpathnamefile = os.path.dirname(_cfilepath)
+
+        namefilescript = re.sub("\.c$|\.i$","", _cfilepath)
 
         # Generating pips script
-        destscript = cpathnamefile + "/script_depthk.pips"
+        destscript = namefilescript + "_script_depthk.pips"
         shutil.copyfile(self.pipsscriptpath, destscript)
 
         # Write the name of the C program in the PIPS script
