@@ -547,15 +547,17 @@ if __name__ == "__main__":
                     list_paths_to_delete.append(inputCFile)
 
 
+            # Applying the preprocess code - Define a specific format to code
+            inputCFile = rundepthk.rununcrustify(inputCFile)
+
+
             # Apply hacking to handle with GNU extensions
             # HackGNUext: Generate a copy the analyzed program to a tmp file
             # now with the extension replaced from .i to .c
             inputCFile = rundepthk.applygnuhack(inputCFile)
             #print(inputCFile)
-            #sys.exit()
-
-            # Applying the preprocess code - Define a specific format to code
-            inputCFile = rundepthk.rununcrustify(inputCFile)
+            os.system("cat "+ inputCFile)
+            sys.exit()
 
 
             codewithinv = ""

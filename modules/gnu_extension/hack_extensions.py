@@ -54,8 +54,77 @@ def make_pycparser_compatible( data ):
     # ]
     #for type, name in TYPEDEF_HACKS: d += 'typedef %s %s;\n' %(type,name)
 
+    list2delete = []
     for num, line in enumerate(data.splitlines()):
         # TODO: Improve this match by use regular expressions
+
+
+        # TODO: remove __gnuc_va_list
+        # functions that use __gnuc_va_list
+        # typedef __builtin_va_list __gnuc_va_list;
+        if line.startswith('typedef __builtin_va_list __gnuc_va_list;'):
+            line = ""
+        # extern int _IO_vfscanf
+        if line.startswith('extern int _IO_vfscanf'):
+            list2delete.append(num)
+        # extern int _IO_vfprintf
+        if line.startswith('extern int _IO_vfprintf'):
+            list2delete.append(num)
+        # typedef __gnuc_va_list va_list;
+        if line.startswith('typedef __gnuc_va_list va_list;'):
+            line = ""
+        # extern int vfprintf
+        if line.startswith('extern int vfprintf'):
+            list2delete.append(num)
+        # extern int vprintf
+        if line.startswith('extern int vprintf'):
+            list2delete.append(num)
+        # extern int vsprintf
+        if line.startswith('extern int vsprintf'):
+            list2delete.append(num)
+        # extern int vsnprintf
+        if line.startswith('extern int vsnprintf'):
+            list2delete.append(num)
+        # extern int vdprintf
+        if line.startswith('extern int vdprintf'):
+            list2delete.append(num)
+        # extern int vfscanf
+        if line.startswith('extern int vfscanf'):
+            list2delete.append(num)
+        # extern int vscanf
+        if line.startswith('extern int vscanf'):
+            list2delete.append(num)
+        # extern int vsscanf
+        if line.startswith('extern int vsscanf'):
+            list2delete.append(num)
+        # extern int vfscanf
+        if line.startswith('extern int vfscanf'):
+            list2delete.append(num)
+        # extern int vscanf
+        if line.startswith('extern int vscanf'):
+            list2delete.append(num)
+        # extern int vsscanf
+        if line.startswith('extern int vsscanf'):
+            list2delete.append(num)
+        #
+
+
+        # printf -- stdio.h
+        matchincludeio = re.search(r"(#include[ ]*<stdio\.h>)", line)
+        if matchincludeio:
+            line = line.replace(matchincludeio.group(1),"//"+matchincludeio.group(1))
+
+        matchprintf = re.search(r"(printf\(.*\)[ ]*;)", line)
+        if matchprintf:
+            #print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            # identify only the part with printf
+            txtlist = line.strip().split(";")
+            for txt in txtlist:
+                matchprintfstart = re.search(r"(^printf\(.*\))", txt)
+                if matchprintfstart:
+                    line = line.replace(matchprintfstart.group(1), "")
+
+
 
         if '((__malloc__));' in line.split(): line = line.replace('((__malloc__));', ';')   # stdio.h:225
         if '((__malloc__))' in line.split(): line = line.replace('((__malloc__))', '')
@@ -126,6 +195,21 @@ def make_pycparser_compatible( data ):
         matchnr = re.search(r"\(\(__nothrow__[ ]*,[ ]*__noreturn__\)\)", line)
         if matchnr:
             line = re.sub(r"\(\(__nothrow__[ ]*,[ ]*__noreturn__\)\)", "", line)
+
+
+        # ((__format__ (__printf__, 3, 4)));
+        matchformatp = re.search(r"\(\(__format__[ ]*\(__printf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)", line)
+        if matchformatp:
+            line = re.sub(r"\(\(__format__[ ]*\(__printf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)",
+                          "",
+                          line)
+
+        # ((__format__(__scanf__, 2, 0)));
+        matchformats = re.search(r"\(\(__format__[ ]*\(__scanf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)", line)
+        if matchformats:
+            line = re.sub(r"\(\(__format__[ ]*\(__scanf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)",
+                          "",
+                          line)
 
         #
         match_nnull = re.search(r"\(\(__nonnull__[ ]*[\(]([0-9]*,[ ]*)*([0-9]*)[\)]\)\)", line)

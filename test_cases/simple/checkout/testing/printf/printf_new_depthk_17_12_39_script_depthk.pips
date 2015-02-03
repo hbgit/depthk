@@ -1,0 +1,60 @@
+# PIPS script adopted by DepthK
+# Usage way:
+#            $ source MYPIPS/pipsrc.sh
+#            $ tpips scritp.pips
+
+# ---- prettyprinter settings  
+ 
+setproperty PRETTYPRINT_ALL_DECLARATIONS TRUE
+# setproperty PRETTYPRINT_ALL_CONTINUE_STATEMENTS TRUE
+# setproperty PRETTYPRINT_ALL_LABELS TRUE
+setproperty PRETTYPRINT_C_CODE TRUE
+setproperty PRETTYPRINT_ALL_C_BRACES TRUE
+setproperty PRETTYPRINT_GCC_C_BRACES TRUE
+
+# ---- Generates missing files  and routines 
+
+setproperty PREPROCESSOR_MISSING_FILE_HANDLING "generate"
+
+# Stop as soon as the first user error occurs  
+ 
+setproperty ABORT_ON_USER_ERROR TRUE
+
+# ---- Set the file name here
+
+delete precodB1422997959526
+create precodB1422997959526 \
+    /home/hrocha/Documents/Projects_DEV/depthk/test_cases/simple/checkout/testing/printf/printf_new_depthk_17_12_39.c
+
+# just to insure that all routines are generated.  
+ 
+make CALLGRAPH_FILE[%ALL]
+
+
+# ---- eliminate dead code 
+
+apply SUPPRESS_DEAD_CODE[%ALL]
+
+# ---- ask interprocedural information  
+ 
+activate TRANSFORMERS_INTER_FULL
+activate PRECONDITIONS_INTER_FULL 
+
+ 
+capply PARTIAL_EVAL[%ALL]
+
+
+activate PRINT_CODE_PRECONDITIONS
+
+
+# 3.4 Regeneration of User Source Files
+# The unsplit 3.4 phase regenerates user files from available printed_file. 
+# The various modules that where initially stored in single file are appended
+# together in a file with the same name. Rebuild the source files after
+# one or several transformations. The files are placed in the ex1.database/Src
+# directory
+
+apply UNSPLIT[%ALL]
+
+close
+quit

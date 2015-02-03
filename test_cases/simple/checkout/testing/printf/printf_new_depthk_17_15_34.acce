@@ -1,0 +1,15 @@
+file /home/hrocha/Documents/Projects_DEV/depthk/test_cases/simple/checkout/testing/printf/printf_new_depthk_17_15_34.c: Parsing
+Converting
+Type-checking printf_new_depthk_17_15_34
+Generating GOTO Program
+GOTO program creation time: 0.093s
+GOTO program processing time: 0.000s
+Starting Bounded Model Checking
+Unwinding loop 0 iteration 1 file /home/hrocha/Documents/Projects_DEV/depthk/test_cases/simple/checkout/testing/printf/printf_new_depthk_17_15_34.c line 71 function main
+Unwinding loop 0 iteration 2 file /home/hrocha/Documents/Projects_DEV/depthk/test_cases/simple/checkout/testing/printf/printf_new_depthk_17_15_34.c line 71 function main
+Symex completed in: 0.001s
+size of program expression: 23 assignments
+Slicing time: 0.000s
+Generated 0 VCC(s), 0 remaining after simplification
+VERIFICATION SUCCESSFUL
+BMC program time: 0.001s
