@@ -768,6 +768,9 @@ class DepthEsbmcCheck(object):
                                                  self.esbmc_basecase_op + " " +
                                                  _cprogrampath)
 
+
+            # print(result_basecase)
+
             # We just check here cuz, the other esbmc call just change specific parameters controlled by us
             # if self.hasincorrectopesbmc(actual_ce):
             #     os.system("cat " + actual_ce)
@@ -782,7 +785,7 @@ class DepthEsbmcCheck(object):
             # >> (1) Identifying if it was generated a counterexample
             statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
 
-            #print(actual_ce)
+
 
             if statusce_basecase > 0:
                 # show counterexample
@@ -880,7 +883,7 @@ class DepthEsbmcCheck(object):
                                                                   self.esbmc_inductivestep_op + " " +
                                                                   _cprogrampath)
 
-                        #print(result_inductivestep)
+                        # print(result_inductivestep)
 
                         self.savelist2file(actual_ce, result_inductivestep)
                         # Identify a possible timeout

@@ -35,17 +35,6 @@ from modules.gnu_extension import hack_extensions
 
 
 
-# TODO:
-# Precondition to usage:
-# - all variables should be declared in top of the function [todo]
-# - it is necessary to generate the invariante to the code
-# (1) [DONE] Identify each variable and it type
-# (2) [DONE] Read the code.pips identify #init, save the VAR#init and the function where it was find
-# (3) [DONE] write new code where for each function identified in (2) we should add the new vars to VAR#init
-# (4) [DONE] Read the code.pips and translate the annotations to __ESBMC. WARNNING: replace VAR#init to VAR_init
-# (5) Checking the new code with ESBMC k-induction
-# (6) From counterexample added a new ASSUME in the code
-
 
 
 class DepthK(object):
@@ -469,8 +458,8 @@ if __name__ == "__main__":
                         help='configure time limit  to ESBMC (default is 15m), integer followed by {s,m,h}',
                         default="15m")
     parser.add_argument('-e', '--extra-option-esbmc', metavar='options', type=str, dest='setOpESBMC',
-                        help='set extra options to ESBMC (default --no-library). '
-                             'Usage way: -e=\"--bv --no-bounds-check\"', default="--no-library")
+                        help='set extra options to ESBMC '
+                             'Usage way: -e=\"--bv --no-bounds-check\"')
     parser.add_argument('-g', '--debug', action="store_true", dest='setDebug',
                         help='generates debug information', default=False)
     # parser.add_argument('-s', '--statistics', action="store_true", dest='setInfo',
