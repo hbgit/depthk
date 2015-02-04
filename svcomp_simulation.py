@@ -198,7 +198,7 @@ def set_codes_to_experiment(pathCPrograms):
         for file in files:
             if file.endswith(".c"):
                 # checking if there is a .i
-                file_i = re.sub(".c$",".i", file)
+                file_i = re.sub(".c$",".i", os.path.join(root, file))
                 if os.path.exists(file_i):
                     file = file_i
 
@@ -487,7 +487,7 @@ def set_codes_to_experiment(pathCPrograms):
         #os.remove(PATH_HTML_MODEL_REPORT)
         os.remove(TMP_REPORT_FILE)
         # save on dropbox the result
-        ckstatus = commands.getoutput("dropbox_uploader.sh upload " + str(OUTPUT_REPORT_FILE) + " /results_depthk/no_use_counterexample_2/")
+        ckstatus = commands.getoutput("dropbox_uploader.sh upload " + str(OUTPUT_REPORT_FILE) + " /results_depthk/no_use_ce_forcelastcheck/")
         matchdonesend = re.search(r"DONE", str(ckstatus))
         if not matchdonesend:
             print(">>>> Sorry. Error to send the report.")
