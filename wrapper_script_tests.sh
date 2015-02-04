@@ -47,6 +47,9 @@ run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
 # postprocess the results. `timeout` is part of coreutils on debian and fedora.
 result_check=`timeout 895 bash -c "$run_cmdline"`
 
+# Identify when it is not possible generate the invariants
+invTO=`echo ${result_check} | grep -c "TIMEOUT to generate the invariants"`
+
 # Postprocessing: first, collect some facts
 failed=`echo ${result_check} | grep -c "VERIFICATION FAILED"`
 success=`echo ${result_check} | grep -c "TRUE"`
@@ -60,4 +63,9 @@ elif [ $success -gt 0 ]; then
 else
     echo "UNKNOWN"
 
+fi
+
+# print if have a TO to invariants
+if [ invTO -gt 0 ]; then
+    echo "[PIPS] TIMEOUT to generate the invariants"
 fi
