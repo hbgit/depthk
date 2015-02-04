@@ -726,6 +726,9 @@ class DepthEsbmcCheck(object):
         #last_ce = "/tmp/last_ce_kinduction.txt"
         flag_forceassume = self.forceassume
 
+        flag_moreonecheckbase = True
+        lastresult = ""
+
         # generate data about the functions
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
 
@@ -795,6 +798,12 @@ class DepthEsbmcCheck(object):
                 return "FALSE"
 
             else:
+
+                # checking we are in the force last check
+                if lastresult:
+                    self.cleantmpfiles(listtmpfiles)
+                    return lastresult
+
                 # >> (2) Only if there is NOT counterexample, then  increase k = k +1
                 # only to check if any crash was generated
                 statusce_basecase_nobug = int(commands.getoutput("cat " + actual_ce +
@@ -843,8 +852,13 @@ class DepthEsbmcCheck(object):
                         if self.hassuccessfulfromesbmc(actual_ce):
                             # The property was proved
                             # print("True")
-                            self.cleantmpfiles(listtmpfiles)
-                            return "TRUE"
+                            if flag_moreonecheckbase:
+                                lastresult = "TRUE"
+                                if self.debug:
+                                    print("\t\t > Forcing last check in base case")
+                            else:
+                                self.cleantmpfiles(listtmpfiles)
+                                return "TRUE"
                         else:
                             # Some ERROR was identified in the verification of forward-condition
                             os.system("cat " + actual_ce)
