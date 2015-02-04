@@ -326,6 +326,7 @@ class DepthK(object):
         # run script with tpips
         # TODO: Add a timout
         init_inv_t = time.time()
+        #resultpips = commands.getoutput(self.pipscommand + " " + _scriptpips)
         resultpips = commands.getoutput("timeout --signal=9 8m " + self.pipscommand + " " + _scriptpips)
         #os.system("timeout --signal=9 8m " + self.pipscommand + " " + _scriptpips)
         end_inv_t = time.time()
@@ -336,6 +337,8 @@ class DepthK(object):
         matcherrorpips1 = re.search(r'tpips_user_error: Abort on user error requested!', resultpips)
         # Aborted                 (core dumped)
         matcherrorpips2 = re.search(r'(core dumped)', resultpips)
+        # timeout: the monitored command dumped core
+        matcherrorpips3 = re.search(r'(timeout: the monitored command dumped core)', resultpips)
 
         # Identify if happen a TO
         flag_TO_inv = False
@@ -343,7 +346,7 @@ class DepthK(object):
             flag_TO_inv = True
 
 
-        if matcherrorpips1 or matcherrorpips2 or flag_TO_inv:
+        if matcherrorpips1 or matcherrorpips2 or matcherrorpips3 or flag_TO_inv:
             if self.debug_op:
                 if flag_TO_inv:
                     print("\t - TIMEOUT to generate the invariants.")
