@@ -761,33 +761,50 @@ class DepthEsbmcCheck(object):
             #                                      self.esbmc_basecase_op + " " +
             #                                      _cprogrampath)
 
-            result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                 self.esbmc_solver_op + " " +
-                                                 self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                                                 self.isdefiniedmemlimit() +
-                                                 "--timeout " + self.esbmc_timeout_op + " " +
-                                                 self.esbmc_nolibrary + " " +
-                                                 self.esbmc_extra_op + " " +
-                                                 self.esbmc_basecase_op + " " +
-                                                 _cprogrampath)
+            # checking we are in the force last check
+            if lastresult:
+                #nextk = self.esbmc_bound + 25
+                self.esbmc_bound += 20
+                #while self.esbmc_bound <= nextk and self.esbmc_bound <= self.maxk and statusce_basecase <= 0:
+                # print("---------------")
+                if self.esbmc_bound <= self.maxk:
+                    result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                     self.esbmc_solver_op + " " +
+                                                     self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                     self.isdefiniedmemlimit() +
+                                                     "--timeout " + self.esbmc_timeout_op + " " +
+                                                     self.esbmc_nolibrary + " " +
+                                                     self.esbmc_extra_op + " " +
+                                                     self.esbmc_basecase_op + " " +
+                                                     _cprogrampath)
 
+                    self.savelist2file(actual_ce, result_basecase)
 
-            # print(result_basecase)
+                    # Identify a possible timeout
+                    self.hastimeoutfromesbmc(actual_ce)
 
-            # We just check here cuz, the other esbmc call just change specific parameters controlled by us
-            # if self.hasincorrectopesbmc(actual_ce):
-            #     os.system("cat " + actual_ce)
-            #     return "\n ERROR. Unrecognized option to ESBMC"
+                    # >> (1) Identifying if it was generated a counterexample
+                    statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
+                    #self.esbmc_bound += 1
 
-            self.savelist2file(actual_ce, result_basecase)
+            else:
+                result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                     self.esbmc_solver_op + " " +
+                                                     self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                     self.isdefiniedmemlimit() +
+                                                     "--timeout " + self.esbmc_timeout_op + " " +
+                                                     self.esbmc_nolibrary + " " +
+                                                     self.esbmc_extra_op + " " +
+                                                     self.esbmc_basecase_op + " " +
+                                                     _cprogrampath)
 
-            # Identify a possible timeout
-            self.hastimeoutfromesbmc(actual_ce)
+                self.savelist2file(actual_ce, result_basecase)
 
+                # Identify a possible timeout
+                self.hastimeoutfromesbmc(actual_ce)
 
-            # >> (1) Identifying if it was generated a counterexample
-            statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
-
+                # >> (1) Identifying if it was generated a counterexample
+                statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
 
 
             if statusce_basecase > 0:
@@ -911,8 +928,13 @@ class DepthEsbmcCheck(object):
                         if statusce_inductivestep == 0:
                             if self.hassuccessfulfromesbmc(actual_ce):
                                 # print("True")
-                                self.cleantmpfiles(listtmpfiles)
-                                return "TRUE"
+                                if flag_moreonecheckbase:
+                                    lastresult = "TRUE"
+                                    if self.debug:
+                                        print("\t\t > Forcing last check in base case")
+                                else:
+                                    self.cleantmpfiles(listtmpfiles)
+                                    return "TRUE"
                             else:
                                 # Some ERROR was identified in the verification of inductive-step
                                 os.system("cat " + actual_ce)
