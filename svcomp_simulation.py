@@ -261,15 +261,18 @@ def set_codes_to_experiment(pathCPrograms):
                 # >> Analysing the result to write the log
                 SAVE_PRP_result = ''
                 # Check if has a TIME OUT
-                if not(str(result_exec).strip() == 'UNKNOWN'):
+                matchto = re.search(r"UNKNOWN", str(result_exec).strip())
+                if not matchto:
 
                     # -- The result is True or False
-                    if str(result_exec).strip() == "FAILED":
+                    matchfailedst = re.search(r"FAILED", str(result_exec).strip())
+                    matchtruest = re.search(r"TRUE", str(result_exec).strip())
+                    if matchfailedst:
                         SAVE_PRP_result = "failed"
                         FAILED = True
                         SUCCESS = False
 
-                    elif str(result_exec).strip() == "TRUE":
+                    elif matchtruest:
                         FAILED = False
                         SUCCESS = True
 
