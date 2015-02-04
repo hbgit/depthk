@@ -556,8 +556,8 @@ if __name__ == "__main__":
             # now with the extension replaced from .i to .c
             inputCFile = rundepthk.applygnuhack(inputCFile)
             #print(inputCFile)
-            os.system("cat "+ inputCFile)
-            sys.exit()
+            # os.system("cat " + inputCFile)
+            # sys.exit()
 
 
             codewithinv = ""
@@ -574,6 +574,7 @@ if __name__ == "__main__":
                 print(">> Adopting only the ESBMC counterexample to generate assumes")
 
             if codewithinv:
+                codewithinv = rundepthk.applygnuhack(codewithinv)
                 # Identify #init from PIPS in the code with invariants
                 dict_init = rundepthk.identify_initpips(codewithinv)
 

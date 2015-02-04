@@ -54,7 +54,12 @@ class IdentifyVarDecl(NodeVisitor):
 
     def visit_Decl(self, node):
         if type(node.type) == TypeDecl:
-            self.datafromdecl[node.name] = [node.type.type.names,self.getnumberofline(node.coord)]
+            #print("===================", node.coord, node.type.type)
+            if not type(node.type.type) == Union and \
+               not type(node.type.type) == Struct:
+                self.datafromdecl[node.name] = [node.type.type.names,self.getnumberofline(node.coord)]
+            #else:
+
             #print(node.name,node.type.type.names,self.getnumberofline(node.coord))
 
 

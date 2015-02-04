@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: latin1 -*-
+from itertools import count
 
 import sys
 import re
@@ -22,6 +23,19 @@ _super_hack = '''typedef union
   char __size[24];
   long int __align;
 } pthread_mutex_t;'''
+
+
+def countwhiledelimiter(_list, _index):
+    delimiter = ";"
+    count = _index
+    # print(count,"===========================")
+    while not re.search(r";$", _list[count]):
+        count += 1
+    # print(count,"===========================")
+    #_index += count
+
+    return count+1
+
 
 ## data = output of C pre processor ##
 def make_pycparser_compatible( data ):
@@ -55,215 +69,220 @@ def make_pycparser_compatible( data ):
     #for type, name in TYPEDEF_HACKS: d += 'typedef %s %s;\n' %(type,name)
 
     list2delete = []
-    for num, line in enumerate(data.splitlines()):
+    listdata = data.splitlines()
+    counti = 0
+    #for num, line in enumerate(data.splitlines()):
+    while counti < len(listdata):
         # TODO: Improve this match by use regular expressions
 
 
         # TODO: remove __gnuc_va_list
         # functions that use __gnuc_va_list
         # typedef __builtin_va_list __gnuc_va_list;
-        if line.startswith('typedef __builtin_va_list __gnuc_va_list;'):
-            line = ""
+        if re.search(r"typedef[ ]+__builtin_va_list[ ]+__gnuc_va_list;", listdata[counti]):
+            listdata[counti] = ""
         # extern int _IO_vfscanf
-        if line.startswith('extern int _IO_vfscanf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int _IO_vfscanf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int _IO_vfprintf
-        if line.startswith('extern int _IO_vfprintf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int _IO_vfprintf'):
+            counti = countwhiledelimiter(listdata, counti)
         # typedef __gnuc_va_list va_list;
-        if line.startswith('typedef __gnuc_va_list va_list;'):
-            line = ""
+        if re.search(r"typedef[ ]+__gnuc_va_list[ ]+va_list;", listdata[counti]):
+            listdata[counti] = ""
         # extern int vfprintf
-        if line.startswith('extern int vfprintf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vfprintf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vprintf
-        if line.startswith('extern int vprintf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vprintf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vsprintf
-        if line.startswith('extern int vsprintf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vsprintf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vsnprintf
-        if line.startswith('extern int vsnprintf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vsnprintf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vdprintf
-        if line.startswith('extern int vdprintf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vdprintf'):
+            # print(listdata[counti],"-----------------------------------", counti)
+            counti = countwhiledelimiter(listdata, counti)
+            # print(listdata[counti],"-----------------------------------", counti)
         # extern int vfscanf
-        if line.startswith('extern int vfscanf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vfscanf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vscanf
-        if line.startswith('extern int vscanf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vscanf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vsscanf
-        if line.startswith('extern int vsscanf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vsscanf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vfscanf
-        if line.startswith('extern int vfscanf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vfscanf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vscanf
-        if line.startswith('extern int vscanf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vscanf'):
+            counti = countwhiledelimiter(listdata, counti)
         # extern int vsscanf
-        if line.startswith('extern int vsscanf'):
-            list2delete.append(num)
+        if listdata[counti].startswith('extern int vsscanf'):
+            counti = countwhiledelimiter(listdata, counti)
         #
 
 
         # printf -- stdio.h
-        matchincludeio = re.search(r"(#include[ ]*<stdio\.h>)", line)
+        matchincludeio = re.search(r"(#include[ ]*<stdio\.h>)", listdata[counti])
         if matchincludeio:
-            line = line.replace(matchincludeio.group(1),"//"+matchincludeio.group(1))
+            listdata[counti] = listdata[counti].replace(matchincludeio.group(1),"//"+matchincludeio.group(1))
 
-        matchprintf = re.search(r"(printf\(.*\)[ ]*;)", line)
+        matchprintf = re.search(r"(printf\(.*\)[ ]*;)", listdata[counti])
         if matchprintf:
             #print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
             # identify only the part with printf
-            txtlist = line.strip().split(";")
+            txtlist = listdata[counti].strip().split(";")
             for txt in txtlist:
                 matchprintfstart = re.search(r"(^printf\(.*\))", txt)
                 if matchprintfstart:
-                    line = line.replace(matchprintfstart.group(1), "")
+                    listdata[counti] = listdata[counti].replace(matchprintfstart.group(1), "")
 
 
 
-        if '((__malloc__));' in line.split(): line = line.replace('((__malloc__));', ';')   # stdio.h:225
-        if '((__malloc__))' in line.split(): line = line.replace('((__malloc__))', '')
+        if '((__malloc__));' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__malloc__));', ';')   # stdio.h:225
+        if '((__malloc__))' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__malloc__))', '')
 
         #__attribute__((__malloc__))
-        match_malloc = re.search(r"[ ]*__attribute__[ ]*\(\(__malloc__\)\)[ ]*([;]*)", line)
+        match_malloc = re.search(r"[ ]*__attribute__[ ]*\(\(__malloc__\)\)[ ]*([;]*)", listdata[counti])
         if match_malloc:
             if match_malloc.group(1):
-                line = re.sub(r"[ ]*__attribute__[ ]*\(\(__malloc__\)\)[ ]*[;]*", " ;", line)
+                listdata[counti] = re.sub(r"[ ]*__attribute__[ ]*\(\(__malloc__\)\)[ ]*[;]*", " ;", listdata[counti])
             else:
-                line = re.sub(r"[ ]*__attribute__[ ]*\(\(__malloc__\)\)[ ]*[;]*", " ", line)
+                listdata[counti] = re.sub(r"[ ]*__attribute__[ ]*\(\(__malloc__\)\)[ ]*[;]*", " ", listdata[counti])
 
 
         #__const
-        # match_ext = re.search(r"(__extension__)* extern", line)
-        # if match_ext or line.startswith('extern'):
-        match_const = re.search(r"__const[^_]", line)
+        # match_ext = re.search(r"(__extension__)* extern", listdata[counti])
+        # if match_ext or listdata[counti].startswith('extern'):
+        match_const = re.search(r"__const[^_]", listdata[counti])
         if match_const:
-            line = line.replace('__const', 'const')
+            listdata[counti] = listdata[counti].replace('__const', 'const')
 
-            #print(line)
+            #print(listdata[counti])
             #sys.exit()
 
-        #print(">>>>>> "+ line)
+        #print(">>>>>> "+ listdata[counti])
 
 
 
-        if '__attribute__((visibility("default")))' in line.split():
-            line = line.replace('__attribute__((visibility("default")))', '')
-
-        #
-        if '__attribute__((noinline))' in line.split():  line = line.replace('__attribute__((noinline))', '')
-        if '__attribute__((noinline));' in line.split():  line = line.replace('__attribute__((noinline));', ';')
+        if '__attribute__((visibility("default")))' in listdata[counti].split():
+            listdata[counti] = listdata[counti].replace('__attribute__((visibility("default")))', '')
 
         #
-        if '__attribute__((packed))' in line.split(): line = line.replace('__attribute__((packed))', '')
-        if '__attribute__((packed));' in line.split(): line = line.replace('__attribute__((packed));', ';')
+        if '__attribute__((noinline))' in listdata[counti].split():  listdata[counti] = listdata[counti].replace('__attribute__((noinline))', '')
+        if '__attribute__((noinline));' in listdata[counti].split():  listdata[counti] = listdata[counti].replace('__attribute__((noinline));', ';')
+
+        #
+        if '__attribute__((packed))' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('__attribute__((packed))', '')
+        if '__attribute__((packed));' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('__attribute__((packed));', ';')
 
 
         # __WAIT_STATUS
-        if '__WAIT_STATUS' in line.split(): line = line.replace('__WAIT_STATUS', '')
-        if '((__transparent_union__))' in line.split(): line = line.replace('((__transparent_union__))', '')
-        if '((__transparent_union__));' in line.split(): line = line.replace('((__transparent_union__));', ';')
-        if '((__transparent_union__)) ;' in line.split(): line = line.replace('((__transparent_union__)) ;', ';')
+        if '__WAIT_STATUS' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('__WAIT_STATUS', '')
+        if '((__transparent_union__))' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__transparent_union__))', '')
+        if '((__transparent_union__));' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__transparent_union__));', ';')
+        if '((__transparent_union__)) ;' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__transparent_union__)) ;', ';')
 
         #
-        if '((__pure__))' in line.split(): line = line.replace('((__pure__))', '')
-        if '((__pure__)) ;' in line.split(): line = line.replace('((__pure__)) ;', ';')
+        if '((__pure__))' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__pure__))', '')
+        if '((__pure__)) ;' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__pure__)) ;', ';')
 
         #
-        if '((__warn_unused_result__))' in line.split(): line = line.replace('((__warn_unused_result__))', '')
-        if '((__warn_unused_result__)) ;' in line.split(): line = line.replace('((__warn_unused_result__)) ;', ';')
-        if '((__warn_unused_result__));' in line.split(): line = line.replace('((__warn_unused_result__));', ';')
+        if '((__warn_unused_result__))' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__warn_unused_result__))', '')
+        if '((__warn_unused_result__)) ;' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__warn_unused_result__)) ;', ';')
+        if '((__warn_unused_result__));' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__warn_unused_result__));', ';')
 
 
-        #if '__attribute__' in line.split(): line = line.replace('__attribute__', '')
-        matchattribute = re.search(r"[ ]*__attribute__[ ]*", line)
+        #if '__attribute__' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('__attribute__', '')
+        matchattribute = re.search(r"[ ]*__attribute__[ ]*", listdata[counti])
         if matchattribute:
-            line = re.sub(r"[ ]*__attribute__[ ]*", " ", line)
+            listdata[counti] = re.sub(r"[ ]*__attribute__[ ]*", " ", listdata[counti])
 
         # __nothrow__ and __leaf__
-        match_nl = re.search(r"\(\(__nothrow__[ ]*,[ ]*__leaf__\)\)", line)
+        match_nl = re.search(r"\(\(__nothrow__[ ]*,[ ]*__leaf__\)\)", listdata[counti])
         if match_nl:
-            #line = line.replace('((__nothrow__ , __leaf__))', '')
-            line = re.sub(r"\(\(__nothrow__[ ]*,[ ]*__leaf__\)\)", "", line)
+            #listdata[counti] = listdata[counti].replace('((__nothrow__ , __leaf__))', '')
+            listdata[counti] = re.sub(r"\(\(__nothrow__[ ]*,[ ]*__leaf__\)\)", "", listdata[counti])
 
         # __attribute__((__nothrow__, __noreturn__))
-        matchnr = re.search(r"\(\(__nothrow__[ ]*,[ ]*__noreturn__\)\)", line)
+        matchnr = re.search(r"\(\(__nothrow__[ ]*,[ ]*__noreturn__\)\)", listdata[counti])
         if matchnr:
-            line = re.sub(r"\(\(__nothrow__[ ]*,[ ]*__noreturn__\)\)", "", line)
+            listdata[counti] = re.sub(r"\(\(__nothrow__[ ]*,[ ]*__noreturn__\)\)", "", listdata[counti])
 
 
         # ((__format__ (__printf__, 3, 4)));
-        matchformatp = re.search(r"\(\(__format__[ ]*\(__printf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)", line)
+        matchformatp = re.search(r"\(\(__format__[ ]*\(__printf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)", listdata[counti])
         if matchformatp:
-            line = re.sub(r"\(\(__format__[ ]*\(__printf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)",
+            listdata[counti] = re.sub(r"\(\(__format__[ ]*\(__printf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)",
                           "",
-                          line)
+                          listdata[counti])
 
         # ((__format__(__scanf__, 2, 0)));
-        matchformats = re.search(r"\(\(__format__[ ]*\(__scanf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)", line)
+        matchformats = re.search(r"\(\(__format__[ ]*\(__scanf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)", listdata[counti])
         if matchformats:
-            line = re.sub(r"\(\(__format__[ ]*\(__scanf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)",
+            listdata[counti] = re.sub(r"\(\(__format__[ ]*\(__scanf__[ ]*,[ ]*[0-9]+,[ ]*[0-9]+\)\)\)",
                           "",
-                          line)
+                          listdata[counti])
 
         #
-        match_nnull = re.search(r"\(\(__nonnull__[ ]*[\(]([0-9]*,[ ]*)*([0-9]*)[\)]\)\)", line)
+        match_nnull = re.search(r"\(\(__nonnull__[ ]*[\(]([0-9]*,[ ]*)*([0-9]*)[\)]\)\)", listdata[counti])
         if match_nnull:
-            line = re.sub(r"\(\(__nonnull__[ ]*[\(]([0-9]*,[ ]*)*([0-9]*)[\)]\)\)", "", line)
-            #line = line.replace('((__nonnull__ (1)))', '')
+            listdata[counti] = re.sub(r"\(\(__nonnull__[ ]*[\(]([0-9]*,[ ]*)*([0-9]*)[\)]\)\)", "", listdata[counti])
+            #listdata[counti] = listdata[counti].replace('((__nonnull__ (1)))', '')
 
 
 
-        if '__extension__' in line.split(): line = line.replace('__extension__','')
-        if '__THROW' in line.split(): line = line.replace('__THROW', '')
+        if '__extension__' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('__extension__','')
+        if '__THROW' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('__THROW', '')
 
-        if '__inline__' in line.split(): line = line.replace( '__inline__', '' )
-        if '__inline' in line.split(): line = line.replace( '__inline', '' )
+        if '__inline__' in listdata[counti].split(): listdata[counti] = listdata[counti].replace( '__inline__', '' )
+        if '__inline' in listdata[counti].split(): listdata[counti] = listdata[counti].replace( '__inline', '' )
 
-        if '((__nothrow__))' in line.split(): line = line.replace('((__nothrow__))', '')    # inttypes.h
-        if '((__nothrow__));' in line.split(): line = line.replace('((__nothrow__));', ';')
+        if '((__nothrow__))' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__nothrow__))', '')    # inttypes.h
+        if '((__nothrow__));' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__nothrow__));', ';')
 
-        matchnothrow = re.search(r"\(\(__nothrow__[ ]*\)\)[ ]*[;]*", line)
+        matchnothrow = re.search(r"\(\(__nothrow__[ ]*\)\)[ ]*[;]*", listdata[counti])
         if matchnothrow:
-            line = re.sub(r"\(\(__nothrow__[ ]*\)\)[ ]*[;]*", "", line)
+            listdata[counti] = re.sub(r"\(\(__nothrow__[ ]*\)\)[ ]*[;]*", "", listdata[counti])
 
-        if '((__const__))' in line.split(): line = line.replace('((__const__))', '')
-        if '((__const__));' in line.split(): line = line.replace('((__const__));', ';')
+        if '((__const__))' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__const__))', '')
+        if '((__const__));' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('((__const__));', ';')
 
-        if '**__restrict' in line.split(): line = line.replace('**__restrict', '**')
-        if '*__restrict' in line.split(): line = line.replace('*__restrict', '*' )
-        if '__restrict' in line.split(): line = line.replace('__restrict', '' )
+        if '**__restrict' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('**__restrict', '**')
+        if '*__restrict' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('*__restrict', '*' )
+        if '__restrict' in listdata[counti].split(): listdata[counti] = listdata[counti].replace('__restrict', '' )
 
-        if line.strip().startswith('((__format__ ('):       # stdio.h:385
-            _s = line.strip()
-            if _s.endswith( '))) ;' ) or _s.endswith(')));'): line = ';'
+        if listdata[counti].strip().startswith('((__format__ ('):       # stdio.h:385
+            _s = listdata[counti].strip()
+            if _s.endswith( '))) ;' ) or _s.endswith(')));'): listdata[counti] = ';'
 
-        if line.startswith('extern') and '((visibility("default")))' in line.split():       # SDL_cdrom.h
-            line = line.replace( '((visibility("default")))', '' )
+        if listdata[counti].startswith('extern') and '((visibility("default")))' in listdata[counti].split():       # SDL_cdrom.h
+            listdata[counti] = listdata[counti].replace( '((visibility("default")))', '' )
 
 
         #__attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-        if line.startswith('extern'):
-            if '((__noreturn__))'  in line.split():
-                line = line.replace( '((__noreturn__))', '' )
-            if '((__noreturn__));' in line.split():
-                line = line.replace( '((__noreturn__));', ';' )
+        if listdata[counti].startswith('extern'):
+            if '((__noreturn__))'  in listdata[counti].split():
+                listdata[counti] = listdata[counti].replace( '((__noreturn__))', '' )
+            if '((__noreturn__));' in listdata[counti].split():
+                listdata[counti] = listdata[counti].replace( '((__noreturn__));', ';' )
 
-        if '((__noreturn__))'  in line.split():
-                line = line.replace( '((__noreturn__))', '' )
-        if '((__noreturn__));' in line.split():
-            line = line.replace( '((__noreturn__));', ';' )
+        if '((__noreturn__))'  in listdata[counti].split():
+                listdata[counti] = listdata[counti].replace( '((__noreturn__))', '' )
+        if '((__noreturn__));' in listdata[counti].split():
+            listdata[counti] = listdata[counti].replace( '((__noreturn__));', ';' )
 
         # Replace __VERIFIER_error() by out implementation
-        # if line.startswith('extern') and '__VERIFIER_error()' in line.split():       # SVCOMP
-        #     line = line.replace( '__VERIFIER_error()', '__VERIFIER_error(int numline)' )
-        # if line.startswith('extern') and '__VERIFIER_error(void);' in line.split():       # SVCOMP
-        #     line = line.replace( '__VERIFIER_error(void);', '__VERIFIER_error(int numline);' )
+        # if listdata[counti].startswith('extern') and '__VERIFIER_error()' in listdata[counti].split():       # SVCOMP
+        #     listdata[counti] = listdata[counti].replace( '__VERIFIER_error()', '__VERIFIER_error(int numline)' )
+        # if listdata[counti].startswith('extern') and '__VERIFIER_error(void);' in listdata[counti].split():       # SVCOMP
+        #     listdata[counti] = listdata[counti].replace( '__VERIFIER_error(void);', '__VERIFIER_error(int numline);' )
 
 
         # types.h #
@@ -273,22 +292,30 @@ def make_pycparser_compatible( data ):
                      '((__mode__ (__DI__)));' , '((__mode__(__DI__)));' ,
                      '((__mode__ (__word__)));' , '((__mode__(__word__)));']
         for ugly in list_mode:
-            if line.endswith( ugly ): line = line.replace(ugly, ';')
+            if listdata[counti].endswith( ugly ): listdata[counti] = listdata[counti].replace(ugly, ';')
 
-        # if '__asm__' in line.split() and '__isoc99_' in line:
-        #     if line.strip().endswith(';'): line = line.split('__asm__')[0] + ';'
-        #     else: line = line.split('__asm__')[0]
+        # if '__asm__' in listdata[counti].split() and '__isoc99_' in listdata[counti]:
+        #     if listdata[counti].strip().endswith(';'): listdata[counti] = listdata[counti].split('__asm__')[0] + ';'
+        #     else: listdata[counti] = listdata[counti].split('__asm__')[0]
 
         #
-        match_asm = re.search(r"__asm__[ ]*\(\"\" \"__xpg_strerror_r\"\)", line)
+        match_asm = re.search(r"__asm__[ ]*\(\"\" \"__xpg_strerror_r\"\)", listdata[counti])
         if match_asm:
-            #line = line.replace('((__nothrow__ , __leaf__))', '')
-            line = re.sub(r"__asm__[ ]*\(\"\" \"__xpg_strerror_r\"\)", "", line)
+            #listdata[counti] = listdata[counti].replace('((__nothrow__ , __leaf__))', '')
+            listdata[counti] = re.sub(r"__asm__[ ]*\(\"\" \"__xpg_strerror_r\"\)", "", listdata[counti])
 
-        #if '*__const' in line.split(): # sys_errlist.h
+        match_asm_generic = re.search(r"__asm__\(.*\)[ ]*([;]*)", listdata[counti])
+        if match_asm_generic:
+            if match_asm_generic.group(1):
+                listdata[counti] = re.sub(r"__asm__\(.*\)[ ]*([;]*)", ";", listdata[counti])
+            else:
+                listdata[counti] = re.sub(r"__asm__\(.*\)[ ]*([;]*)", "", listdata[counti])
+
+        #if '*__const' in listdata[counti].split(): # sys_errlist.h
         #   pass
 
-        d += line + '\n'
+        d += listdata[counti] + '\n'
+        counti += 1
 
     return d
 

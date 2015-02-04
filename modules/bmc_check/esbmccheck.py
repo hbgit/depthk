@@ -719,10 +719,10 @@ class DepthEsbmcCheck(object):
         listtmpfiles = []
         actual_detphver = 1
         actual_ce = _cprogrampath.replace(".c", ".acce")
-        #listtmpfiles.append(actual_ce)
+        listtmpfiles.append(actual_ce)
         #actual_ce = "/tmp/ce_kinduction.txt"
         last_ce = _cprogrampath.replace(".c", ".ltce")
-        #listtmpfiles.append(last_ce)
+        listtmpfiles.append(last_ce)
         #last_ce = "/tmp/last_ce_kinduction.txt"
         flag_forceassume = self.forceassume
 
