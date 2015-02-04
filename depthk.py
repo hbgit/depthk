@@ -345,9 +345,10 @@ class DepthK(object):
 
         if matcherrorpips1 or matcherrorpips2 or flag_TO_inv:
             if self.debug_op:
-                print("\t - A problem was identified in PIPS.")
                 if flag_TO_inv:
-                    print("\t - TIMEOUT to generate the invariants")
+                    print("\t - TIMEOUT to generate the invariants.")
+                else:
+                    print("\t - A problem was identified in PIPS.")
 
             # print(resultpips)
             # # Identify parser errors

@@ -47,8 +47,15 @@ run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
 # postprocess the results. `timeout` is part of coreutils on debian and fedora.
 result_check=`timeout 895 bash -c "$run_cmdline"`
 
-# Identify when it is not possible generate the invariants
+# Identify problems with invariants generation
+# Not supported by PIPS
+PIPSerror=`echo ${result_check} | grep -c "A problem was identified in PIPS"`
+# When it is not possible generate the invariants
 invTO=`echo ${result_check} | grep -c "TIMEOUT to generate the invariants"`
+
+# Checking approach to force last check with base case
+forcelastcheckbc=`echo ${result_check} | grep -c "> Forcing last check in base case"`
+
 
 # Postprocessing: first, collect some facts
 failed=`echo ${result_check} | grep -c "VERIFICATION FAILED"`
@@ -65,7 +72,15 @@ else
 
 fi
 
-# print if have a TO to invariants
+# Print log about invariants generation
+if [ PIPSerror -gt 0 ]; then
+    echo "[PIPS] A problem was identified"
+fi
+
 if [ invTO -gt 0 ]; then
     echo "[PIPS] TIMEOUT to generate the invariants"
+fi
+
+if [ forcelastcheckbc -gt 0 ]; then
+    echo "[DEPTHK] Forcing last check in base case"
 fi
