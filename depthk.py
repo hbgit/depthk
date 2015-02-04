@@ -66,6 +66,7 @@ class DepthK(object):
         #self.pipsdatabaseresult = os.path.abspath(".") + '/precod' + self.idresultpipsdb + ''
         self.pipsdatabaseresult = 'precod' + self.idresultpipsdb + ''
         self.pipsdatabaseresultpath = ""
+        self.debug_gh = False
 
 
     def identify_initpips(self, _cfilepath):
@@ -393,10 +394,19 @@ class DepthK(object):
         # Mini hack to allow PIPS handle with .i files
         # new_namefile = os.path.basename(_inputcfile).replace(".i", self.depthkname_ext)
         # pathnewfile = os.path.dirname(_inputcfile) + "/" + new_namefile
-        filec = open(inputCFile, 'r')
+
+        filec = open(_inputcfile, 'r')
+
+        # if self.debug_gh:
+        #     print(_inputcfile)
+        #     #os.system("cat " + _inputcfile)
+        #     print(filec.read())
+        #     sys.exit()
+
         str_filelines = hack_extensions.make_pycparser_compatible(filec.read())
         filec.close()
 
+        #os.system("cat "+_inputcfile)
         # writing new c file after GNU hacking
         newfile = open(_inputcfile, "w")
         newfile.write(str_filelines)
@@ -574,7 +584,9 @@ if __name__ == "__main__":
                 print(">> Adopting only the ESBMC counterexample to generate assumes")
 
             if codewithinv:
+                # rundepthk.debug_gh = True
                 codewithinv = rundepthk.applygnuhack(codewithinv)
+
                 # Identify #init from PIPS in the code with invariants
                 dict_init = rundepthk.identify_initpips(codewithinv)
 

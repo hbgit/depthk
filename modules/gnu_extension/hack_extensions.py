@@ -45,6 +45,10 @@ def make_pycparser_compatible( data ):
     for line in data.splitlines():
         #if line.strip():
         _d += line + '\n'
+
+    #print(_d)
+
+
     #f = open('/tmp/xxx.c','wb')
     #f.write(_d); f.close()
     if _super_hack in _d:
@@ -317,6 +321,7 @@ def make_pycparser_compatible( data ):
         d += listdata[counti] + '\n'
         counti += 1
 
+    #print(d)
     return d
 
 
