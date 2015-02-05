@@ -764,7 +764,7 @@ class DepthEsbmcCheck(object):
             # checking we are in the force last check
             if lastresult:
                 #nextk = self.esbmc_bound + 25
-                self.esbmc_bound += 10
+                self.esbmc_bound += 5
                 #while self.esbmc_bound <= nextk and self.esbmc_bound <= self.maxk and statusce_basecase <= 0:
                 # print("---------------")
                 if self.esbmc_bound <= self.maxk:

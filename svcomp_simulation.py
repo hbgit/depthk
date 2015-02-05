@@ -490,7 +490,7 @@ def set_codes_to_experiment(pathCPrograms):
         #os.remove(PATH_HTML_MODEL_REPORT)
         os.remove(TMP_REPORT_FILE)
         # save on dropbox the result
-        ckstatus = commands.getoutput("dropbox_uploader.sh upload " + str(OUTPUT_REPORT_FILE) + " /results_depthk/no_use_ce_frocelastcheck20/")
+        ckstatus = commands.getoutput("dropbox_uploader.sh upload " + str(OUTPUT_REPORT_FILE) + " /results_depthk/no_use_ce_frocelastcheck5/")
         matchdonesend = re.search(r"DONE", str(ckstatus))
         if not matchdonesend:
             print(">>>> Sorry. Error to send the report.")
