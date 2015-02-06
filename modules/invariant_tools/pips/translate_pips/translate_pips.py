@@ -256,5 +256,6 @@ class PipsTranslateAnnot(object):
 
                         # Mount string to precondition
                         middletxt = ' && '.join(listnewpreform)
-                        newtext = "__ESBMC_assume( " + middletxt + " );"
+                        # newtext = "__ESBMC_assume( " + middletxt + " );"
+                        newtext = "assert( " + middletxt + " );"
                         return newtext

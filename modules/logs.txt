@@ -1,3 +1,70 @@
+EXTRA:
+
+======================================== BMC + ASSUME
+
+esbmc --64 --z3 --unwind <nr> --error-label ERROR
+
+----- ASSUME
+
+systemc/pipeline_false-unreach-call_false-termination.cil.c
+ANTIGO: true    390.34
+ATUAL : TO      >2m
+
+systemc/token_ring.05_false-unreach-call_false-termination.cil.c
+ANTIGO: true    118.91
+ATUAL : TO      >2m
+
+systemc/transmitter.06_false-unreach-call_false-termination.cil.c
+ANTIGO: true    205.88
+ATUAL : failed  0.526s
+
+*** BitVectors.set/pointer_extension_true-unreach-call.c
+ANTIGO: failed  0.37
+ATUAL : failed  0.154s
+
+BitVectors.set/overflow_false-unreach-call1.i
+ANTIGO: true    0.53
+ATUAL : MAX K reached == UNKNOWN
+
+*** BitVectors.set/diamond_false-unreach-call2.i
+ANTIGO: true    4.95
+ATUAL : true    1.356s
+
+======================================== BMC + ASSERT
+
+systemc/pipeline_false-unreach-call_false-termination.cil.c
+ANTIGO: true    390.34
+ATUAL : TO      >2m
+
+systemc/token_ring.05_false-unreach-call_false-termination.cil.c
+ANTIGO: true    118.91
+ATUAL : failed  0.458s -- ASSERT BY PIPS
+
+systemc/transmitter.06_false-unreach-call_false-termination.cil.c
+ANTIGO: true    205.88
+ATUAL : TO      >2m
+
+*** BitVectors.set/pointer_extension_true-unreach-call.c
+ANTIGO: failed  0.37
+ATUAL : failed  0.154s
+
+BitVectors.set/overflow_false-unreach-call1.i
+ANTIGO: true    0.53
+ATUAL : MAX K reached == UNKNOWN
+
+*** BitVectors.set/diamond_false-unreach-call2.i
+ANTIGO: true    4.95
+ATUAL : failed  1.356s -- ASSERT BY PIPS
+
+
+
+
+
+
+
+
+
+
 TODO:
     -  How improve the verification take into account the FALSE NEGATIVES, e.g., in k-induction/invert_string_bug/main.c
     - Translation not executed in test_cases/k-induction/bubble_sort because of this format
