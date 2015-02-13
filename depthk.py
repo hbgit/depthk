@@ -49,6 +49,7 @@ class DepthK(object):
         self.uncrustify_cfg = os.path.dirname(os.path.abspath(__file__)) + \
                               "/modules/preprocessing/uncrustify_files/ben.cfg"
         self.onlygeninvs_p = False
+        self.en_kparalell = False
         self.esbmcpath = ''
         self.esbmcsolver = ""
         self.esbmc_memlimit = ""
@@ -284,6 +285,7 @@ class DepthK(object):
         runesbmc.esbmc_arch = self.esbmc_arch
         runesbmc.esbmc_extra_op = self.esbmc_extraop
         runesbmc.disableuse_ce = self.disableuse_ce
+        runesbmc.en_kparalell = self.en_kparalell
         if _enableforceassume:
             runesbmc.forceassume = True
         else:
@@ -474,6 +476,8 @@ if __name__ == "__main__":
                         default=25, help='set the max number of P\' to be generated (default is 25)')
     parser.add_argument('-p', '--generate-program-inv', action="store_true", dest='setOnlyGenInv',
                         help='generates the program with the invariants', default=False)
+    parser.add_argument('-l', '--k-induction-parallel', action="store_true", dest='setKParallel',
+                        help='prove by k-induction, ESBMC runs each step on a separate process', default=False)
     parser.add_argument('-o', '--only-counter-example', action="store_true", dest='setOnlyCEUse',
                         help='adopt only the counterexample to generate the assumes', default=False)
     parser.add_argument('-i', '--disable-counter-example', action="store_true", dest='setDisableCEUse',
@@ -532,6 +536,8 @@ if __name__ == "__main__":
                 rundepthk.esbmc_timeout = args.setTOESBMC
             if args.setOpESBMC:
                 rundepthk.esbmc_extraop = args.setOpESBMC
+            if args.setKParallel:
+                rundepthk.en_kparalell = args.setKParallel
             if args.setDisableCEUse:
                 rundepthk.disableuse_ce = args.setDisableCEUse
             if args.setESBMCSolver:

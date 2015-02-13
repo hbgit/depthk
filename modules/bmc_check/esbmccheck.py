@@ -31,6 +31,7 @@ class DepthEsbmcCheck(object):
         self.disableuse_ce = False
         self.maxk = 15
         self.maxdepthverification = 25
+        self.en_kparalell = False
         self.esbmcpath = ''
         self.esbmc_arch = "--64"
         self.esbmc_bound = 1
@@ -739,44 +740,80 @@ class DepthEsbmcCheck(object):
         # Checking if we reached the MAX k defined
         while self.esbmc_bound <= self.maxk and actual_detphver <= self.maxdepthverification:
 
-            if self.debug:
-                print("\t -> Actual k = " + str(self.esbmc_bound))
-
-            if os.path.isfile(actual_ce):
-                shutil.copyfile(actual_ce, last_ce)
-
-            if self.debug:
-                print("\t\t Status: checking base case")
-
-            # >> (1) Checking base-case, i.e., there is a counterexample?
-            # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
-            #  --memlimit 4g --timeout 15m "--memlimit " + self.esbmc_memlimit_op + " " +
-            # print(self.esbmcpath + " " + self.esbmc_arch + " " +
-            #                                      self.esbmc_solver_op + " " +
-            #                                      self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-            #                                      self.isdefiniedmemlimit() +
-            #                                      "--timeout " + self.esbmc_timeout_op + " " +
-            #                                      self.esbmc_nolibrary + " " +
-            #                                      self.esbmc_extra_op + " " +
-            #                                      self.esbmc_basecase_op + " " +
-            #                                      _cprogrampath)
-
-            # checking we are in the force last check
-            if lastresult:
-                #nextk = self.esbmc_bound + 25
-                self.esbmc_bound += 5
-                #while self.esbmc_bound <= nextk and self.esbmc_bound <= self.maxk and statusce_basecase <= 0:
-                # print("---------------")
-                if self.esbmc_bound <= self.maxk:
-                    result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+            if self.en_kparalell:
+                #return "Parallel not supported yet."
+                result_parallel = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                                      self.esbmc_solver_op + " " +
-                                                     self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                     "--k-induction-parallel" + " " +
                                                      self.isdefiniedmemlimit() +
                                                      "--timeout " + self.esbmc_timeout_op + " " +
                                                      self.esbmc_nolibrary + " " +
                                                      self.esbmc_extra_op + " " +
-                                                     self.esbmc_basecase_op + " " +
                                                      _cprogrampath)
+
+                return result_parallel
+
+            else:
+                # Sequencial
+
+                if self.debug:
+                    print("\t -> Actual k = " + str(self.esbmc_bound))
+
+                if os.path.isfile(actual_ce):
+                    shutil.copyfile(actual_ce, last_ce)
+
+                if self.debug:
+                    print("\t\t Status: checking base case")
+
+                # >> (1) Checking base-case, i.e., there is a counterexample?
+                # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
+                #  --memlimit 4g --timeout 15m "--memlimit " + self.esbmc_memlimit_op + " " +
+                # print(self.esbmcpath + " " + self.esbmc_arch + " " +
+                #                                      self.esbmc_solver_op + " " +
+                #                                      self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                #                                      self.isdefiniedmemlimit() +
+                #                                      "--timeout " + self.esbmc_timeout_op + " " +
+                #                                      self.esbmc_nolibrary + " " +
+                #                                      self.esbmc_extra_op + " " +
+                #                                      self.esbmc_basecase_op + " " +
+                #                                      _cprogrampath)
+
+                # checking we are in the force last check
+                if lastresult:
+                    #nextk = self.esbmc_bound + 25
+                    self.esbmc_bound += 5
+                    #while self.esbmc_bound <= nextk and self.esbmc_bound <= self.maxk and statusce_basecase <= 0:
+                    # print("---------------")
+                    if self.esbmc_bound <= self.maxk:
+                        result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                         self.esbmc_solver_op + " " +
+                                                         self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                         self.isdefiniedmemlimit() +
+                                                         "--timeout " + self.esbmc_timeout_op + " " +
+                                                         self.esbmc_nolibrary + " " +
+                                                         self.esbmc_extra_op + " " +
+                                                         self.esbmc_basecase_op + " " +
+                                                         _cprogrampath)
+
+                        self.savelist2file(actual_ce, result_basecase)
+
+                        # Identify a possible timeout
+                        self.hastimeoutfromesbmc(actual_ce)
+
+                        # >> (1) Identifying if it was generated a counterexample
+                        statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
+                        #self.esbmc_bound += 1
+
+                else:
+                    result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                         self.esbmc_solver_op + " " +
+                                                         self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                         self.isdefiniedmemlimit() +
+                                                         "--timeout " + self.esbmc_timeout_op + " " +
+                                                         self.esbmc_nolibrary + " " +
+                                                         self.esbmc_extra_op + " " +
+                                                         self.esbmc_basecase_op + " " +
+                                                         _cprogrampath)
 
                     self.savelist2file(actual_ce, result_basecase)
 
@@ -785,148 +822,69 @@ class DepthEsbmcCheck(object):
 
                     # >> (1) Identifying if it was generated a counterexample
                     statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
-                    #self.esbmc_bound += 1
-
-            else:
-                result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                     self.esbmc_solver_op + " " +
-                                                     self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                                                     self.isdefiniedmemlimit() +
-                                                     "--timeout " + self.esbmc_timeout_op + " " +
-                                                     self.esbmc_nolibrary + " " +
-                                                     self.esbmc_extra_op + " " +
-                                                     self.esbmc_basecase_op + " " +
-                                                     _cprogrampath)
-
-                self.savelist2file(actual_ce, result_basecase)
-
-                # Identify a possible timeout
-                self.hastimeoutfromesbmc(actual_ce)
-
-                # >> (1) Identifying if it was generated a counterexample
-                statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
 
 
-            if statusce_basecase > 0:
-                # show counterexample
-                os.system("cat " + actual_ce)
-                print(" ")
-                self.cleantmpfiles(listtmpfiles)
-                return "FALSE"
-
-            else:
-
-                # checking we are in the force last check
-                if lastresult:
+                if statusce_basecase > 0:
+                    # show counterexample
+                    os.system("cat " + actual_ce)
+                    print(" ")
                     self.cleantmpfiles(listtmpfiles)
-                    return lastresult
+                    return "FALSE"
 
-                # >> (2) Only if there is NOT counterexample, then  increase k = k +1
-                # only to check if any crash was generated
-                statusce_basecase_nobug = int(commands.getoutput("cat " + actual_ce +
-                                                                 " | grep -c " +
-                                                                 "\"No bug has been found in the base case\" "))
-                if statusce_basecase_nobug > 0:
-                    # increase k
-                    self.esbmc_bound += 1
-                    if self.debug:
-                        print("\t\t Status: checking forward condition")
-                    # Checking the forward condition
-                    # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
+                else:
 
-                    # print(self.esbmcpath + " " + self.esbmc_arch + " " +
-                    #                                         self.esbmc_solver_op + " " +
-                    #                                         self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                    #                                         self.isdefiniedmemlimit() +
-                    #                                         "--timeout " + self.esbmc_timeout_op + " " +
-                    #                                         self.esbmc_nolibrary + " " +
-                    #                                         self.esbmc_extra_op + " " +
-                    #                                         self.esbmc_forwardcond_op + " " +
-                    #                                         _cprogrampath)
+                    # checking we are in the force last check
+                    if lastresult:
+                        self.cleantmpfiles(listtmpfiles)
+                        return lastresult
 
-                    result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                            self.esbmc_solver_op + " " +
-                                                            self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                                                            self.isdefiniedmemlimit() +
-                                                            "--timeout " + self.esbmc_timeout_op + " " +
-                                                            self.esbmc_nolibrary + " " +
-                                                            self.esbmc_extra_op + " " +
-                                                            self.esbmc_forwardcond_op + " " +
-                                                            _cprogrampath)
-
-                    #print(result_forwardcond)
-
-                    self.savelist2file(actual_ce, result_forwardcond)
-                    # Identify a possible timeout
-                    self.hastimeoutfromesbmc(actual_ce)
-
-                    # Checking if it was possible to prove the property
-                    #
-                    statusce_forwardcond = int(commands.getoutput("cat " + actual_ce +
-                                                                  " | grep -c " +
-                                                                  "\"The forward condition is unable to prove the property\" "))
-                    if statusce_forwardcond == 0:
-                        if self.hassuccessfulfromesbmc(actual_ce):
-                            # The property was proved
-                            # print("True")
-                            if flag_moreonecheckbase:
-                                lastresult = "TRUE"
-                                if self.debug:
-                                    print("\t\t > Forcing last check in base case")
-                            else:
-                                self.cleantmpfiles(listtmpfiles)
-                                return "TRUE"
-                        else:
-                            # Some ERROR was identified in the verification of forward-condition
-                            os.system("cat " + actual_ce)
-                            print(" ")
-                            self.cleantmpfiles(listtmpfiles)
-                            return "ERROR. It was identified an error in the verification of forward condition"
-
-                    else:
-                        # The property was NOT proved
+                    # >> (2) Only if there is NOT counterexample, then  increase k = k +1
+                    # only to check if any crash was generated
+                    statusce_basecase_nobug = int(commands.getoutput("cat " + actual_ce +
+                                                                     " | grep -c " +
+                                                                     "\"No bug has been found in the base case\" "))
+                    if statusce_basecase_nobug > 0:
+                        # increase k
+                        self.esbmc_bound += 1
                         if self.debug:
-                            print("\t\t Status: checking inductive step")
-                        # >> (3) Only if in the (2) the result is:
-                        # "The forward condition is unable to prove the property"
-                        # Checking the inductive step
-                        # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
+                            print("\t\t Status: checking forward condition")
+                        # Checking the forward condition
+                        # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
 
                         # print(self.esbmcpath + " " + self.esbmc_arch + " " +
-                        #                                           self.esbmc_solver_op + " " +
-                        #                                           self.esbmc_unwind_op + " " +
-                        #                                           str(self.esbmc_bound) + " " +
-                        #                                           self.isdefiniedmemlimit() +
-                        #                                           "--timeout " + self.esbmc_timeout_op + " " +
-                        #                                           self.esbmc_nolibrary + " " +
-                        #                                           self.esbmc_extra_op + " " +
-                        #                                           self.esbmc_inductivestep_op + " " +
-                        #                                           _cprogrampath)
+                        #                                         self.esbmc_solver_op + " " +
+                        #                                         self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                        #                                         self.isdefiniedmemlimit() +
+                        #                                         "--timeout " + self.esbmc_timeout_op + " " +
+                        #                                         self.esbmc_nolibrary + " " +
+                        #                                         self.esbmc_extra_op + " " +
+                        #                                         self.esbmc_forwardcond_op + " " +
+                        #                                         _cprogrampath)
 
-                        result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                                  self.esbmc_solver_op + " " +
-                                                                  self.esbmc_unwind_op + " " +
-                                                                  str(self.esbmc_bound) + " " +
-                                                                  self.isdefiniedmemlimit() +
-                                                                  "--timeout " + self.esbmc_timeout_op + " " +
-                                                                  self.esbmc_nolibrary + " " +
-                                                                  self.esbmc_extra_op + " " +
-                                                                  self.esbmc_inductivestep_op + " " +
-                                                                  _cprogrampath)
+                        result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                                self.esbmc_solver_op + " " +
+                                                                self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                                self.isdefiniedmemlimit() +
+                                                                "--timeout " + self.esbmc_timeout_op + " " +
+                                                                self.esbmc_nolibrary + " " +
+                                                                self.esbmc_extra_op + " " +
+                                                                self.esbmc_forwardcond_op + " " +
+                                                                _cprogrampath)
 
-                        # print(result_inductivestep)
+                        #print(result_forwardcond)
 
-                        self.savelist2file(actual_ce, result_inductivestep)
+                        self.savelist2file(actual_ce, result_forwardcond)
                         # Identify a possible timeout
                         self.hastimeoutfromesbmc(actual_ce)
 
-                        # checking CE
-                        statusce_inductivestep = int(commands.getoutput("cat " + actual_ce +
-                                                                        " | grep -c " +
-                                                                        "\"VERIFICATION FAILED\" "))
-                        # >> If the result was SUCCESUFUL then STOP verification
-                        if statusce_inductivestep == 0:
+                        # Checking if it was possible to prove the property
+                        #
+                        statusce_forwardcond = int(commands.getoutput("cat " + actual_ce +
+                                                                      " | grep -c " +
+                                                                      "\"The forward condition is unable to prove the property\" "))
+                        if statusce_forwardcond == 0:
                             if self.hassuccessfulfromesbmc(actual_ce):
+                                # The property was proved
                                 # print("True")
                                 if flag_moreonecheckbase:
                                     lastresult = "TRUE"
@@ -936,82 +894,141 @@ class DepthEsbmcCheck(object):
                                     self.cleantmpfiles(listtmpfiles)
                                     return "TRUE"
                             else:
-                                # Some ERROR was identified in the verification of inductive-step
+                                # Some ERROR was identified in the verification of forward-condition
                                 os.system("cat " + actual_ce)
                                 print(" ")
                                 self.cleantmpfiles(listtmpfiles)
-                                return "ERROR. It was identified an error in the verification of inductive step"
+                                return "ERROR. It was identified an error in the verification of forward condition"
 
-                        elif not self.disableuse_ce:
-                        #else:
+                        else:
+                            # The property was NOT proved
+                            if self.debug:
+                                print("\t\t Status: checking inductive step")
+                            # >> (3) Only if in the (2) the result is:
+                            # "The forward condition is unable to prove the property"
+                            # Checking the inductive step
+                            # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
 
-                            if not self.forceassume:
+                            # print(self.esbmcpath + " " + self.esbmc_arch + " " +
+                            #                                           self.esbmc_solver_op + " " +
+                            #                                           self.esbmc_unwind_op + " " +
+                            #                                           str(self.esbmc_bound) + " " +
+                            #                                           self.isdefiniedmemlimit() +
+                            #                                           "--timeout " + self.esbmc_timeout_op + " " +
+                            #                                           self.esbmc_nolibrary + " " +
+                            #                                           self.esbmc_extra_op + " " +
+                            #                                           self.esbmc_inductivestep_op + " " +
+                            #                                           _cprogrampath)
 
-                                if not self.esbmc_bound <= self.maxk and \
-                                   actual_detphver <= self.maxdepthverification:
+                            result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                                      self.esbmc_solver_op + " " +
+                                                                      self.esbmc_unwind_op + " " +
+                                                                      str(self.esbmc_bound) + " " +
+                                                                      self.isdefiniedmemlimit() +
+                                                                      "--timeout " + self.esbmc_timeout_op + " " +
+                                                                      self.esbmc_nolibrary + " " +
+                                                                      self.esbmc_extra_op + " " +
+                                                                      self.esbmc_inductivestep_op + " " +
+                                                                      _cprogrampath)
+
+                            # print(result_inductivestep)
+
+                            self.savelist2file(actual_ce, result_inductivestep)
+                            # Identify a possible timeout
+                            self.hastimeoutfromesbmc(actual_ce)
+
+                            # checking CE
+                            statusce_inductivestep = int(commands.getoutput("cat " + actual_ce +
+                                                                            " | grep -c " +
+                                                                            "\"VERIFICATION FAILED\" "))
+                            # >> If the result was SUCCESUFUL then STOP verification
+                            if statusce_inductivestep == 0:
+                                if self.hassuccessfulfromesbmc(actual_ce):
+                                    # print("True")
+                                    if flag_moreonecheckbase:
+                                        lastresult = "TRUE"
+                                        if self.debug:
+                                            print("\t\t > Forcing last check in base case")
+                                    else:
+                                        self.cleantmpfiles(listtmpfiles)
+                                        return "TRUE"
+                                else:
+                                    # Some ERROR was identified in the verification of inductive-step
+                                    os.system("cat " + actual_ce)
+                                    print(" ")
+                                    self.cleantmpfiles(listtmpfiles)
+                                    return "ERROR. It was identified an error in the verification of inductive step"
+
+                            elif not self.disableuse_ce:
+                            #else:
+
+                                if not self.forceassume:
+
+                                    if not self.esbmc_bound <= self.maxk and \
+                                       actual_detphver <= self.maxdepthverification:
 
 
-                                    # reset k, i.e., the bound go back to 1
-                                    self.esbmc_bound = 1
-                                    actual_detphver += 1
+                                        # reset k, i.e., the bound go back to 1
+                                        self.esbmc_bound = 1
+                                        actual_detphver += 1
 
 
-                                    # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
-                                    # generating a new ESBMC assume
+                                        # >> Else generate an ESBMC_ASSUME with the counterexample then go to (1)
+                                        # generating a new ESBMC assume
+                                        if self.debug:
+                                            print("\t\t -> It was reached the MAX k")
+                                            print("\t\t Status: generating a new ESBMC assume")
+                                        # print("\t - Get data from CE in the last valid state:")
+                                        # Possible BUG cuz the PLACE where the assume is added
+                                        if not self.getlastdatafromce(actual_ce):
+                                            # >> UNKNOWN
+                                            self.cleantmpfiles(listtmpfiles)
+                                            return "ERROR. NO DATA from counterexample! Sorry about that."
+
+
+                                        # print("\t - New assume generated: \n" + self.assumeset)
+                                        # print("\t - Instrument program with assume ...")
+                                        # Getting the last valid location in the counterexample to add the assume
+                                        # linenumtosetassume = self.getlastlinenumfromce(actual_ce)
+                                        # Adding in the new instance of the analyzed program (P') the new assume
+                                        # generated from the counterexample
+                                        # _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+                                        _cprogrampath = self.addassumeinprogram(_cprogrampath)
+
+                                else:
+                                    # In this case, when the inductive step fail
+                                    # in the first time we force the generation of the ESBMC assume.
+                                    # It is worth to say that ONLY in this case we do not adopt
+                                    # the D, only K is taken into account.
+
+                                    # >> Else generate an ESBMC_ASSUME with the counterexample
+                                    # then go to (1) with the actual K
+
                                     if self.debug:
-                                        print("\t\t -> It was reached the MAX k")
+                                        print("\t\t -> Force the generation of ESBMC assume")
                                         print("\t\t Status: generating a new ESBMC assume")
-                                    # print("\t - Get data from CE in the last valid state:")
+
                                     # Possible BUG cuz the PLACE where the assume is added
                                     if not self.getlastdatafromce(actual_ce):
                                         # >> UNKNOWN
                                         self.cleantmpfiles(listtmpfiles)
                                         return "ERROR. NO DATA from counterexample! Sorry about that."
 
-
-                                    # print("\t - New assume generated: \n" + self.assumeset)
-                                    # print("\t - Instrument program with assume ...")
-                                    # Getting the last valid location in the counterexample to add the assume
+                                    # Getting the last valid location in the counterexample to add
+                                    # the assume
                                     # linenumtosetassume = self.getlastlinenumfromce(actual_ce)
-                                    # Adding in the new instance of the analyzed program (P') the new assume
-                                    # generated from the counterexample
-                                    # _cprogrampath = self.addassumeinprogram(_cprogrampath, linenumtosetassume)
+                                    # Adding in the new instance of the analyzed program (P')
+                                    # the new assume generated from the counterexample
                                     _cprogrampath = self.addassumeinprogram(_cprogrampath)
-
-                            else:
-                                # In this case, when the inductive step fail
-                                # in the first time we force the generation of the ESBMC assume.
-                                # It is worth to say that ONLY in this case we do not adopt
-                                # the D, only K is taken into account.
-
-                                # >> Else generate an ESBMC_ASSUME with the counterexample
-                                # then go to (1) with the actual K
-
-                                if self.debug:
-                                    print("\t\t -> Force the generation of ESBMC assume")
-                                    print("\t\t Status: generating a new ESBMC assume")
-
-                                # Possible BUG cuz the PLACE where the assume is added
-                                if not self.getlastdatafromce(actual_ce):
-                                    # >> UNKNOWN
-                                    self.cleantmpfiles(listtmpfiles)
-                                    return "ERROR. NO DATA from counterexample! Sorry about that."
-
-                                # Getting the last valid location in the counterexample to add
-                                # the assume
-                                # linenumtosetassume = self.getlastlinenumfromce(actual_ce)
-                                # Adding in the new instance of the analyzed program (P')
-                                # the new assume generated from the counterexample
-                                _cprogrampath = self.addassumeinprogram(_cprogrampath)
-                                #sys.exit()
+                                    #sys.exit()
 
 
-                else:
-                    # Some ERROR was identified in the verification of base-case
-                    os.system("cat " + actual_ce)
-                    print(" ")
-                    self.cleantmpfiles(listtmpfiles)
-                    return "ERROR. It was identified an error in the verification of base-case"
+                    else:
+                        # Some ERROR was identified in the verification of base-case
+                        os.system("cat " + actual_ce)
+                        print(" ")
+                        self.cleantmpfiles(listtmpfiles)
+                        return "ERROR. It was identified an error in the verification of base-case"
 
         # >> END-WHILE
         # >> UNKNOWN
