@@ -686,6 +686,43 @@ class DepthEsbmcCheck(object):
             return False
 
 
+    def checkwithkparallel(self, _cprogrampath, _actual_ce, _listtmpfiles):
+        result_parallel = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                             self.esbmc_solver_op + " " +
+                                             "--k-induction-parallel" + " " +
+                                             self.isdefiniedmemlimit() +
+                                             "--timeout " + self.esbmc_timeout_op + " " +
+                                             self.esbmc_nolibrary + " " +
+                                             self.esbmc_extra_op + " " +
+                                             _cprogrampath)
+
+        self.savelist2file(_actual_ce, result_parallel)
+
+        # Checking TRUE
+        status_true = int(commands.getoutput("tail -n 3 " + _actual_ce + " | grep -c \"VERIFICATION SUCCESSFUL\" "))
+        if status_true > 0:
+            self.cleantmpfiles(_listtmpfiles)
+            return "TRUE"
+
+        # Checking FAILED
+        status_failed = int(commands.getoutput("tail -n 3 " + _actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
+        if status_failed > 0:
+            os.system("cat " + _actual_ce)
+            self.cleantmpfiles(_listtmpfiles)
+            return "FAILED"
+
+        # Checking TO
+        status_to = int(commands.getoutput("tail -n 3 " + _actual_ce + " | grep -c \"Timed out\" "))
+        if status_to > 0:
+            self.cleantmpfiles(_listtmpfiles)
+            return "Timed Out"
+        else:
+            self.cleantmpfiles(_listtmpfiles)
+            return "UNKNOWN"
+
+
+
+
     @staticmethod
     def cleantmpfiles(_listfiles2delete):
         for filepath in _listfiles2delete:
@@ -741,21 +778,12 @@ class DepthEsbmcCheck(object):
         while self.esbmc_bound <= self.maxk and actual_detphver <= self.maxdepthverification:
 
             if self.en_kparalell:
-                #return "Parallel not supported yet."
-                result_parallel = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                     self.esbmc_solver_op + " " +
-                                                     "--k-induction-parallel" + " " +
-                                                     self.isdefiniedmemlimit() +
-                                                     "--timeout " + self.esbmc_timeout_op + " " +
-                                                     self.esbmc_nolibrary + " " +
-                                                     self.esbmc_extra_op + " " +
-                                                     _cprogrampath)
-
-                return result_parallel
+                if self.debug:
+                    print("\t -> Status: checking with k-induction parallel")
+                return self.checkwithkparallel(_cprogrampath, actual_ce, listtmpfiles)
 
             else:
                 # Sequencial
-
                 if self.debug:
                     print("\t -> Actual k = " + str(self.esbmc_bound))
 
