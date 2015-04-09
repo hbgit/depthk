@@ -5,6 +5,11 @@ TODO:
       [SOLVED PARTIAL] it was added a trigger to avoid this annotation type
 
 
+Added embedded test cases
+    - fixed bug with gnu hack
+    - [TODO] why PIPS not support test_cases/embedded_codes/powerstone/POWERSTONE_jpeg_det.c
+
+
 SVCOMP simulation Loops-SET:
 -> Adopt .i is in most case better than .c
 -> Adopt k = 25 at least

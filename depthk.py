@@ -329,11 +329,13 @@ class DepthK(object):
         #resultpips = commands.getoutput(self.pipscommand + " " + _scriptpips)
         resultpips = commands.getoutput("timeout --signal=9 8m " + self.pipscommand + " " + _scriptpips)
         #os.system("timeout --signal=9 8m " + self.pipscommand + " " + _scriptpips)
+        #sys.exit()
         end_inv_t = time.time()
 
         # print(resultpips)
 
         # Checking errors from PIPS
+        matcherrorpips0 = re.search(r'user error in', resultpips)
         matcherrorpips1 = re.search(r'tpips_user_error: Abort on user error requested!', resultpips)
         # Aborted                 (core dumped)
         matcherrorpips2 = re.search(r'(core dumped)', resultpips)
@@ -346,7 +348,7 @@ class DepthK(object):
             flag_TO_inv = True
 
 
-        if matcherrorpips1 or matcherrorpips2 or matcherrorpips3 or flag_TO_inv:
+        if matcherrorpips0 or matcherrorpips1 or matcherrorpips2 or matcherrorpips3 or flag_TO_inv:
             if self.debug_op:
                 if flag_TO_inv:
                     print("\t - TIMEOUT to generate the invariants.")
