@@ -8,6 +8,9 @@ TODO:
 Added embedded test cases
     - fixed bug with gnu hack
     - [TODO] why PIPS not support test_cases/embedded_codes/powerstone/POWERSTONE_jpeg_det.c
+    - [TODO] questions about experiment with new test cases:
+        (1) what is the ESBMC solver?
+        (2) sequential or parallel?
 
 
 SVCOMP simulation Loops-SET:
