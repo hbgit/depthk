@@ -1,0 +1,6 @@
+These are the SNU real-time benchmarks.
+
+Original source: http://archi.snu.ac.kr/realtime/benchmark/
+
+The original SNU benchmarks contain concrete arguments. In this version, all 
+the programs receive non-deterministic inputs.
