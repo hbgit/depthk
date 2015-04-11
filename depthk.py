@@ -337,8 +337,9 @@ class DepthK(object):
         # print(resultpips)
 
         # Checking errors from PIPS
-        matcherrorpips0 = re.search(r'user error in', resultpips)
-        matcherrorpips1 = re.search(r'tpips_user_error: Abort on user error requested!', resultpips)
+        matcherrorpips0 = re.search(r'(user error in)', resultpips)
+        matcherrorpips0not = re.search(r'(user error in parse_properties)', resultpips)
+        matcherrorpips1 = re.search(r'(tpips_user_error: Abort on user error requested!)', resultpips)
         # Aborted                 (core dumped)
         matcherrorpips2 = re.search(r'(core dumped)', resultpips)
         # timeout: the monitored command dumped core
@@ -350,11 +351,12 @@ class DepthK(object):
             flag_TO_inv = True
 
 
-        if matcherrorpips0 or matcherrorpips1 or matcherrorpips2 or matcherrorpips3 or flag_TO_inv:
+        if (matcherrorpips0 and not matcherrorpips0not) or matcherrorpips1 or matcherrorpips2 or matcherrorpips3 or flag_TO_inv:
             if self.debug_op:
                 if flag_TO_inv:
                     print("\t - TIMEOUT to generate the invariants.")
                 else:
+                    #print(matcherrorpips0.group(0))
                     print("\t - A problem was identified in PIPS.")
 
             # print(resultpips)
