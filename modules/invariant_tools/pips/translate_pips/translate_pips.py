@@ -10,16 +10,20 @@
 from __future__ import print_function
 
 import re
+import os
+import sys
 
 
 class PipsTranslateAnnot(object):
     def __init__(self):
         self.list_beginnumfuct = []
+        self.actualnameprogram = ""
         #self.nameoforicprogram = ""
 
 
     def instprecondinprog(self, _cprogrampath):
 
+        self.actualnameprogram = _cprogrampath
         fileprogram = open(_cprogrampath, "r")
         listfilec = fileprogram.readlines()
         fileprogram.close()
@@ -177,8 +181,7 @@ class PipsTranslateAnnot(object):
 
 
 
-    @staticmethod
-    def translatepreconditionpips(_precondtext):
+    def translatepreconditionpips(self, _precondtext):
 
         # Generating a single line from PIPS annotation
         linesannot =  _precondtext.split("//")
@@ -249,10 +252,17 @@ class PipsTranslateAnnot(object):
                             # Rename vars in this form comp_m1_st#init
                             matchinit = re.search(r'#init', predicate)
                             if matchinit:
+                                # Remove unnecessary strings
+                                strremove1 = os.path.splitext(os.path.basename(self.actualnameprogram))[0]+"!:"
+                                if strremove1 in predicate:
+                                    predicate = predicate.replace(strremove1, "")
+
                                 predicate = predicate.replace("#init", "_init")
+
 
                             # print(predicate.strip())
                             listnewpreform.append(predicate.strip())
+                            
 
                         # Mount string to precondition
                         middletxt = ' && '.join(listnewpreform)

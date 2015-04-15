@@ -79,6 +79,11 @@ def make_pycparser_compatible(data):
         # TODO: Improve this match by use regular expressions
 
 
+        # remove main function declaration
+        if re.search(r"main\(int argc, unsigned char \*argv\[\]\);", listdata[counti]):
+            listdata[counti] = ""
+
+
         # functions that use __gnuc_va_list
         # typedef __builtin_va_list __gnuc_va_list;
         if re.search(r"typedef[ ]+__builtin_va_list[ ]+__gnuc_va_list;", listdata[counti]):
