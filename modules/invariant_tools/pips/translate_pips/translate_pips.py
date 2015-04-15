@@ -262,7 +262,7 @@ class PipsTranslateAnnot(object):
 
                             # print(predicate.strip())
                             listnewpreform.append(predicate.strip())
-                            
+
 
                         # Mount string to precondition
                         middletxt = ' && '.join(listnewpreform)
