@@ -826,7 +826,8 @@ class DepthEsbmcCheck(object):
                         self.savelist2file(actual_ce, result_basecase)
 
                         # Identify a possible timeout
-                        self.hastimeoutfromesbmc(actual_ce)
+                        if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
+                            return ""
 
                         # >> (1) Identifying if it was generated a counterexample
                         statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
@@ -846,7 +847,8 @@ class DepthEsbmcCheck(object):
                     self.savelist2file(actual_ce, result_basecase)
 
                     # Identify a possible timeout
-                    self.hastimeoutfromesbmc(actual_ce)
+                    if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
+                        return ""
 
                     # >> (1) Identifying if it was generated a counterexample
                     statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
@@ -903,7 +905,8 @@ class DepthEsbmcCheck(object):
 
                         self.savelist2file(actual_ce, result_forwardcond)
                         # Identify a possible timeout
-                        self.hastimeoutfromesbmc(actual_ce)
+                        if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
+                            return ""
 
                         # Checking if it was possible to prove the property
                         #
@@ -963,7 +966,8 @@ class DepthEsbmcCheck(object):
 
                             self.savelist2file(actual_ce, result_inductivestep)
                             # Identify a possible timeout
-                            self.hastimeoutfromesbmc(actual_ce)
+                            if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
+                                return ""
 
                             # checking CE
                             statusce_inductivestep = int(commands.getoutput("cat " + actual_ce +
