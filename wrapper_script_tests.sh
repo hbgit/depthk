@@ -4,7 +4,7 @@
 # Usage: ./wrapper_script_tests.sh <file.c|file.i>
 
 # Path to the DepthK tool
-path_to_depthk=/home/hrocha/servarq/Docs/tools/depthk/depthk.py
+path_to_depthk=/home/hrocha/Documents/Projects_DEV/depthk/depthk.py
 
 
 while getopts "c:mh" arg; do
@@ -40,12 +40,28 @@ if test "${benchmark}" = ""; then
     exit 1
 fi
 
+
+# Creating Dir to save the logs
+LOGS_depthk="LOGS_depthk"
+if [ ! -d "$LOGS_depthk" ]; then
+    mkdir "$LOGS_depthk"
+fi
+
+
 # The complete command to be executed
 run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
 
 # Invoke our command, wrapped in a timeout so that we can
 # postprocess the results. `timeout` is part of coreutils on debian and fedora.
 result_check=`timeout 895 bash -c "$run_cmdline"`
+
+# Saving logs
+#for i in $result_check; do
+#    echo $i >> "${benchmark}"".log"
+#done
+echo "$result_check" &> "${benchmark}"".log"
+mv "${benchmark}"".log" "$LOGS_depthk"
+
 
 # Identify problems with invariants generation
 # Not supported by PIPS
