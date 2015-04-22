@@ -9,6 +9,14 @@ Added embedded test cases
     - fixed bug with gnu hack
     - [TODO] why PIPS not support test_cases/embedded_codes/powerstone/POWERSTONE_jpeg_det.c
     - [TODO] fix bug related to user error in generic_io_effects: stdout is not defined: check if "stdio.h" is included)
+    - [TODO] fug related to generate code to INIT
+       test_cases/embedded_codes/powerstone/POWERSTONE_fir_det.c
+        unsigned long int next_init = next;
+        static unsigned long int next = 1;
+    - [TODO] esbmc bug ???
+       test_cases/embedded_codes/powerstone/POWERSTONE_compress_det.c
+    - [TODO] GNU hack bug
+        test_cases/embedded_codes/powerstone/v42.c
 
 
 SVCOMP simulation Loops-SET:

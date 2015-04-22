@@ -604,8 +604,8 @@ if __name__ == "__main__":
             # now with the extension replaced from .i to .c
             inputCFile = rundepthk.applygnuhack(inputCFile)
             #print(inputCFile)
-            # os.system("cat " + inputCFile)
-            # sys.exit()
+            #os.system("cat " + inputCFile)
+            #sys.exit()
 
 
             codewithinv = ""
@@ -625,8 +625,8 @@ if __name__ == "__main__":
                 # rundepthk.debug_gh = True
                 codewithinv = rundepthk.applygnuhack(codewithinv)
 
-                #os.system("cat "+ codewithinv)
-                #sys.exit()
+                # os.system("cat "+ codewithinv)
+                # sys.exit()
 
                 # Identify #init from PIPS in the code with invariants
                 dict_init = rundepthk.identify_initpips(codewithinv)

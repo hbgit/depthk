@@ -82,6 +82,9 @@ def make_pycparser_compatible(data):
         # remove main function declaration
         if re.search(r"main\(int argc, unsigned char \*argv\[\]\);", listdata[counti]):
             listdata[counti] = ""
+        #  main(int argc, char *argv[]);
+        if re.search(r"main\(int argc, char \*argv\[\]\);", listdata[counti]):
+            listdata[counti] = ""
 
 
         # functions that use __gnuc_va_list
