@@ -101,14 +101,14 @@ else
 fi
 
 # Print log about invariants generation
-if [ $PIPSerror -gt 0 ]; then
-    echo "[PIPS] A problem was identified"
-fi
+#if [ $PIPSerror -gt 0 ]; then
+    #echo "[PIPS] A problem was identified"
+#fi
 
-if [ $invTO -gt 0 ]; then
-    echo "[PIPS] TIMEOUT to generate the invariants"
-fi
+#if [ $invTO -gt 0 ]; then
+    #echo "[PIPS] TIMEOUT to generate the invariants"
+#fi
 
-if [ $forcelastcheckbc -gt 0 ]; then
-    echo "[DEPTHK] Forcing last check in base case"
-fi
+#if [ $forcelastcheckbc -gt 0 ]; then
+    #echo "[DEPTHK] Forcing last check in base case"
+#fi
