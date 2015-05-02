@@ -4,7 +4,7 @@
 # Usage: ./wrapper_script_tests.sh <file.c|file.i>
 
 # Path to the DepthK tool
-path_to_depthk=/home/hrocha/Documents/Projects_DEV/depthk/depthk.py
+path_to_depthk="./depthk.py"
 
 
 while getopts "c:mh" arg; do
@@ -42,10 +42,10 @@ fi
 
 
 # Creating Dir to save the logs
-LOGS_depthk="LOGS_depthk"
-if [ ! -d "$LOGS_depthk" ]; then
-    mkdir "$LOGS_depthk"
-fi
+#LOGS_depthk="LOGS_depthk"
+#if [ ! -d "$LOGS_depthk" ]; then
+#    mkdir "$LOGS_depthk"
+#fi
 
 
 # The complete command to be executed
@@ -56,11 +56,23 @@ run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
 result_check=`timeout 895 bash -c "$run_cmdline"`
 
 # Saving logs
-#for i in $result_check; do
-#    echo $i >> "${benchmark}"".log"
-#done
 echo "$result_check" &> "${benchmark}"".log"
-mv "${benchmark}"".log" "$LOGS_depthk"
+# mv "${benchmark}"".log" "$LOGS_depthk"
+# Getting K adopted by ESBMC
+bound="-"
+bond_check1=`tac  "${benchmark}"".log" | grep -o "^\*\*\* K-Induction Loop Iteration.*" | grep -o "[0-9]*[^ ]*" -m 1`
+bond_check2=`tac  "${benchmark}"".log" | grep -o "^Unwinding loop.*" | grep -o "iteration[ ]*[0-9]*[^ ]*" | grep -o "[0-9]*$" -m 1`
+if [ ! -z "$bond_check1" ]; then
+   bound=$bond_check1
+fi
+
+if [ ! -z "$bond_check2" ]; then
+   bound=$bond_check2
+fi
+
+rm "${benchmark}"".log"
+
+echo "Bound k:$bound"
 
 
 # Identify problems with invariants generation
