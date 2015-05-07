@@ -617,7 +617,7 @@ if __name__ == "__main__":
 
                 # Generating invariants with PIPS
                 codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
-
+			            
             if args.setOnlyCEUse and rundepthk.debug_op:
                 print(">> Adopting only the ESBMC counterexample to generate assumes")
 
@@ -648,7 +648,10 @@ if __name__ == "__main__":
 
             else:
                 # Execute the k-induction with ESBMC
+                # os.system("cat " + inputCFile)
+                # sys.exit()
                 rundepthk.callesbmccheck(inputCFile, True)
+                
 
             # Removing tmp files
             rundepthk.cleantmpfiles(list_paths_to_delete)
