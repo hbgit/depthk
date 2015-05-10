@@ -80,9 +80,19 @@ if [ ! -z "$bond_check2" ]; then
    bound=$bond_check2
 fi
 
-rm "${benchmark}"".log"
-
 echo "Bound k:$bound"
+
+
+# Getting step of the verification
+step="-"
+step_check=`tac  "${benchmark}"".log" | grep -o "Status: checking.*" -m 1 | sed -e  "s/Status: checking //"`
+
+if [ ! -z "$step_check" ]; then
+   step=$step_check
+fi
+
+echo "Solution by:$step"
+#rm "${benchmark}"".log"
 
 
 # Identify problems with invariants generation
