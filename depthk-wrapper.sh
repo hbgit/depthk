@@ -92,7 +92,7 @@ if [ ! -z "$step_check" ]; then
 fi
 
 echo "Solution by:$step"
-#rm "${benchmark}"".log"
+rm "${benchmark}"".log"
 
 
 # Identify problems with invariants generation

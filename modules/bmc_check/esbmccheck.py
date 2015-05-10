@@ -674,6 +674,8 @@ class DepthEsbmcCheck(object):
     def hastimeoutfromesbmc(_esbmcoutput):
         statusc = int(commands.getoutput("cat " + _esbmcoutput + " | grep -c \"Timed out\" "))
         if statusc > 0:
+            os.system("cat " + _esbmcoutput)
+            print(" ")
             print("VERIFICATION UNKNOWN - Time Out")
             return "UNKNOWN"
 
@@ -701,6 +703,8 @@ class DepthEsbmcCheck(object):
         # Checking TRUE
         status_true = int(commands.getoutput("tail -n 3 " + _actual_ce + " | grep -c \"VERIFICATION SUCCESSFUL\" "))
         if status_true > 0:
+            os.system("cat " + actual_ce)
+            print(" ")
             self.cleantmpfiles(_listtmpfiles)
             return "TRUE"
 
@@ -714,9 +718,13 @@ class DepthEsbmcCheck(object):
         # Checking TO
         status_to = int(commands.getoutput("tail -n 3 " + _actual_ce + " | grep -c \"Timed out\" "))
         if status_to > 0:
+            os.system("cat " + actual_ce)
+            print(" ")
             self.cleantmpfiles(_listtmpfiles)
             return "Timed Out"
         else:
+            os.system("cat " + actual_ce)
+            print(" ")
             self.cleantmpfiles(_listtmpfiles)
             return "UNKNOWN"
 
@@ -762,10 +770,11 @@ class DepthEsbmcCheck(object):
         last_ce = _cprogrampath.replace(".c", ".ltce")
         listtmpfiles.append(last_ce)
         #last_ce = "/tmp/last_ce_kinduction.txt"
-        flag_forceassume = self.forceassume
+        flag_forceassume = self.forceassume        
 
-        flag_moreonecheckbase = True
-        lastresult = ""
+        #flag_moreonecheckbase = True
+        flag_moreonecheckbase = False
+        lastresult = [False,"",""] # flag, result, step
 
         # generate data about the functions
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
@@ -787,7 +796,7 @@ class DepthEsbmcCheck(object):
                 if self.debug:
                     print("\t -> Actual k = " + str(self.esbmc_bound))
 
-                if os.path.isfile(actual_ce):
+                if os.path.isfile(actual_ce):                    
                     shutil.copyfile(actual_ce, last_ce)
 
                 if self.debug:
@@ -807,7 +816,7 @@ class DepthEsbmcCheck(object):
                 #                                      _cprogrampath)
 
                 # checking we are in the force last check
-                if lastresult:
+                if lastresult[0]:
                     #nextk = self.esbmc_bound + 25
                     self.esbmc_bound += 5
                     #while self.esbmc_bound <= nextk and self.esbmc_bound <= self.maxk and statusce_basecase <= 0:
@@ -864,9 +873,12 @@ class DepthEsbmcCheck(object):
                 else:
 
                     # checking we are in the force last check
-                    if lastresult:
+                    # This last force is always to TRUE
+                    if lastresult[0]:
+                        os.system("cat " + last_ce)                        
+                        print(" ")                        
                         self.cleantmpfiles(listtmpfiles)
-                        return lastresult
+                        return "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
 
                     # >> (2) Only if there is NOT counterexample, then  increase k = k +1
                     # only to check if any crash was generated
@@ -918,10 +930,15 @@ class DepthEsbmcCheck(object):
                                 # The property was proved
                                 # print("True")
                                 if flag_moreonecheckbase:
-                                    lastresult = "TRUE"
+                                    #lastresult = "TRUE"
+                                    lastresult[0] = True
+                                    lastresult[1] = "TRUE"
+                                    lastresult[2] = "Status: checking forward condition"
                                     if self.debug:
                                         print("\t\t > Forcing last check in base case")
                                 else:
+                                    os.system("cat " + actual_ce)
+                                    print(" ")
                                     self.cleantmpfiles(listtmpfiles)
                                     return "TRUE"
                             else:
@@ -978,10 +995,15 @@ class DepthEsbmcCheck(object):
                                 if self.hassuccessfulfromesbmc(actual_ce):
                                     # print("True")
                                     if flag_moreonecheckbase:
-                                        lastresult = "TRUE"
+                                        #lastresult = "TRUE"
+                                        lastresult[0] = True
+                                        lastresult[1] = "TRUE"
+                                        lastresult[2] = "Status: checking inductive step"
                                         if self.debug:
                                             print("\t\t > Forcing last check in base case")
                                     else:
+                                        os.system("cat " + actual_ce)
+                                        print(" ")
                                         self.cleantmpfiles(listtmpfiles)
                                         return "TRUE"
                                 else:
@@ -1064,6 +1086,8 @@ class DepthEsbmcCheck(object):
 
         # >> END-WHILE
         # >> UNKNOWN
+        os.system("cat " + actual_ce)
+        print(" ")
         print("MAX k (" + str(self.maxk) + ") reached. ")
         self.cleantmpfiles(listtmpfiles)
         return "UNKNOWN"
