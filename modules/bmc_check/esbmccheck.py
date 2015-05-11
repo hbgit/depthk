@@ -773,7 +773,7 @@ class DepthEsbmcCheck(object):
         flag_forceassume = self.forceassume        
 
         #flag_moreonecheckbase = True
-        flag_moreonecheckbase = False
+        flag_moreonecheckbase = True
         lastresult = [False,"",""] # flag, result, step
 
         # generate data about the functions
@@ -801,6 +801,7 @@ class DepthEsbmcCheck(object):
 
                 if self.debug:
                     print("\t\t Status: checking base case")
+                    
 
                 # >> (1) Checking base-case, i.e., there is a counterexample?
                 # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
@@ -865,10 +866,20 @@ class DepthEsbmcCheck(object):
 
                 if statusce_basecase > 0:
                     # show counterexample
-                    os.system("cat " + actual_ce)
-                    print(" ")
-                    self.cleantmpfiles(listtmpfiles)
-                    return "FALSE"
+                    if lastresult[0]:
+                        os.system("cat " + actual_ce)
+                        print(" ")                                                 
+                        print(" ")
+                        self.cleantmpfiles(listtmpfiles)
+                        return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
+                               ", but the correct is the: base case \n"
+                        return "FALSE"
+                               
+                    else:
+                        os.system("cat " + actual_ce)
+                        print(" ")
+                        self.cleantmpfiles(listtmpfiles)
+                        return "FALSE"
 
                 else:
 
