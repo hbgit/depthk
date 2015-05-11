@@ -1098,8 +1098,8 @@ class DepthEsbmcCheck(object):
 
         # >> END-WHILE
         # >> UNKNOWN
-        os.system("cat " + actual_ce)
-        print(" ")
+        # os.system("cat " + actual_ce)
+        # print(" ")
         print("MAX k (" + str(self.maxk) + ") reached. ")
         self.cleantmpfiles(listtmpfiles)
         return "UNKNOWN"

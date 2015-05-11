@@ -71,13 +71,18 @@ echo "$result_check" &> "${benchmark}"".log"
 # Getting K adopted by ESBMC
 bound="-"
 bond_check1=`tac  "${benchmark}"".log" | grep -o "^\*\*\* K-Induction Loop Iteration.*" | grep -o "[0-9]*[^ ]*" -m 1`
-bond_check2=`tac  "${benchmark}"".log" | grep -o "^Unwinding loop.*" | grep -o "iteration[ ]*[0-9]*[^ ]*" | grep -o "[0-9]*$" -m 1`
 if [ ! -z "$bond_check1" ]; then
    bound=$bond_check1
-fi
-
-if [ ! -z "$bond_check2" ]; then
-   bound=$bond_check2
+else 
+	bond_check2=`tac  "${benchmark}"".log" | grep -o "^Unwinding loop.*" | grep -o "iteration[ ]*[0-9]*[^ ]*" | grep -o "[0-9]*$" -m 1`
+	if [ ! -z "$bond_check2" ]; then
+		bound=$bond_check2
+	else
+		bond_check3=`tac  "${benchmark}"".log" | grep -o "^MAX k (100) reached." -m 1`
+		if [ ! -z "$bond_check3" ]; then
+			bound="100"
+		fi
+	fi
 fi
 
 echo "Bound k:$bound"
@@ -97,12 +102,12 @@ rm "${benchmark}"".log"
 
 # Identify problems with invariants generation
 # Not supported by PIPS
-PIPSerror=`echo ${result_check} | grep -c "A problem was identified in PIPS"`
+#PIPSerror=`echo ${result_check} | grep -c "A problem was identified in PIPS"`
 # When it is not possible generate the invariants
-invTO=`echo ${result_check} | grep -c "TIMEOUT to generate the invariants"`
+#invTO=`echo ${result_check} | grep -c "TIMEOUT to generate the invariants"`
 
 # Checking approach to force last check with base case
-forcelastcheckbc=`echo ${result_check} | grep -c "> Forcing last check in base case"`
+#forcelastcheckbc=`echo ${result_check} | grep -c "> Forcing last check in base case"`
 
 
 # Postprocessing: first, collect some facts
