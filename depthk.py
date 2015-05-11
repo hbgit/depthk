@@ -274,7 +274,7 @@ class DepthK(object):
         return listbeginnumfuct
 
 
-    def callesbmccheck(self, _cfilepath, _enableforceassume):
+    def callesbmccheck(self, _cfilepath, _enableforceassume, _enablelastcheckbasecase):
         runesbmc = esbmccheck.DepthEsbmcCheck()
         runesbmc.esbmcpath = self.esbmcpath
         runesbmc.maxk = self.maxk
@@ -290,6 +290,11 @@ class DepthK(object):
             runesbmc.forceassume = True
         else:
             runesbmc.forceassume = False
+        
+        if _enablelastcheckbasecase:
+            runesbmc.moreonecheckbasecase = True
+        else:
+            runesbmc.moreonecheckbasecase = False
         # runesbmc.esbmc_extra_op = self.esbmc_extraop
 
         if not self.esbmcsolver == "z3":
@@ -487,6 +492,8 @@ if __name__ == "__main__":
                         help='generates the program with the invariants', default=False)
     parser.add_argument('-l', '--k-induction-parallel', action="store_true", dest='setKParallel',
                         help='prove by k-induction, ESBMC runs each step on a separate process', default=False)
+    parser.add_argument('-c', '--force-check-base-case', action="store_true", dest='setForceBaseCase',
+                        help='force a last check in the base case of the k-induction algorithm', default=True)
     parser.add_argument('-o', '--only-counter-example', action="store_true", dest='setOnlyCEUse',
                         help='adopt only the counterexample to generate the assumes', default=False)
     parser.add_argument('-i', '--disable-counter-example', action="store_true", dest='setDisableCEUse',
@@ -548,7 +555,7 @@ if __name__ == "__main__":
             if args.setKParallel:
                 rundepthk.en_kparalell = args.setKParallel
             if args.setDisableCEUse:
-                rundepthk.disableuse_ce = args.setDisableCEUse
+                rundepthk.disableuse_ce = args.setDisableCEUse                            
             if args.setESBMCSolver:
                 # Checking if this solver is supported by ESBMC
                 if rundepthk.checkesbmcsolversupport(args.setESBMCSolver):
@@ -617,7 +624,7 @@ if __name__ == "__main__":
 
                 # Generating invariants with PIPS
                 codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
-			            
+                        
             if args.setOnlyCEUse and rundepthk.debug_op:
                 print(">> Adopting only the ESBMC counterexample to generate assumes")
 
@@ -644,13 +651,13 @@ if __name__ == "__main__":
                     sys.exit()
 
                 # Execute the k-induction with ESBMC
-                rundepthk.callesbmccheck(pathcodepipstranslated, False)
+                rundepthk.callesbmccheck(pathcodepipstranslated, False, args.setForceBaseCase)
 
             else:
                 # Execute the k-induction with ESBMC
                 # os.system("cat " + inputCFile)
                 # sys.exit()
-                rundepthk.callesbmccheck(inputCFile, True)
+                rundepthk.callesbmccheck(inputCFile, True, args.setForceBaseCase)
                 
 
             # Removing tmp files

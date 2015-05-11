@@ -28,6 +28,7 @@ class DepthEsbmcCheck(object):
         # depth check options
         self.debug = False
         self.forceassume = False
+        self.moreonecheckbasecase = False
         self.disableuse_ce = False
         self.maxk = 15
         self.maxdepthverification = 25
@@ -773,7 +774,7 @@ class DepthEsbmcCheck(object):
         flag_forceassume = self.forceassume        
 
         #flag_moreonecheckbase = True
-        flag_moreonecheckbase = True
+        flag_moreonecheckbase = self.moreonecheckbasecase
         lastresult = [False,"",""] # flag, result, step
 
         # generate data about the functions
