@@ -493,7 +493,7 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--k-induction-parallel', action="store_true", dest='setKParallel',
                         help='prove by k-induction, ESBMC runs each step on a separate process', default=False)
     parser.add_argument('-c', '--force-check-base-case', action="store_true", dest='setForceBaseCase',
-                        help='force a last check in the base case of the k-induction algorithm', default=True)
+                        help='force a last check in the base case of the k-induction algorithm', default=False)
     parser.add_argument('-o', '--only-counter-example', action="store_true", dest='setOnlyCEUse',
                         help='adopt only the counterexample to generate the assumes', default=False)
     parser.add_argument('-i', '--disable-counter-example', action="store_true", dest='setDisableCEUse',

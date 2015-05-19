@@ -33,9 +33,11 @@ done
 # Command line, common to all tests.
 depthk_options=""
 if test ${parallel} = 1; then
-    depthk_options="--debug --disable-counter-example --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""    
+    #depthk_options="--debug --disable-counter-example --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""    
+    depthk_options="--debug --disable-counter-example --k-induction-parallel --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""    
 else
-	depthk_options="--debug --disable-counter-example --force-check-base-case --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""
+	#depthk_options="--debug --disable-counter-example --force-check-base-case --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""
+	depthk_options="--debug --disable-counter-example --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""
 fi
 
 
