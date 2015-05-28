@@ -803,15 +803,18 @@ class DepthEsbmcCheck(object):
         enable_witnesschecker = True
         #esbmc_tokenizer_path = " \"" + os.path.abspath(".") + "/modules/bmc_check/utils/tokenizer" + "\" "
         esbmc_tokenizer_path = " \"tokenizer\" " # should be added in the path
+        file2witness=""
+        cpachecker_path = "/mnt/Docs/herbert/cpachecker/witness_checker/CPAchecker/"
+        cwd = os.getcwd()
         if enable_witnesschecker:
             file2witness = _cprogrampath.replace(".c", ".graphml")
             self.esbmc_witness_op = " --witnesspath " + str(file2witness) + " --tokenizer " + str(esbmc_tokenizer_path)
+            os.chdir(cpachecker_path)
         else:
             self.esbmc_witness_op = ""
 
-        cpachecker_path = "/mnt/Docs/herbert/cpachecker/witness_checker/CPAchecker/"
         listproperty = os.path.abspath(".")+"/ALL.prp"
-        cpachecker_ops = cpachecker_path + "scripts/cpa.sh -noout -heap 10000M -witness-check -spec "+str(listproperty)
+        cpachecker_ops = "scripts/cpa.sh -noout -heap 10000M -witness-check -spec "+str(listproperty)
 
 
 
@@ -921,9 +924,9 @@ class DepthEsbmcCheck(object):
                                 os.system("cat " + actual_ce)
                                 print(" ")
                                 self.cleantmpfiles(listtmpfiles)
+                                os.chdir(cwd)
                                 return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
-                                   ", but the correct is the: base case \n"
-                                return "FALSE"
+                                   ", but the correct is the: base case \n FALSE"
                             else:
                                 self.cleantmpfiles(listtmpfiles)
                                 return "UNKNOWN"
@@ -932,9 +935,10 @@ class DepthEsbmcCheck(object):
                             print(" ")
                             print(" ")
                             self.cleantmpfiles(listtmpfiles)
+                            os.chdir(cwd)
                             return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
-                                   ", but the correct is the: base case \n"
-                            return "FALSE"
+                                   ", but the correct is the: base case \n FALSE"
+
                                
                     else:
                         # Apply witness checker
@@ -972,6 +976,7 @@ class DepthEsbmcCheck(object):
                         os.system("cat " + last_ce)                        
                         print(" ")                        
                         self.cleantmpfiles(listtmpfiles)
+                        os.chdir(cwd)
                         return "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
 
                     # >> (2) Only if there is NOT counterexample, then  increase k = k +1
