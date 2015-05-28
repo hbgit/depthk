@@ -740,6 +740,22 @@ class DepthEsbmcCheck(object):
                 os.remove(filepath)
 
 
+    def check_witnessresult(self, _listresultwitness):
+        list_recheck = _listresultwitness.split("\n")
+        flag_cpa = False
+        for line in list_recheck:
+            match_failed_CPA = re.search(r"Verification result: FALSE", line)
+            match_nobug_CPA = re.search(r"Verification result: TRUE", line)
+            if match_failed_CPA:
+                return "FALSE"
+            elif match_nobug_CPA:
+                # "TRUE" not equal to actual
+                return "UNKNOWN"
+
+        if not flag_cpa:
+            return "UNKNOWN"
+
+
 
     def kinductioncheck(self, _cprogrampath):
 
@@ -789,15 +805,12 @@ class DepthEsbmcCheck(object):
         if enable_witnesschecker:
             file2witness = _cprogrampath.replace(".c", ".graphml")
             self.esbmc_witness_op = " --witnesspath " + str(file2witness) + " --tokenizer " + str(esbmc_tokenizer_path)
-            print(self.esbmc_witness_op)
         else:
             self.esbmc_witness_op = ""
-        cpachecker_path = ""
-        cpachecker_ops = "scripts/cpa.sh -preprocess -sv-comp14--memorysafety " \
-                         "-spec config/specification/cpalien-leaks.spc " \
-                         "-spec config/specification/TerminatingFunctions.spc " \
-                         "-setprop cfa.useMultiEdges=false " \
-                         "-setprop parser.transformTokensToLines=true -spec"
+
+        cpachecker_path = "/mnt/Docs/herbert/cpachecker/witness_checker/CPAchecker/"
+        listproperty = os.path.abspath(".")+"/ALL.prp"
+        cpachecker_ops = cpachecker_path + "scripts/cpa.sh -noout -heap 10000M -witness-check -spec "+str(listproperty)
 
 
 
@@ -892,29 +905,63 @@ class DepthEsbmcCheck(object):
                     if lastresult[0]:
                         # Apply witness checker
                         if enable_witnesschecker:
-                            print("witness")
-                            os.system("cat " + file2witness)
-                            sys.exit()
-
-                        os.system("cat " + actual_ce)
-                        print(" ")                                                 
-                        print(" ")
-                        self.cleantmpfiles(listtmpfiles)
-                        return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
-                               ", but the correct is the: base case \n"
-                        return "FALSE"
+                            # making a copy of the P'
+                            tmpname = _cprogrampath+"_c.c"
+                            shutil.copy(_cprogrampath,tmpname)
+                            # removing __ESBMC_ASSUME
+                            commands.getoutput("sed -i \'s/__ESBMC_assume.*//\' "+tmpname)
+                            result_witness = commands.getoutput(cpachecker_ops + " " +
+                                                                " -spec " + file2witness + " " +
+                                                                tmpname)
+                            os.remove(tmpname)
+                            os.remove(file2witness)
+                            endresult = self.check_witnessresult(result_witness)
+                            if endresult == "FALSE":
+                                os.system("cat " + actual_ce)
+                                print(" ")
+                                self.cleantmpfiles(listtmpfiles)
+                                return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
+                                   ", but the correct is the: base case \n"
+                                return "FALSE"
+                            else:
+                                self.cleantmpfiles(listtmpfiles)
+                                return "UNKNOWN"
+                        else:
+                            os.system("cat " + actual_ce)
+                            print(" ")
+                            print(" ")
+                            self.cleantmpfiles(listtmpfiles)
+                            return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
+                                   ", but the correct is the: base case \n"
+                            return "FALSE"
                                
                     else:
                         # Apply witness checker
                         if enable_witnesschecker:
-                            print("witness")
-                            os.system("cat " + file2witness)
-                            sys.exit()
-
-                        os.system("cat " + actual_ce)
-                        print(" ")
-                        self.cleantmpfiles(listtmpfiles)
-                        return "FALSE"
+                            # making a copy of the P'
+                            tmpname = _cprogrampath+"_c.c"
+                            shutil.copy(_cprogrampath,tmpname)
+                            # removing __ESBMC_ASSUME
+                            commands.getoutput("sed -i \'s/__ESBMC_assume.*//\' "+tmpname)
+                            result_witness = commands.getoutput(cpachecker_ops + " " +
+                                                                " -spec " + file2witness + " " +
+                                                                tmpname)
+                            os.remove(tmpname)
+                            os.remove(file2witness)
+                            endresult = self.check_witnessresult(result_witness)
+                            if endresult == "FALSE":
+                                os.system("cat " + actual_ce)
+                                print(" ")
+                                self.cleantmpfiles(listtmpfiles)
+                                return "FALSE"
+                            else:
+                                self.cleantmpfiles(listtmpfiles)
+                                return "UNKNOWN"
+                        else:
+                            os.system("cat " + actual_ce)
+                            print(" ")
+                            self.cleantmpfiles(listtmpfiles)
+                            return "FALSE"
 
                 else:
 
