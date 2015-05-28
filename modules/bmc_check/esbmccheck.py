@@ -42,6 +42,7 @@ class DepthEsbmcCheck(object):
         #self.esbmc_nolibrary = "--no-library"
         self.esbmc_nolibrary = ""
         self.esbmc_extra_op = ""
+        self.esbmc_witness_op = ""
         self.esbmc_solver_op = "--z3"
         # k-induction options
         self.esbmc_basecase_op = "--base-case"
@@ -781,6 +782,24 @@ class DepthEsbmcCheck(object):
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
 
 
+        # To witness checker
+        enable_witnesschecker = True
+        #esbmc_tokenizer_path = " \"" + os.path.abspath(".") + "/modules/bmc_check/utils/tokenizer" + "\" "
+        esbmc_tokenizer_path = " \"tokenizer\" " # should be added in the path
+        if enable_witnesschecker:
+            file2witness = _cprogrampath.replace(".c", ".graphml")
+            self.esbmc_witness_op = " --witnesspath " + str(file2witness) + " --tokenizer " + str(esbmc_tokenizer_path)
+            print(self.esbmc_witness_op)
+        else:
+            self.esbmc_witness_op = ""
+        cpachecker_path = ""
+        cpachecker_ops = "scripts/cpa.sh -preprocess -sv-comp14--memorysafety " \
+                         "-spec config/specification/cpalien-leaks.spc " \
+                         "-spec config/specification/TerminatingFunctions.spc " \
+                         "-setprop cfa.useMultiEdges=false " \
+                         "-setprop parser.transformTokensToLines=true -spec"
+
+
 
         if self.debug:
             print(">> Starting the verification of the P\' program")
@@ -811,6 +830,7 @@ class DepthEsbmcCheck(object):
                 #                                      self.esbmc_solver_op + " " +
                 #                                      self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                 #                                      self.isdefiniedmemlimit() +
+                #                                      self.esbmc_witness_op +
                 #                                      "--timeout " + self.esbmc_timeout_op + " " +
                 #                                      self.esbmc_nolibrary + " " +
                 #                                      self.esbmc_extra_op + " " +
@@ -828,6 +848,7 @@ class DepthEsbmcCheck(object):
                                                          self.esbmc_solver_op + " " +
                                                          self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                          self.isdefiniedmemlimit() +
+                                                         self.esbmc_witness_op +
                                                          "--timeout " + self.esbmc_timeout_op + " " +
                                                          self.esbmc_nolibrary + " " +
                                                          self.esbmc_extra_op + " " +
@@ -849,6 +870,7 @@ class DepthEsbmcCheck(object):
                                                          self.esbmc_solver_op + " " +
                                                          self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                          self.isdefiniedmemlimit() +
+                                                         self.esbmc_witness_op +
                                                          "--timeout " + self.esbmc_timeout_op + " " +
                                                          self.esbmc_nolibrary + " " +
                                                          self.esbmc_extra_op + " " +
@@ -868,6 +890,12 @@ class DepthEsbmcCheck(object):
                 if statusce_basecase > 0:
                     # show counterexample
                     if lastresult[0]:
+                        # Apply witness checker
+                        if enable_witnesschecker:
+                            print("witness")
+                            os.system("cat " + file2witness)
+                            sys.exit()
+
                         os.system("cat " + actual_ce)
                         print(" ")                                                 
                         print(" ")
@@ -877,6 +905,12 @@ class DepthEsbmcCheck(object):
                         return "FALSE"
                                
                     else:
+                        # Apply witness checker
+                        if enable_witnesschecker:
+                            print("witness")
+                            os.system("cat " + file2witness)
+                            sys.exit()
+
                         os.system("cat " + actual_ce)
                         print(" ")
                         self.cleantmpfiles(listtmpfiles)
