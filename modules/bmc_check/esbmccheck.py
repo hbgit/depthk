@@ -744,7 +744,7 @@ class DepthEsbmcCheck(object):
         list_recheck = _listresultwitness.split("\n")
         flag_cpa = False
         for line in list_recheck:
-            print(line)
+            #print(line)
             match_failed_CPA = re.search(r"Verification result: FALSE", line)
             match_nobug_CPA = re.search(r"Verification result: TRUE", line)
             if match_failed_CPA:
