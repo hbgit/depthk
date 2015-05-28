@@ -809,7 +809,6 @@ class DepthEsbmcCheck(object):
         if enable_witnesschecker:
             file2witness = _cprogrampath.replace(".c", ".graphml")
             self.esbmc_witness_op = " --witnesspath " + str(file2witness) + " --tokenizer " + str(esbmc_tokenizer_path)
-            os.chdir(cpachecker_path)
         else:
             self.esbmc_witness_op = ""
 
@@ -914,9 +913,11 @@ class DepthEsbmcCheck(object):
                             shutil.copy(_cprogrampath,tmpname)
                             # removing __ESBMC_ASSUME
                             commands.getoutput("sed -i \'s/__ESBMC_assume.*//\' "+tmpname)
+                            os.chdir(cpachecker_path)
                             result_witness = commands.getoutput(cpachecker_ops + " " +
                                                                 " -spec " + file2witness + " " +
                                                                 tmpname)
+                            os.chdir(cwd)
                             os.remove(tmpname)
                             os.remove(file2witness)
                             endresult = self.check_witnessresult(result_witness)
@@ -924,7 +925,6 @@ class DepthEsbmcCheck(object):
                                 os.system("cat " + actual_ce)
                                 print(" ")
                                 self.cleantmpfiles(listtmpfiles)
-                                os.chdir(cwd)
                                 return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
                                    ", but the correct is the: base case \n FALSE"
                             else:
@@ -935,7 +935,6 @@ class DepthEsbmcCheck(object):
                             print(" ")
                             print(" ")
                             self.cleantmpfiles(listtmpfiles)
-                            os.chdir(cwd)
                             return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
                                    ", but the correct is the: base case \n FALSE"
 
@@ -948,9 +947,11 @@ class DepthEsbmcCheck(object):
                             shutil.copy(_cprogrampath,tmpname)
                             # removing __ESBMC_ASSUME
                             commands.getoutput("sed -i \'s/__ESBMC_assume.*//\' "+tmpname)
+                            os.chdir(cpachecker_path)
                             result_witness = commands.getoutput(cpachecker_ops + " " +
                                                                 " -spec " + file2witness + " " +
                                                                 tmpname)
+                            os.chdir(cwd)
                             os.remove(tmpname)
                             os.remove(file2witness)
                             endresult = self.check_witnessresult(result_witness)
@@ -976,7 +977,6 @@ class DepthEsbmcCheck(object):
                         os.system("cat " + last_ce)                        
                         print(" ")                        
                         self.cleantmpfiles(listtmpfiles)
-                        os.chdir(cwd)
                         return "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
 
                     # >> (2) Only if there is NOT counterexample, then  increase k = k +1
