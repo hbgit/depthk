@@ -1,0 +1,315 @@
+*** ESBMC Benchmark Runner (Single-Core) v0.4-k-induction ***
+
+Tool: DepthK
+Date of run: Thu Feb  4 08:20:59 AMT 2016
+System: CPU: Intel(R) Core(TM) i7-2670QM CPU @ 2.20GHz RAM:  kB
+Options:  --debug --disable-counter-example --solver z3 --memlimit 15g --extra-option-esbmc="--error-label ERROR"
+Source: test_cases/svcomp_loops 
+
+RUNNING:  test_cases/svcomp_loops/loop-new/gauss_sum_true-unreach-call.i
+[0;33munknown[0m in 95s
+RUNNING:  test_cases/svcomp_loops/loop-new/count_by_k_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-new/count_by_1_variant_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-new/nested_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-new/count_by_2_true-unreach-call.i
+[0;33munknown[0m in 40s
+RUNNING:  test_cases/svcomp_loops/loop-new/half_true-unreach-call.i
+[0;33munknown[0m in 160s
+RUNNING:  test_cases/svcomp_loops/loop-new/count_by_nondet_true-unreach-call.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loop-new/count_by_1_true-unreach-call.i
+[0;33munknown[0m in 51s
+RUNNING:  test_cases/svcomp_loops/loop-invgen/large_const_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/nested9_true-unreach-call.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/heapsort_true-unreach-call.i
+[1;35mERROR[0m in 11s
+RUNNING:  test_cases/svcomp_loops/loop-invgen/up_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/string_concat-noarr_true-unreach-call.i
+[1;35mERROR[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loop-invgen/fragtest_simple_true-unreach-call.i
+[1;35mERROR[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loop-invgen/down_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/id_trans_false-unreach-call.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loop-invgen/nest-if3_true-unreach-call.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/MADWiFi-encode_ie_ok_true-unreach-call.i
+[0;32mtrue[0m in 4s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/seq_true-unreach-call.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/nested6_true-unreach-call.i
+[0;32mtrue[0m in 8s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/SpamAssassin-loop_true-unreach-call.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loop-invgen/id_build_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/apache-get-tag_true-unreach-call.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loop-invgen/apache-escape-absolute_true-unreach-call.i
+[0;32mtrue[0m in 29s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/NetBSD_loop_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/sendmail-close-angle_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-invgen/half_2_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-lit/afnp2014_true-unreach-call.c.i
+[1;35mERROR[0m in 8s
+RUNNING:  test_cases/svcomp_loops/loop-lit/cggmp2005_true-unreach-call.c.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-lit/jm2006_true-unreach-call.c.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-lit/bhmr2007_true-unreach-call.c.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loop-lit/gj2007b_true-unreach-call.c.i
+[0;33munknown[0m in 298s
+RUNNING:  test_cases/svcomp_loops/loop-lit/gj2007_true-unreach-call.c.i
+[0;32mtrue[0m in 53s usingVERIFICATION SUCCESSFUL
+RUNNING:  test_cases/svcomp_loops/loop-lit/gr2006_true-unreach-call.c.i
+[0;32mtrue[0m in 0s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-lit/ddlm2013_true-unreach-call.c.i
+[1;35mERROR[0m in 8s
+RUNNING:  test_cases/svcomp_loops/loop-lit/hhk2008_true-unreach-call.c.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-lit/gcnr2008_false-unreach-call.c.i
+[0;32mfalse(label)[0m in 0s
+RUNNING:  test_cases/svcomp_loops/loop-lit/cggmp2005b_true-unreach-call.c.i
+[0;33munknown[0m in 46s
+RUNNING:  test_cases/svcomp_loops/loop-lit/gsv2008_true-unreach-call.c.i
+[0;33munknown[0m in 275s
+RUNNING:  test_cases/svcomp_loops/loop-lit/mcmillan2006_true-unreach-call.c.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loop-lit/cggmp2005_variant_true-unreach-call.c.i
+[0;33munknown[0m in 534s
+RUNNING:  test_cases/svcomp_loops/loop-lit/jm2006_variant_true-unreach-call.c.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-lit/css2003_true-unreach-call.c.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/nec40_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/bubble_sort_false-unreach-call.i
+[0;32mfalse(label)[0m in 17s
+RUNNING:  test_cases/svcomp_loops/loops/insertion_sort_false-unreach-call.i
+[0;32mfalse(label)[0m in 3s
+RUNNING:  test_cases/svcomp_loops/loops/nec11_false-unreach-call.i
+[0;32mfalse(label)[0m in 2s
+RUNNING:  test_cases/svcomp_loops/loops/sum03_false-unreach-call_true-termination.i
+[0;31mtrue[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/sum01_bug02_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 6s
+RUNNING:  test_cases/svcomp_loops/loops/veris.c_NetBSD-libc__loop_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/trex03_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/n.c40_true-unreach-call.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/vogal_true-unreach-call.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loops/veris.c_sendmail__tTflag_arr_one_loop_true-unreach-call.i
+[0;32mtrue[0m in 4s using	 -> Actual k = 10
+RUNNING:  test_cases/svcomp_loops/loops/lu.cmp_true-unreach-call.i
+[0;32mtrue[0m in 4s using	 -> Actual k = 6
+RUNNING:  test_cases/svcomp_loops/loops/while_infinite_loop_4_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 0s
+RUNNING:  test_cases/svcomp_loops/loops/sum04_true-unreach-call_true-termination.i
+[0;32mtrue[0m in 3s using	 -> Actual k = 8
+RUNNING:  test_cases/svcomp_loops/loops/eureka_01_false-unreach-call.i
+[0;32mfalse(label)[0m in 4s
+RUNNING:  test_cases/svcomp_loops/loops/sum01_true-unreach-call_true-termination.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/while_infinite_loop_2_true-unreach-call_false-termination.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/terminator_02_true-unreach-call_true-termination.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/count_up_down_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 0s
+RUNNING:  test_cases/svcomp_loops/loops/terminator_03_true-unreach-call_true-termination.i
+[0;33munknown[0m in 178s
+RUNNING:  test_cases/svcomp_loops/loops/trex03_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/n.c24_false-unreach-call.i
+[0;33munknown[0m in 352s
+RUNNING:  test_cases/svcomp_loops/loops/string_false-unreach-call.i
+[0;32mfalse(label)[0m in 9s
+RUNNING:  test_cases/svcomp_loops/loops/veris.c_OpenSER__cases1_stripFullBoth_arr_true-unreach-call.i
+[0;32mtrue[0m in 21s using	 -> Actual k = 9
+RUNNING:  test_cases/svcomp_loops/loops/terminator_03_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/linear_search_false-unreach-call.i
+[0;32mfalse(label)[0m in 33s
+RUNNING:  test_cases/svcomp_loops/loops/trex01_true-unreach-call.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/verisec_OpenSER__cases1_stripFullBoth_arr_false-unreach-call.i
+[0;32mfalse(label)[0m in 11s
+RUNNING:  test_cases/svcomp_loops/loops/ludcmp_false-unreach-call.i
+[0;32mfalse(label)[0m in 20s
+RUNNING:  test_cases/svcomp_loops/loops/for_infinite_loop_2_true-unreach-call_false-termination.i
+[0;32mtrue[0m in 0s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/count_up_down_true-unreach-call_true-termination.i
+[0;32mtrue[0m in 0s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/linear_sea.ch_true-unreach-call.i
+[0;33munknown[0m in 125s
+RUNNING:  test_cases/svcomp_loops/loops/sum_array_true-unreach-call.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/invert_string_false-unreach-call.i
+[0;32mfalse(label)[0m in 3s
+RUNNING:  test_cases/svcomp_loops/loops/eureka_05_true-unreach-call.i
+[0;32mtrue[0m in 3s using	 -> Actual k = 5
+RUNNING:  test_cases/svcomp_loops/loops/trex04_true-unreach-call_false-termination.i
+[0;32mtrue[0m in 3s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/insertion_sort_true-unreach-call.i
+[0;33munknown[0m in 901s
+RUNNING:  test_cases/svcomp_loops/loops/for_bounded_loop1_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 3s
+RUNNING:  test_cases/svcomp_loops/loops/eureka_01_true-unreach-call.i
+[0;32mtrue[0m in 13s using	 -> Actual k = 20
+RUNNING:  test_cases/svcomp_loops/loops/trex02_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/sum_array_false-unreach-call.i
+[0;32mfalse(label)[0m in 2s
+RUNNING:  test_cases/svcomp_loops/loops/bubble_sort_true-unreach-call.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/array_true-unreach-call.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/trex02_true-unreach-call_true-termination.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/sum01_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 8s
+RUNNING:  test_cases/svcomp_loops/loops/while_infinite_loop_1_true-unreach-call_false-termination.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/array_false-unreach-call.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/terminator_01_false-unreach-call_false-termination.i
+[0;32mfalse(label)[0m in 0s
+RUNNING:  test_cases/svcomp_loops/loops/invert_string_true-unreach-call.i
+[0;32mtrue[0m in 4s using	 -> Actual k = 5
+RUNNING:  test_cases/svcomp_loops/loops/nec20_false-unreach-call.i
+[0;32mfalse(label)[0m in 3s
+RUNNING:  test_cases/svcomp_loops/loops/terminator_02_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/n.c11_true-unreach-call.i
+[1;35mERROR[0m in 8s
+RUNNING:  test_cases/svcomp_loops/loops/while_infinite_loop_3_true-unreach-call_false-termination.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/sum03_true-unreach-call_false-termination.i
+[0;32mtrue[0m in 0s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/verisec_NetBSD-libc__loop_false-unreach-call.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/s3_false-unreach-call.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loops/sum04_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 4s
+RUNNING:  test_cases/svcomp_loops/loops/sum01_bug02_sum01_bug02_base.case_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 2s
+RUNNING:  test_cases/svcomp_loops/loops/string_true-unreach-call.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loops/vogal_false-unreach-call.i
+[0;32mfalse(label)[0m in 20s
+RUNNING:  test_cases/svcomp_loops/loops/matrix_false-unreach-call_true-termination.i
+[1;35mERROR[0m in 8s
+RUNNING:  test_cases/svcomp_loops/loops/matrix_true-unreach-call_true-termination.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loops/trex01_false-unreach-call_true-termination.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/for_infinite_loop_1_true-unreach-call_false-termination.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/array_false-unreach-call1.i
+[0;33munknown[0m in 365s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/overflow_true-unreach-call1.i
+[0;32mtrue[0m in 0s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/multivar_true-unreach-call1.i
+[0;33munknown[0m in 147s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/underapprox_false-unreach-call1.i
+[0;32mfalse(label)[0m in 5s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/simple_false-unreach-call1.i
+[0;33munknown[0m in 52s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/phases_false-unreach-call2.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/const_false-unreach-call1.i
+[0;33munknown[0m in 54s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/array_true-unreach-call4.i
+[0;33munknown[0m in 75s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/array_true-unreach-call2.i
+[0;33munknown[0m in 403s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/const_true-unreach-call1.i
+[0;33munknown[0m in 52s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/diamond_true-unreach-call2.i
+[0;32mtrue[0m in 4s using	 -> Actual k = 5
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/array_true-unreach-call1.i
+[0;33munknown[0m in 393s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/simple_true-unreach-call2.i
+[0;33munknown[0m in 100s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/phases_true-unreach-call2.i
+[1;35mtimeout[0m in 960s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/diamond_false-unreach-call1.i
+[0;32mfalse(label)[0m in 53s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/array_false-unreach-call3.i
+[0;33munknown[0m in 70s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/array_true-unreach-call3.i
+[0;32mtrue[0m in 0s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/nested_false-unreach-call1.i
+[0;33munknown[0m in 92s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/functions_false-unreach-call1.i
+[0;33munknown[0m in 56s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/simple_false-unreach-call4.i
+[0;33munknown[0m in 107s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/nested_true-unreach-call1.i
+[0;33munknown[0m in 105s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/array_false-unreach-call2.i
+[0;33munknown[0m in 438s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/simple_true-unreach-call1.i
+[0;33munknown[0m in 59s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/phases_true-unreach-call1.i
+[0;33munknown[0m in 58s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/simple_false-unreach-call3.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/underapprox_false-unreach-call2.i
+[0;32mfalse(label)[0m in 5s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/multivar_false-unreach-call1.i
+[0;32mfalse(label)[0m in 0s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/diamond_true-unreach-call1.i
+[0;32mtrue[0m in 215s using	 -> Actual k = 99
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/functions_true-unreach-call1.i
+[0;33munknown[0m in 58s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/simple_true-unreach-call3.i
+[0;32mtrue[0m in 1s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/simple_false-unreach-call2.i
+[0;32mfalse(label)[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/simple_true-unreach-call4.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 2
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/phases_false-unreach-call1.i
+[0;33munknown[0m in 59s
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/underapprox_true-unreach-call1.i
+[0;32mtrue[0m in 2s using	 -> Actual k = 6
+RUNNING:  test_cases/svcomp_loops/loop-acceleration/underapprox_true-unreach-call2.i
+[0;32mtrue[0m in 5s using	 -> Actual k = 6
+RUNNING:  test_cases/svcomp_loops/loops/heavy_true-unreach-call.c
+[1;35mERROR[0m in 0s
+RUNNING:  test_cases/svcomp_loops/loops/heavy_false-unreach-call.c
+[1;35mERROR[0m in 1s
+RUNNING:  test_cases/svcomp_loops/loops/compact_false-unreach-call.c
+[0;33munknown[0m in 257s
+
+*** RESULTS *** 
+Total Files: 145 in 15399s
+Correct Results: 94
+False Negatives: 0
+False Positives: 1
+
+Total Fails Using Base Case: 16
+Total Unknown: 32
+Total Success Using Forward Condition: 40
+Total Success Using Inductive Step: 0
+Total Errors: 9
+
+Score (145 files, max score: 239): 144
+Report file generated: report.html
+5907.46user 371.82system 4:16:40elapsed 40%CPU (0avgtext+0avgdata 321660maxresident)k
+2848inputs+1828648outputs (12major+74247297minor)pagefaults 0swaps

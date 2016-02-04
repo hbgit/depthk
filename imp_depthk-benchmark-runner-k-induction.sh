@@ -139,7 +139,7 @@ for file in $SOURCES; do
    fi   
 
    INITIAL_EXECUTION_TIMESTAMP=$(date +%s)
-   OUT=$(python depthk.py --debug --disable-counter-example --solver z3 --memlimit 15g --extra-option-esbmc="--error-label ERROR" $file 2> /tmp/dephtk-error)
+   OUT=$(timeout --signal=9 16m python depthk.py --debug --disable-counter-example --solver z3 --memlimit 15g --extra-option-esbmc="--error-label ERROR" $file 2> /tmp/dephtk-error)
    FINAL_EXECUTION_TIMESTAMP=$(date +%s)
 
    ERROR=$(echo "$OUT" | grep "ERROR" | wc -l); 
@@ -148,6 +148,7 @@ for file in $SOURCES; do
    SUCCESS=$(echo $OUT | grep "TRUE" | wc -l);  
    UNKNOWN=$(echo $OUT | grep "UNKNOWN" | wc -l);  
    TIME_OUT=$(echo $OUT | grep "TIMEOUT" | wc -l);  
+   TIME_OUT=$(echo $OUT | grep "Killed" | wc -l);  
    INCORRECT_RESULT=0;  
    TIME=$((FINAL_EXECUTION_TIMESTAMP - INITIAL_EXECUTION_TIMESTAMP));
  
