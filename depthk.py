@@ -327,8 +327,8 @@ class DepthK(object):
         # getting only the name of the file
         namecfile = os.path.basename(_cfilepath)
 
-        if self.debug_op:
-            print(">> Running PIPS to generate the invariants")
+        #if self.debug_op:
+        #    print(">> Running PIPS to generate the invariants")
 
         # run script with tpips
         # TODO: Add a timout
@@ -536,6 +536,7 @@ if __name__ == "__main__":
             list_paths_to_delete = []
 
             inputCFile = os.path.abspath(quote(args.inputCProgram))
+            originalFile = inputCFile
 
             rundepthk = DepthK(inputCFile)
 
@@ -581,17 +582,18 @@ if __name__ == "__main__":
                 #64bits
                 rundepthk.esbmc_arch = "--" + str(args.setArchCheck)
 
-            useInvariants = True
-            if args.setNoInvariants:
-                useInvariants = False
+            # useInvariants = True
+            # if args.setNoInvariants:
+            #     useInvariants = False
+            #
+            # if useInvariants:
 
-            if useInvariants:
-                if args.setInvariantTool not in ["pips","pagai"]:
-                    print("")
-                    print("ERROR. The invariant generation is not supported")
-                    print("")
-                    parser.parse_args(['-h'])
-                    sys.exit()
+            if args.setInvariantTool not in ["pips","pagai"]:
+                print("")
+                print("ERROR. The invariant generation is not supported")
+                print("")
+                parser.parse_args(['-h'])
+                sys.exit()
 
             # Identify the extension of the C program .c or .i
             if inputCFile.endswith(".i"):
@@ -618,68 +620,98 @@ if __name__ == "__main__":
                     list_paths_to_delete.append(inputCFile)
 
 
-            # Applying the preprocess code - Define a specific format to code
-            inputCFile = rundepthk.rununcrustify(inputCFile)
+            if args.setInvariantTool == "pips":
+                # Applying the preprocess code - Define a specific format to code
+                inputCFile = rundepthk.rununcrustify(inputCFile)
 
+                # Apply hacking to handle with GNU extensions
+                # HackGNUext: Generate a copy the analyzed program to a tmp file
+                # now with the extension replaced from .i to .c
+                inputCFile = rundepthk.applygnuhack(inputCFile)
+                #print(inputCFile)
+                #os.system("cat " + inputCFile)
+                #sys.exit()
 
-            # Apply hacking to handle with GNU extensions
-            # HackGNUext: Generate a copy the analyzed program to a tmp file
-            # now with the extension replaced from .i to .c
-            inputCFile = rundepthk.applygnuhack(inputCFile)
-            #print(inputCFile)
-            #os.system("cat " + inputCFile)
-            #sys.exit()
-
-
-            codewithinv = ""
-            if not args.setOnlyCEUse:
-                # Applying steps of DepthK
-                # Generating pips script
-                scriptpipspath = rundepthk.generatepipsscript(inputCFile)
-                list_paths_to_delete.append(scriptpipspath)
-
-                # Generating invariants with PIPS
-                codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
-                        
             if args.setOnlyCEUse and rundepthk.debug_op:
                 print(">> Adopting only the ESBMC counterexample to generate assumes")
 
-            if codewithinv:
-                # rundepthk.debug_gh = True
-                codewithinv = rundepthk.applygnuhack(codewithinv)
 
-                # os.system("cat "+ codewithinv)
-                # sys.exit()
+            codewithinv = ""
+            __invgeneration = args.setInvariantTool
+            pathcodeinvtranslated = ""
+            ERROR_FLAG = False
+            if not args.setOnlyCEUse:
 
-                # Identify #init from PIPS in the code with invariants
-                dict_init = rundepthk.identify_initpips(codewithinv)
+                # Choose invariant generation __invgeneration
+                # Applying steps of DepthK
+                if __invgeneration == "pips":
+                    # Generating pips script
+                    if rundepthk.debug_op:
+                        print(">> Generating PIPS script")
+                    scriptpipspath = rundepthk.generatepipsscript(inputCFile)
+                    list_paths_to_delete.append(scriptpipspath)
 
-                # Generate auxiliary code to support the translation of #init from PIPS
-                pathcodeinit = rundepthk.generatecodewithinit(codewithinv, inputCFile, dict_init)
+                    # Generating invariants with PIPS
+                    if rundepthk.debug_op:
+                        print(">> Running PIPS to generate the invariants")
+                    codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
 
-                # Translate the invariants generated by PIPS
-                pathcodepipstranslated = rundepthk.translatepipsannot(pathcodeinit)
+                    if codewithinv:
+                        # rundepthk.debug_gh = True
+                        if rundepthk.debug_op:
+                            print(">> Applying GNU hack")
+                        codewithinv = rundepthk.applygnuhack(codewithinv)
+
+                        # Identify #init from PIPS in the code with invariants
+                        if rundepthk.debug_op:
+                            print(">> Running PIPS Translation")
+                        dict_init = rundepthk.identify_initpips(codewithinv)
+                        # Generate auxiliary code to support the translation of #init from PIPS
+                        pathcodeinit = rundepthk.generatecodewithinit(codewithinv, inputCFile, dict_init)
+                        # Translate the invariants generated by PIPS
+                        pathcodeinvtranslated = rundepthk.translatepipsannot(pathcodeinit)
+                    else:
+                        print("ERROR. Program invariants with PIPS")
+                        rundepthk.cleantmpfiles(list_paths_to_delete)
+                        ERROR_FLAG = True
+
+
+                includespath = os.path.dirname(pathcodeinvtranslated)
 
                 if rundepthk.onlygeninvs_p:
-                    # Removing tmp files
-                    os.system("cat " + pathcodepipstranslated)
-                    rundepthk.cleantmpfiles(list_paths_to_delete)
-                    sys.exit()
+                    if ERROR_FLAG:
+                        if rundepthk.debug_op:
+                            print("\t ERROR. Generating code with invariants")
+                        # Removing tmp files
+                        rundepthk.cleantmpfiles(list_paths_to_delete)
+                        sys.exit()
+                    else:
+                        os.system("cat " + pathcodeinvtranslated)
+                        # Removing tmp files
+                        rundepthk.cleantmpfiles(list_paths_to_delete)
+                        sys.exit()
+                else:
+                    # Execute the k-induction with ESBMC
+                    # Last test to validated the new code generated
+                    if rundepthk.debug_op and not ERROR_FLAG:
+                        print(">> ESBMC PARSING CHECKING")
+                    if not ERROR_FLAG:
+                        resultparse = commands.getoutput(rundepthk.esbmcpath + " -I "+ includespath + " " + rundepthk.esbmc_arch + " --show-claims " + pathcodeinvtranslated)
+                        matchparseerror = re.search(r'PARSING ERROR', resultparse)
+                        if matchparseerror:
+                            if rundepthk.debug_op:
+                                print("\t ERROR. PARSING ERROR")
+                            ERROR_FLAG = True
 
-                # Execute the k-induction with ESBMC
-                rundepthk.callesbmccheck(pathcodepipstranslated, False, args.setForceBaseCase)
+                    if ERROR_FLAG: # Some ERROR in invariant generation
+                        rundepthk.callesbmccheck(originalFile, False, args.setForceBaseCase)
+                    else:
+                        rundepthk.callesbmccheck(pathcodeinvtranslated, False, args.setForceBaseCase)
 
             else:
                 # Execute the k-induction with ESBMC
-                # os.system("cat " + inputCFile)
-                # sys.exit()
-                rundepthk.callesbmccheck(inputCFile, True, args.setForceBaseCase)
-                
+                rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
+
 
             # Removing tmp files
             rundepthk.cleantmpfiles(list_paths_to_delete)
-
-
-
-
-
