@@ -1,0 +1,31 @@
+Execuções:
+
+(1) Somente o ESBMC (k-induction) version 2.1.0 64-bit x86_64 linux
+$ timeout 60s time esbmc --64 --k-induction --unwind 1 paper_ex.c
+
+>> RESULTADO: 
+The inductive step is unable to prove the property
+Unable to prove or falsify the program, giving up.
+VERIFICATION UNKNOWN
+>> Time: 17.46s
+
+
+(2) Somente o ESBMC (plain) version 2.1.0 64-bit x86_64 linux
+$ timeout 60s time esbmc --64 --unwind 105 paper_ex.c
+
+>> RESULTADO: 
+VERIFICATION SUCCESSFUL
+>> Time: 0.27s
+
+(3) ESBMC (k-induction) version 2.1.0 + PIPS invariants
+$ timeout 60s time esbmc --64 --k-induction --unwind 1 inv_paper_ex_pips.c 
+>> RESULTADO: 
+TIME OUT
+>> Time: 60s
+
+(4) ESBMC (k-induction) version 2.1.0 + PAGAI invariants
+$ timeout 60s time esbmc --64 --k-induction --unwind 1 inv_paper_ex_pagai.c
+
+>> RESULTADO: 
+VERIFICATION SUCCESSFUL
+>> Time: 0.54s
