@@ -518,11 +518,11 @@ int main()
 
   if (sum != 2598822)
     {
-      puts("jpeg: fail\n");      
+      puts("jpeg: fail\n");
     } 
   else
     {
-      puts("jpeg: success\n");      
+      puts("jpeg: success\n");
     }
 
   return 0;
