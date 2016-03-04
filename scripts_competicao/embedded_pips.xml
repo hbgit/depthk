@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE benchmark SYSTEM "benchmark.dtd">
+
+<benchmark tool="depthkp" memlimit="15000" cpuCores="1">
+
+  <propertyfile>${inputfile_path}/ALL.prp</propertyfile>
+
+  <sourcefiles name="Embedded">
+    <includesfile>../../sv-benchmarks/c/embedded.set</includesfile>    
+  </sourcefiles>
+
+  <rundefinition name="DepthK k-induction 1.25(pips)">    
+  </rundefinition>
+
+  <columns>
+    <column title="k">k</column>
+    <column title="Step">Step</column>
+  </columns>
+  
+</benchmark>
+
+
+

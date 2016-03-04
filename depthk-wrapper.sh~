@@ -119,7 +119,7 @@ success=`echo ${result_check} | grep -c "TRUE"`
 # Decide which result we determined here.
 if [ $failed -gt 0 ]; then
     # Error path found
-    echo "FALSE"
+    echo "FAILED"
 elif [ $success -gt 0 ]; then
     echo "TRUE"
 else

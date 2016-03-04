@@ -497,7 +497,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--force-check-base-case', action="store_true", dest='setForceBaseCase',
                         help='force a last check in the base case of the k-induction algorithm', default=True)
     parser.add_argument('-i', '--invariant-generation', metavar='name', type=str, dest='setInvariantTool',
-                        help='set the invariant generation {pips, pagai} to be adopted (default is pips)', default="pips")
+                        help='set the invariant generation {pips, pagai, all} to be adopted (default is pips)', default="pips")
 
     # --16, --32, --64             set width of machine word
     parser.add_argument('-a', '--arch', metavar='nr', type=int, dest='setArchCheck',
@@ -590,7 +590,7 @@ if __name__ == "__main__":
             #
             # if useInvariants:
 
-            if args.setInvariantTool not in ["pips","pagai"]:
+            if args.setInvariantTool not in ["pips","pagai", "all"]:
                 print("")
                 print("ERROR. The invariant generation is not supported")
                 print("")
@@ -622,7 +622,7 @@ if __name__ == "__main__":
                     list_paths_to_delete.append(inputCFile)
 
 
-            if args.setInvariantTool == "pips":
+            if args.setInvariantTool == "pips" or args.setInvariantTool == "all":
                 # Applying the preprocess code - Define a specific format to code
                 inputCFile = rundepthk.rununcrustify(inputCFile)
 
@@ -646,7 +646,43 @@ if __name__ == "__main__":
 
                 # Choose invariant generation __invgeneration
                 # Applying steps of DepthK
-                if __invgeneration == "pips":
+                runtranspagai = translate_pagai.TranslatePagai()
+                if __invgeneration == "pagai" or __invgeneration == "all":
+                    # Generate invariants
+                    if rundepthk.debug_op:
+                        print(">> Running PAGAI to generate the invariants")
+                    geninvpagai = generate_inv_pagai.GeneratePagaiInv()
+                    codewithinv = geninvpagai.generate_inv(inputCFile)
+
+                    # Translate invariants
+                    if rundepthk.debug_op:
+                        print(">> Running PAGAI translation")
+
+                    runtranspagai.pathprogram = codewithinv
+                    if codewithinv:
+                        if runtranspagai.identifyInv(runtranspagai.pathprogram):
+                            # Program invariants were detected
+                            newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, False)
+                            newprogram = runtranspagai.removenotprintable(newprogram)
+                            newfileinv = open(codewithinv, "w")
+                            for line in newprogram:
+                                newfileinv.write(line)
+                                #print(line, end="")
+                            newfileinv.close()
+                            pathcodeinvtranslated = codewithinv
+                            list_paths_to_delete.append(pathcodeinvtranslated)
+                            inputCFile = runtranspagai.pathprogram
+                        else:
+                            if rundepthk.debug_op:
+                                print("ERROR. Program invariants were NOT detected with PAGAI")
+                            rundepthk.cleantmpfiles(list_paths_to_delete)
+                            ERROR_FLAG = True
+                            #pathcodeinvtranslated = inputCFile
+                            #sys.exit()
+                    else:
+                        ERROR_FLAG = True
+
+                if __invgeneration == "pips" or __invgeneration == "all":
                     # Generating pips script
                     if rundepthk.debug_op:
                         print(">> Generating PIPS script")
@@ -678,43 +714,24 @@ if __name__ == "__main__":
                         ERROR_FLAG = True
 
 
-                elif __invgeneration == "pagai":
-                    # Generate invariants
-                    if rundepthk.debug_op:
-                        print(">> Running PAGAI to generate the invariants")
-                    geninvpagai = generate_inv_pagai.GeneratePagaiInv()
-                    codewithinv = geninvpagai.generate_inv(inputCFile)
+                if (__invgeneration == "pagai" or __invgeneration == "all") and codewithinv:
+                        # Program invariants were detected
+                        runtranspagai.identifyInv(runtranspagai.pathprogram)
+                        newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, True)
+                        newprogram = runtranspagai.removenotprintable(newprogram)
+                        newfileinv = open(codewithinv, "w")
+                        for line in newprogram:
+                            newfileinv.write(line)
+                            #print(line, end="")
+                        newfileinv.close()
+                        pathcodeinvtranslated = codewithinv
+                        list_paths_to_delete.append(pathcodeinvtranslated)
+                        inputCFile = runtranspagai.pathprogram
 
-                    # Translate invariants
-                    if rundepthk.debug_op:
-                        print(">> Running PAGAI translation")
-                    runtranspagai = translate_pagai.TranslatePagai()
-                    runtranspagai.pathprogram = codewithinv
-                    if codewithinv:
-                        if runtranspagai.identifyInv(runtranspagai.pathprogram):
-                            # Program invariants were detected
-                            newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram)
-                            newprogram = runtranspagai.removenotprintable(newprogram)
-                            newfileinv = open(codewithinv, "w")
-                            for line in newprogram:
-                                newfileinv.write(line)
-                                #print(line, end="")
-                            newfileinv.close()
-                            pathcodeinvtranslated = codewithinv
-                            list_paths_to_delete.append(pathcodeinvtranslated)
-                        else:
-                            if rundepthk.debug_op:
-                                print("ERROR. Program invariants were NOT detected with PAGAI")
-                            rundepthk.cleantmpfiles(list_paths_to_delete)
-                            ERROR_FLAG = True
-                            #pathcodeinvtranslated = inputCFile
-                            #sys.exit()
-                    else:
-                        ERROR_FLAG = True
-
+                #else:
+                #    ERROR_FLAG = True
 
                 includespath = os.path.dirname(pathcodeinvtranslated)
-
 
                 if rundepthk.onlygeninvs_p:
                     if ERROR_FLAG:
