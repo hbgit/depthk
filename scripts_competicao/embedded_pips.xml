@@ -9,7 +9,7 @@
     <includesfile>../../sv-benchmarks/c/embedded.set</includesfile>    
   </sourcefiles>
 
-  <rundefinition name="DepthK k-induction 1.25(pips)">    
+  <rundefinition name="DepthK k-induction 1.25(pips and pagai)contraexemplo">    
   </rundefinition>
 
   <columns>

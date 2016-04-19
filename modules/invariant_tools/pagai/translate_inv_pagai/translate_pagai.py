@@ -166,13 +166,25 @@ class TranslatePagai(object):
         fileprogram.close()
 
         listcodewithinv = []
-
+        invbuffer = []
         i = 0
+        hasInvariantInLine = False
         while i < len(listfilec):
             listcodewithinv.append(listfilec[i])
-            if self.invlocation.has_key(i) and addassume:
-                for inv in self.invlocation.get(i):
-                    listcodewithinv.append(self.applyesbmcassume(inv))
+            matchinvprev = re.search(r'\*/', listfilec[i])
+            if(matchinvprev):
+                hasInvariantInLine = False
+                for invariant in invbuffer:
+                    listcodewithinv.append(invariant)
+                invbuffer = []
+
+            if hasInvariantInLine and addassume:
+                #for inv in self.invlocation.get(i):
+                invbuffer.append(self.applyesbmcassume(listfilec[i]))
+
+            matchinvprev = re.search(r'/\* invariant:', listfilec[i])
+            if(matchinvprev):
+                hasInvariantInLine = True
 
             # count while
             i += 1
