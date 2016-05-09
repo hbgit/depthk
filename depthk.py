@@ -545,7 +545,7 @@ if __name__ == "__main__":
             rundepthk = DepthK(inputCFile)
 
             # Define ESBMC path
-            rundepthk.esbmcpath = "./esbmc"
+            rundepthk.esbmcpath = "esbmc"
             # rundepthk.esbmcpath = "~/Downloads/ESBMC/bin/esbmc_v24"
             if args.setMaxK:
                 rundepthk.maxk = args.setMaxK

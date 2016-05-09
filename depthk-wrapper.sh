@@ -36,7 +36,7 @@ if test ${parallel} = 1; then
     depthk_options="--debug --disable-counter-example --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""    
     #depthk_options="--debug --disable-counter-example --k-induction-parallel --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""    
 else
-	depthk_options="--debug --disable-counter-example -i all --force-check-base-case --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""
+	depthk_options="--debug -i pagai --force-check-base-case --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""
 	#depthk_options="--debug --disable-counter-example --solver z3 --memlimit 15g --extra-option-esbmc=\"--error-label ERROR\""
 fi
 
@@ -62,7 +62,7 @@ fi
 
 # The complete command to be executed
 run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
-
+echo "$run_cmdline"
 # Invoke our command, wrapped in a timeout so that we can
 # postprocess the results. `timeout` is part of coreutils on debian and fedora.
 result_check=`timeout 895 bash -c "$run_cmdline"`
