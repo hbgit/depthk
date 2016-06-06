@@ -72,7 +72,6 @@ class DepthK(object):
         self.pipsdatabaseresultpath = ""
         self.debug_gh = False
 
-
     def identify_initpips(self, _cfilepath):
         """
         Read the code.pips identify #init, save the VAR#init and the function
@@ -289,7 +288,7 @@ class DepthK(object):
         runesbmc.esbmc_extra_op = self.esbmc_extraop
         #runesbmc.disableuse_ce = self.disableuse_ce
         runesbmc.en_kparalell = self.en_kparalell
-        rundepthk.use_counter_example = self.use_counter_example
+        runesbmc.use_counter_example = self.use_counter_example
         if _enableforceassume:
             runesbmc.forceassume = True
         else:
@@ -474,8 +473,6 @@ class DepthK(object):
         filewriteunc.close()
 
         return _cfilepath
-
-
 # -------------------------------------------------
 # Main python program
 # -------------------------------------------------
@@ -545,7 +542,7 @@ if __name__ == "__main__":
             rundepthk = DepthK(inputCFile)
 
             # Define ESBMC path
-            rundepthk.esbmcpath = "esbmc"
+            rundepthk.esbmcpath = "./esbmc"
             # rundepthk.esbmcpath = "~/Downloads/ESBMC/bin/esbmc_v24"
             if args.setMaxK:
                 rundepthk.maxk = args.setMaxK
@@ -636,21 +633,21 @@ if __name__ == "__main__":
                 #os.system("cat " + inputCFile)
                 #sys.exit()
 
-            if args.setOnlyCEUse or args.setInvariantTool == "all":
+            if args.setOnlyCEUse:#'or args.setInvariantTool == "all":
                 rundepthk.use_counter_example = True
-
 
             if args.setOnlyCEUse and rundepthk.debug_op:
                 print(">> Adopting only the ESBMC counterexample to generate assumes")
 
-            if(args.setInvariantTool == "all"):
+            '''if(args.setInvariantTool == "all"):
                 print(">> Adopting PIPS, Pagai and CounterExample to generate assumes")
 
             codewithinv = ""
             __invgeneration = args.setInvariantTool
             pathcodeinvtranslated = ""
             ERROR_FLAG = False
-            if not args.setOnlyCEUse or args.setInvariantTool == "all":
+            #if not args.setOnlyCEUse or args.setInvariantTool == "all":
+            if args.setInvariantTool == "all":
 
                 # Choose invariant generation __invgeneration
                 # Applying steps of DepthK
@@ -773,6 +770,22 @@ if __name__ == "__main__":
 
             else:
                 # Execute the k-induction with ESBMC
-                rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
+                if rundepthk.use_counter_example:
+                    import shutil
+                    destFile = os.path.dirname(originalFile) + '/' + 'copy_' + os.path.basename(originalFile)
+                    print(destFile)
+                    rundepthk.cleantmpfiles(destFile)
+                    shutil.copy(originalFile, destFile)
+                    originalFile = destFile
+                rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)'''
+            # Execute the k-induction with ESBMC
+            if rundepthk.use_counter_example:
+                import shutil
+                destFile = os.path.dirname(originalFile) + '/' + 'copy_' + os.path.basename(originalFile)
+                print(destFile)
+                list_paths_to_delete.append(destFile)
+                shutil.copy(originalFile, destFile)
+                originalFile = destFile
+            rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
             # Removing tmp files
             rundepthk.cleantmpfiles(list_paths_to_delete)

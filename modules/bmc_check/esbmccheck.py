@@ -48,7 +48,15 @@ class DepthEsbmcCheck(object):
         self.esbmc_basecase_op = "--base-case"
         self.esbmc_forwardcond_op = "--forward-condition"
         self.esbmc_inductivestep_op = "--inductive-step --no-slice --show-counter-example"
+        self.fileToAddAssume = ""
 
+    #Creates a copy of original file to counter example
+    def createCopyFileToAddAssume(self, fileToCopy):
+        import shutil
+        destFile = os.path.dirname(fileToCopy) + '/' + 'CE_' + os.path.basename(fileToCopy)
+        print(destFile)
+        shutil.copy(fileToCopy, destFile)
+        return destFile
 
     @staticmethod
     def getlastlinenumfromce(_esbmccepath, _indexliststartsearch):
@@ -592,8 +600,12 @@ class DepthEsbmcCheck(object):
     def addassumeinprogram(self, _cprogrampath):
         # print(_linenumtosetassume)
         # sys.exit()
+        fileprogram = None
 
-        fileprogram = open(_cprogrampath, "r")
+        if(self.fileToAddAssume <> ""):
+            fileprogram = open(self.fileToAddAssume, "r")
+        else:
+            fileprogram = open(_cprogrampath, "r")
         listfilec = fileprogram.readlines()
         fileprogram.close()
 
@@ -783,7 +795,10 @@ class DepthEsbmcCheck(object):
         # generate data about the functions
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
 
-
+        if self.use_counter_example:
+            print(">>Creating a copy of file to add ESBMC_ASSUME")
+            self.fileToAddAssume = self.createCopyFileToAddAssume(_cprogrampath)
+            print(">>The base file to add assume is: " + self.fileToAddAssume)
 
         if self.debug:
             print(">> Starting the verification of the P\' program")
@@ -1028,7 +1043,7 @@ class DepthEsbmcCheck(object):
                                     self.cleantmpfiles(listtmpfiles)
                                     return "ERROR. It was identified an error in the verification of inductive step"
 
-                            elif self.use_counter_example:
+                            if self.use_counter_example:
                                 # In this case, when the inductive step fail
                                 # in the first time we force the generation of the ESBMC assume.
                                 # It is worth to say that ONLY in this case we do not adopt
