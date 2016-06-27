@@ -53,7 +53,7 @@ class DepthEsbmcCheck(object):
     #Creates a copy of original file to counter example
     def createCopyFileToAddAssume(self, fileToCopy):
         import shutil
-        destFile = os.path.dirname(fileToCopy) + '/' + 'CE_' + os.path.basename(fileToCopy)
+        destFile = os.path.dirname(fileToCopy) + '/' + 'INSERT_CE_' + os.path.basename(fileToCopy)
         print(destFile)
         shutil.copy(fileToCopy, destFile)
         return destFile
@@ -1059,8 +1059,9 @@ class DepthEsbmcCheck(object):
                                 # Possible BUG cuz the PLACE where the assume is added
                                 if not self.getlastdatafromce(actual_ce):
                                     # >> UNKNOWN
-                                    self.cleantmpfiles(listtmpfiles)
-                                    return "ERROR. NO DATA from counterexample! Sorry about that."
+                                    continue
+                                    #self.cleantmpfiles(listtmpfiles)
+                                    #return "ERROR. NO DATA from counterexample! Sorry about that."
 
                                 # Getting the last valid location in the counterexample to add
                                 # the assume

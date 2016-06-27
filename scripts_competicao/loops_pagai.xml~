@@ -9,7 +9,7 @@
     <includesfile>../../../sv-benchmarks/c/Loops.set</includesfile>    
   </sourcefiles>
 
-  <rundefinition name="DepthK K-Induction 3.0(pagai sem contraexemplo)">    
+  <rundefinition name="DepthK K-Induction 3.0(pagai contraexemplo sem acumulo)">    
   </rundefinition>
 
   <columns>
