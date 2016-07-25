@@ -15,6 +15,8 @@ import re
 import os
 import sys
 import shutil
+from modules.invariant_tools.pagai.generate_inv_pagai import generate_inv_pagai
+from modules.invariant_tools.pagai.translate_inv_pagai import translate_pagai
 
 
 class DepthEsbmcCheck(object):
@@ -49,6 +51,7 @@ class DepthEsbmcCheck(object):
         self.esbmc_forwardcond_op = "--forward-condition"
         self.esbmc_inductivestep_op = "--inductive-step --no-slice --show-counter-example"
         self.fileToAddAssume = ""
+        self.rundepthk = None
 
     #Creates a copy of original file to counter example
     def createCopyFileToAddAssume(self, fileToCopy):
@@ -482,7 +485,8 @@ class DepthEsbmcCheck(object):
 
                     if len(listnewassign) > 0:
                         txtassume = ' && '.join(listnewassign)
-                        self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+                        #self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );//DepthK_Assert"
+                        self.dict_dataassume[ce_cs_line] = "assert( " + txtassume + " );//DepthK_Assert"
 
                 else:
                     # Identify a possible location to add the ASSUME to CS$
@@ -513,7 +517,8 @@ class DepthEsbmcCheck(object):
 
                     if len(listnewassign) > 0:
                         txtassume = ' && '.join(listnewassign)
-                        self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+                        #self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
+                        self.dict_dataassume[ce_cs_line] = "assert( " + txtassume + " );//DepthK_Assert"
 
         #print(self.dict_dataassume)
         #sys.exit()
@@ -582,7 +587,8 @@ class DepthEsbmcCheck(object):
                         if len(listnewassign) > 0:
                             # >> Generating ASSUME to the next states
                             txtassume = ' && '.join(listnewassign)
-                            self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
+                            #self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
+                            self.dict_dataassume[nxt_state_line] = "assert( " + txtassume + " );//DepthK_Assert"
 
             countnxst += 1
 
@@ -601,11 +607,7 @@ class DepthEsbmcCheck(object):
         # print(_linenumtosetassume)
         # sys.exit()
         fileprogram = None
-
-        if(self.fileToAddAssume <> ""):
-            fileprogram = open(self.fileToAddAssume, "r")
-        else:
-            fileprogram = open(_cprogrampath, "r")
+        fileprogram = open(_cprogrampath, "r")
         listfilec = fileprogram.readlines()
         fileprogram.close()
 
@@ -662,6 +664,29 @@ class DepthEsbmcCheck(object):
 
         return _cprogrampath
 
+    def commentassumeinprogram(self, _cprogrampath, comment):
+
+        fileprogram = None
+        fileprogram = open(_cprogrampath, "r")
+        listfilec = fileprogram.readlines()
+        fileprogram.close()
+
+        newfile = open(_cprogrampath, "w")
+
+        i = 0
+        while i < len(listfilec):
+
+            if(comment == True and "//DepthK_Assert" in listfilec[i]):
+                newfile.write('//DepthK_Comment ' + listfilec[i])
+            elif (comment == False and "//DepthK_Comment" in listfilec[i]):
+                newfile.write(listfilec[i].replace("//DepthK_Comment", ""))
+            else:
+                newfile.write(listfilec[i])
+            i += 1
+
+        newfile.close()
+
+        return _cprogrampath
 
     @staticmethod
     def savelist2file(_pathfile, _list2file):
@@ -838,7 +863,7 @@ class DepthEsbmcCheck(object):
                 # checking we are in the force last check
                 if lastresult[0]:
                     #nextk = self.esbmc_bound + 25
-                    self.esbmc_bound += 5
+                    self.esbmc_bound += 8
                     #while self.esbmc_bound <= nextk and self.esbmc_bound <= self.maxk and statusce_basecase <= 0:
                     # print("---------------")
                     if self.esbmc_bound <= self.maxk:
@@ -847,7 +872,7 @@ class DepthEsbmcCheck(object):
                                                          self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                          self.isdefiniedmemlimit() +
                                                          "--timeout " + self.esbmc_timeout_op + " " +
-                                                         self.esbmc_nolibrary + " " +
+                                                         self.esbmc_nolibrary + " --no-pointer-check --falsification " +
                                                          self.esbmc_extra_op + " " +
                                                          self.esbmc_basecase_op + " " +
                                                          _cprogrampath)
@@ -868,7 +893,7 @@ class DepthEsbmcCheck(object):
                                                          self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                          self.isdefiniedmemlimit() +
                                                          "--timeout " + self.esbmc_timeout_op + " " +
-                                                         self.esbmc_nolibrary + " " +
+                                                         self.esbmc_nolibrary + " --no-pointer-check --falsification " +
                                                          self.esbmc_extra_op + " " +
                                                          self.esbmc_basecase_op + " " +
                                                          _cprogrampath)
@@ -923,22 +948,12 @@ class DepthEsbmcCheck(object):
                         # Checking the forward condition
                         # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
 
-                        # print(self.esbmcpath + " " + self.esbmc_arch + " " +
-                        #                                         self.esbmc_solver_op + " " +
-                        #                                         self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                        #                                         self.isdefiniedmemlimit() +
-                        #                                         "--timeout " + self.esbmc_timeout_op + " " +
-                        #                                         self.esbmc_nolibrary + " " +
-                        #                                         self.esbmc_extra_op + " " +
-                        #                                         self.esbmc_forwardcond_op + " " +
-                        #                                         _cprogrampath)
-
                         result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                                                 self.esbmc_solver_op + " " +
                                                                 self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                                 self.isdefiniedmemlimit() +
                                                                 "--timeout " + self.esbmc_timeout_op + " " +
-                                                                self.esbmc_nolibrary + " " +
+                                                                self.esbmc_nolibrary + "  " +
                                                                 self.esbmc_extra_op + " " +
                                                                 self.esbmc_forwardcond_op + " " +
                                                                 _cprogrampath)
@@ -986,17 +1001,6 @@ class DepthEsbmcCheck(object):
                             # "The forward condition is unable to prove the property"
                             # Checking the inductive step
                             # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
-
-                            # print(self.esbmcpath + " " + self.esbmc_arch + " " +
-                            #                                           self.esbmc_solver_op + " " +
-                            #                                           self.esbmc_unwind_op + " " +
-                            #                                           str(self.esbmc_bound) + " " +
-                            #                                           self.isdefiniedmemlimit() +
-                            #                                           "--timeout " + self.esbmc_timeout_op + " " +
-                            #                                           self.esbmc_nolibrary + " " +
-                            #                                           self.esbmc_extra_op + " " +
-                            #                                           self.esbmc_inductivestep_op + " " +
-                            #                                           _cprogrampath)
 
                             result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
                                                                       self.esbmc_solver_op + " " +
@@ -1068,9 +1072,97 @@ class DepthEsbmcCheck(object):
                                 # linenumtosetassume = self.getlastlinenumfromce(actual_ce)
                                 # Adding in the new instance of the analyzed program (P')
                                 # the new assume generated from the counterexample
+
                                 _cprogrampath = self.addassumeinprogram(_cprogrampath)
                                 #sys.exit()
 
+                                _cprogrampath = self.commentassumeinprogram(_cprogrampath, False)
+                                'It generates assert from the counter example to refine PIPS invariants'
+                                '''if True:
+                                    # Generate invariants
+                                    if self.debug:
+                                        print(">> Running PAGAI to generate the invariants based on counter example")
+                                    geninvpagai = generate_inv_pagai.GeneratePagaiInv()
+                                    codewithinv = geninvpagai.generate_inv(_cprogrampath)
+
+                                    # Translate invariants
+                                    if self.debug:
+                                        print(">> Running PAGAI translation")
+
+                                    runtranspagai = translate_pagai.TranslatePagai()
+
+                                    runtranspagai.pathprogram = codewithinv
+                                    if codewithinv:
+                                        if runtranspagai.identifyInv(runtranspagai.pathprogram):
+                                            # Program invariants were detected
+                                            newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, False)
+                                            newprogram = runtranspagai.removenotprintable(newprogram)
+                                            newfileinv = open(codewithinv, "w")
+                                            for line in newprogram:
+                                                newfileinv.write(line)
+                                                #print(line, end="")
+                                            newfileinv.close()
+                                            pathcodeinvtranslated = codewithinv
+                                            #list_paths_to_delete.append(pathcodeinvtranslated)
+                                            inputCFile = runtranspagai.pathprogram
+                                        else:
+                                            if self.debug:
+                                                print("ERROR. Program invariants were NOT detected with PAGAI")
+                                            #rundepthk.cleantmpfiles(list_paths_to_delete)
+                                            ERROR_FLAG = True
+                                            #pathcodeinvtranslated = inputCFile
+                                            #sys.exit()
+                                    else:
+                                        ERROR_FLAG = True'''
+
+                                if True:
+                                    # Generating pips script
+                                    if self.debug:
+                                        print(">> Generating PIPS script")
+                                    scriptpipspath = self.rundepthk.generatepipsscript(_cprogrampath)
+                                    self.rundepthk.list_paths_to_delete.append(scriptpipspath)
+
+                                    # Generating invariants with PIPS
+                                    if self.debug:
+                                        print(">> Running PIPS to generate the invariants")
+                                    codewithinv = self.rundepthk.runpips(scriptpipspath, _cprogrampath, self.rundepthk.list_paths_to_delete)
+
+                                    if codewithinv:
+                                        # rundepthk.debug_gh = True
+                                        if self.debug:
+                                            print(">> Applying GNU hack")
+                                        codewithinv = self.rundepthk.applygnuhack(codewithinv)
+
+                                        # Identify #init from PIPS in the code with invariants
+                                        if self.debug:
+                                            print(">> Running PIPS Translation")
+                                        dict_init = self.rundepthk.identify_initpips(codewithinv)
+                                        # Generate auxiliary code to support the translation of #init from PIPS
+                                        pathcodeinit = self.rundepthk.generatecodewithinit(codewithinv, _cprogrampath, dict_init)
+                                        #pathcodeinvtranslated = pathcodeinit
+                                        # Translate the invariants generated by PIPS
+                                        pathcodeinvtranslated = self.rundepthk.translatepipsannot(pathcodeinit)
+                                        _cprogrampath = pathcodeinvtranslated
+                                        _cprogrampath = self.commentassumeinprogram(_cprogrampath, True)
+                                    else:
+                                        print("ERROR. Program invariants with PIPS")
+                                        #
+                                        # rundepthk.cleantmpfiles(list_paths_to_delete)
+
+                                '''if True:
+                                    # Program invariants were detected
+                                    runtranspagai.identifyInv(runtranspagai.pathprogram)
+                                    newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, True)
+                                    newprogram = runtranspagai.removenotprintable(newprogram)
+                                    newfileinv = open(runtranspagai.pathprogram, "w")
+                                    for line in newprogram:
+                                        newfileinv.write(line)
+                                        #print(line, end="")
+                                    newfileinv.close()
+                                    pathcodeinvtranslated = runtranspagai.pathprogram
+                                    _cprogrampath = pathcodeinvtranslated
+                                    self.rundepthk.list_paths_to_delete.append(pathcodeinvtranslated)
+                                    inputCFile = runtranspagai.pathprogram'''
 
                     else:
                         # Some ERROR was identified in the verification of base-case
