@@ -71,6 +71,7 @@ class DepthK(object):
         self.pipsdatabaseresult = 'precod' + self.idresultpipsdb + ''
         self.pipsdatabaseresultpath = ""
         self.debug_gh = False
+        self.list_paths_to_delete = []
 
     def identify_initpips(self, _cfilepath):
         """
@@ -289,6 +290,8 @@ class DepthK(object):
         #runesbmc.disableuse_ce = self.disableuse_ce
         runesbmc.en_kparalell = self.en_kparalell
         runesbmc.use_counter_example = self.use_counter_example
+        runesbmc.rundepthk = rundepthk
+
         if _enableforceassume:
             runesbmc.forceassume = True
         else:
@@ -534,7 +537,7 @@ if __name__ == "__main__":
             parser.parse_args(['-h'])
             sys.exit()
         else:
-            list_paths_to_delete = []
+            #list_paths_to_delete = []
 
             inputCFile = os.path.abspath(quote(args.inputCProgram))
             originalFile = inputCFile
@@ -589,7 +592,7 @@ if __name__ == "__main__":
             #
             # if useInvariants:
 
-            if args.setInvariantTool not in ["pips","pagai", "all"]:
+            if args.setInvariantTool not in ["pips","pagai", "all", "none"]:
                 print("")
                 print("ERROR. The invariant generation is not supported")
                 print("")
@@ -607,7 +610,7 @@ if __name__ == "__main__":
                 shutil.copyfile(inputCFile, pathnewinstance_depthk)
                 inputCFile = pathnewinstance_depthk
                 if not args.setNotRemoveNewCode:
-                    list_paths_to_delete.append(inputCFile)
+                    rundepthk.list_paths_to_delete.append(inputCFile)
 
                 rundepthk.inputisexti = True
 
@@ -618,7 +621,7 @@ if __name__ == "__main__":
                 shutil.copyfile(inputCFile, pathnewinstance_depthk)
                 inputCFile = pathnewinstance_depthk
                 if not args.setNotRemoveNewCode:
-                    list_paths_to_delete.append(inputCFile)
+                    rundepthk.list_paths_to_delete.append(inputCFile)
 
 
             if args.setInvariantTool == "pips" or args.setInvariantTool == "all":
@@ -639,7 +642,7 @@ if __name__ == "__main__":
             if args.setOnlyCEUse and rundepthk.debug_op:
                 print(">> Adopting only the ESBMC counterexample to generate assumes")
 
-            '''if(args.setInvariantTool == "all"):
+            if(args.setInvariantTool == "all"):
                 print(">> Adopting PIPS, Pagai and CounterExample to generate assumes")
 
             codewithinv = ""
@@ -647,7 +650,7 @@ if __name__ == "__main__":
             pathcodeinvtranslated = ""
             ERROR_FLAG = False
             #if not args.setOnlyCEUse or args.setInvariantTool == "all":
-            if args.setInvariantTool == "all":
+            if args.setInvariantTool in ["all", "pips", "pagai"]:
 
                 # Choose invariant generation __invgeneration
                 # Applying steps of DepthK
@@ -675,12 +678,12 @@ if __name__ == "__main__":
                                 #print(line, end="")
                             newfileinv.close()
                             pathcodeinvtranslated = codewithinv
-                            list_paths_to_delete.append(pathcodeinvtranslated)
+                            rundepthk.list_paths_to_delete.append(pathcodeinvtranslated)
                             inputCFile = runtranspagai.pathprogram
                         else:
                             if rundepthk.debug_op:
                                 print("ERROR. Program invariants were NOT detected with PAGAI")
-                            rundepthk.cleantmpfiles(list_paths_to_delete)
+                            rundepthk.cleantmpfiles(rundepthk.list_paths_to_delete)
                             ERROR_FLAG = True
                             #pathcodeinvtranslated = inputCFile
                             #sys.exit()
@@ -692,12 +695,12 @@ if __name__ == "__main__":
                     if rundepthk.debug_op:
                         print(">> Generating PIPS script")
                     scriptpipspath = rundepthk.generatepipsscript(inputCFile)
-                    list_paths_to_delete.append(scriptpipspath)
+                    rundepthk.list_paths_to_delete.append(scriptpipspath)
 
                     # Generating invariants with PIPS
                     if rundepthk.debug_op:
                         print(">> Running PIPS to generate the invariants")
-                    codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
+                    codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, rundepthk.list_paths_to_delete)
 
                     if codewithinv:
                         # rundepthk.debug_gh = True
@@ -711,11 +714,12 @@ if __name__ == "__main__":
                         dict_init = rundepthk.identify_initpips(codewithinv)
                         # Generate auxiliary code to support the translation of #init from PIPS
                         pathcodeinit = rundepthk.generatecodewithinit(codewithinv, inputCFile, dict_init)
+                        #pathcodeinvtranslated = pathcodeinit
                         # Translate the invariants generated by PIPS
                         pathcodeinvtranslated = rundepthk.translatepipsannot(pathcodeinit)
                     else:
                         print("ERROR. Program invariants with PIPS")
-                        rundepthk.cleantmpfiles(list_paths_to_delete)
+                        rundepthk.cleantmpfiles(rundepthk.list_paths_to_delete)
                         ERROR_FLAG = True
 
 
@@ -730,11 +734,8 @@ if __name__ == "__main__":
                             #print(line, end="")
                         newfileinv.close()
                         pathcodeinvtranslated = runtranspagai.pathprogram
-                        list_paths_to_delete.append(pathcodeinvtranslated)
+                        rundepthk.list_paths_to_delete.append(pathcodeinvtranslated)
                         inputCFile = runtranspagai.pathprogram
-
-                #else:
-                #    ERROR_FLAG = True
 
                 includespath = os.path.dirname(pathcodeinvtranslated)
 
@@ -743,12 +744,12 @@ if __name__ == "__main__":
                         if rundepthk.debug_op:
                             print("\t ERROR. Generating code with invariants")
                         # Removing tmp files
-                        rundepthk.cleantmpfiles(list_paths_to_delete)
+                        rundepthk.cleantmpfiles(rundepthk.list_paths_to_delete)
                         sys.exit()
                     else:
                         os.system("cat " + pathcodeinvtranslated)
                         # Removing tmp files
-                        rundepthk.cleantmpfiles(list_paths_to_delete)
+                        rundepthk.cleantmpfiles(rundepthk.list_paths_to_delete)
                         sys.exit()
                 else:
                     # Execute the k-induction with ESBMC
@@ -764,6 +765,12 @@ if __name__ == "__main__":
                             ERROR_FLAG = True
 
                     if ERROR_FLAG: # Some ERROR in invariant generation
+                        import shutil
+                        destFile = os.path.dirname(originalFile) + '/' + 'Depthk_copy_' + os.path.basename(originalFile)
+                        print(destFile)
+                        rundepthk.list_paths_to_delete.append(destFile)
+                        shutil.copy(originalFile, destFile)
+                        originalFile = destFile
                         rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
                     else:
                         rundepthk.callesbmccheck(pathcodeinvtranslated, True, args.setForceBaseCase)
@@ -772,20 +779,11 @@ if __name__ == "__main__":
                 # Execute the k-induction with ESBMC
                 if rundepthk.use_counter_example:
                     import shutil
-                    destFile = os.path.dirname(originalFile) + '/' + 'copy_' + os.path.basename(originalFile)
+                    destFile = os.path.dirname(originalFile) + '/' + 'Depthk_copy_' + os.path.basename(originalFile)
                     print(destFile)
-                    rundepthk.cleantmpfiles(destFile)
+                    rundepthk.list_paths_to_delete.append(destFile)
                     shutil.copy(originalFile, destFile)
                     originalFile = destFile
-                rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)'''
-            # Execute the k-induction with ESBMC
-            if rundepthk.use_counter_example:
-                import shutil
-                destFile = os.path.dirname(originalFile) + '/' + 'copy_' + os.path.basename(originalFile)
-                print(destFile)
-                list_paths_to_delete.append(destFile)
-                shutil.copy(originalFile, destFile)
-                originalFile = destFile
-            rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
+                rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
             # Removing tmp files
-            rundepthk.cleantmpfiles(list_paths_to_delete)
+            rundepthk.cleantmpfiles(rundepthk.list_paths_to_delete)
