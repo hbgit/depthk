@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<key id="witness-type" attr.name="witness-type" attr.type="string" for="graph"/>
+	<key id="assumption" attr.name="assumption" attr.type="string" for="edge"/>
+	<key id="sourcecode" attr.name="sourcecode" attr.type="string" for="edge"/>
+	<key id="sourcecodelang" attr.name="sourcecodeLanguage" attr.type="string" for="graph"/>
+	<key id="control" attr.name="control" attr.type="string" for="edge"/>
+	<key id="startline" attr.name="startline" attr.type="int" for="edge"/>
+	<key id="endline" attr.name="endline" attr.type="int" for="edge"/>
+	<key id="originfile" attr.name="originFileName" attr.type="string" for="edge">
+		<default>../../sv-benchmarks/c/loops/nec20_false-unreach-call.i</default>
+	</key>
+	<key id="invariant" attr.name="invariant" attr.type="string" for="node"/>
+	<key id="invariant.scope" attr.name="invariant.scope" attr.type="string" for="node"/>
+	<key id="nodetype" attr.name="nodeType" attr.type="string" for="node">
+		<default>path</default>
+	</key>
+	<key id="frontier" attr.name="isFrontierNode" attr.type="boolean" for="node">
+		<default>false</default>
+	</key>
+	<key id="violation" attr.name="isViolationNode" attr.type="boolean" for="node">
+		<default>false</default>
+	</key>
+	<key id="entry" attr.name="isEntryNode" attr.type="boolean" for="node">
+		<default>false</default>
+	</key>
+	<key id="sink" attr.name="isSinkNode" attr.type="boolean" for="node">
+		<default>false</default>
+	</key>
+	<key id="enterFunction" attr.name="enterFunction" attr.type="string" for="edge"/>
+	<key id="returnFrom" attr.name="returnFromFunction" attr.type="string" for="edge"/>
+	<graph edgedefault="directed">
+		<data key="sourcecodelang">C</data>
+		<node id="n0">
+			<data key="entry">true</data>
+		</node>
+		<node id="n1"/>
+		<edge id="e0" source="n0" target="n1">
+			<data key="sourcecode">int b;</data>
+			<data key="startline">9</data>
+			<data key="endline">9</data>
+			<data key="enterFunction">main</data>
+			<data key="assumption">b = 0;</data>
+		</edge>
+		<node id="n2"/>
+		<edge id="e1" source="n1" target="n2">
+			<data key="sourcecode">a[j]=0;</data>
+			<data key="startline">30</data>
+			<data key="endline">30</data>
+			<data key="assumption">num_threads_running = 0;</data>
+		</edge>
+		<node id="n3"/>
+		<edge id="e2" source="n2" target="n3">
+			<data key="sourcecode">a[i]=0;</data>
+			<data key="startline">29</data>
+			<data key="endline">29</data>
+			<data key="assumption">num_total_threads = 0;</data>
+		</edge>
+		<node id="n4"/>
+		<edge id="e3" source="n3" target="n4">
+			<data key="startline">44</data>
+			<data key="endline">44</data>
+			<data key="enterFunction">pthread_start_main_hook</data>
+			<data key="assumption">num_total_threads = 1;</data>
+		</edge>
+		<node id="n5"/>
+		<edge id="e4" source="n4" target="n5">
+			<data key="startline">45</data>
+			<data key="endline">45</data>
+			<data key="assumption">num_threads_running = 1;</data>
+		</edge>
+		<node id="n6"/>
+		<edge id="e5" source="n5" target="n6">
+			<data key="sourcecode">_Bool k=__VERIFIER_nondet_bool();</data>
+			<data key="startline">12</data>
+			<data key="endline">12</data>
+			<data key="enterFunction">main</data>
+			<data key="assumption">k = -2147483648;</data>
+		</edge>
+		<node id="n7"/>
+		<edge id="e6" source="n6" target="n7">
+			<data key="sourcecode">n=0;</data>
+			<data key="startline">17</data>
+			<data key="endline">17</data>
+			<data key="assumption">n = 0;</data>
+		</edge>
+		<node id="n8"/>
+		<edge id="e7" source="n7" target="n8">
+			<data key="sourcecode">i=0;</data>
+			<data key="startline">22</data>
+			<data key="endline">22</data>
+			<data key="assumption">i = 0;</data>
+		</edge>
+		<node id="n9"/>
+		<edge id="e8" source="n8" target="n9">
+			<data key="sourcecode">i++;</data>
+			<data key="startline">25</data>
+			<data key="endline">25</data>
+			<data key="assumption">i = 1;</data>
+		</edge>
+		<node id="n10"/>
+		<edge id="e9" source="n9" target="n10">
+			<data key="sourcecode">j= j +2;</data>
+			<data key="startline">26</data>
+			<data key="endline">26</data>
+			<data key="assumption">j = 1283;</data>
+		</edge>
+		<node id="n11"/>
+		<edge id="e10" source="n10" target="n11">
+			<data key="sourcecode">a[i]=0;</data>
+			<data key="startline">29</data>
+			<data key="endline">29</data>
+		</edge>
+		<node id="n12"/>
+		<edge id="e11" source="n11" target="n12">
+			<data key="sourcecode">a[j]=0;</data>
+			<data key="startline">30</data>
+			<data key="endline">30</data>
+		</edge>
+		<node id="n13"/>
+		<edge id="e12" source="n12" target="n13">
+			<data key="sourcecode">__VERIFIER_assert(j&lt;1025);</data>
+			<data key="startline">31</data>
+			<data key="endline">31</data>
+			<data key="assumption">cond = 0;</data>
+		</edge>
+		<node id="n14">
+			<data key="violation">true</data>
+		</node>
+		<edge id="e13" source="n13" target="n14"/>
+	</graph>
+</graphml>
