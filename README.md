@@ -22,11 +22,10 @@ To use this tool is necessary that the system contains the following software al
 > - sed;
 > - grep;
 > - GCC compiler; 
-> - [NEW] Uncrustify (v0.60 or higher) - http://uncrustify.sourceforge.net/
+> - Uncrustify (v0.60 or higher) - http://uncrustify.sourceforge.net/
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
 > - Ctags - http://ctags.sourceforge.net 
 > - PIPS - http://pips4u.org/
-> - ESBMC (v1.24.1 or higher) - http://esbmc.org/
 
 ================
 
