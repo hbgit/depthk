@@ -1,4 +1,4 @@
-<h1>DepthK</h1>
+<h1>DepthK 3.0</h1>
 <h3>K-Induction adopting program invariants</h3>
 
 Author: Herbert O. Rocha <br>
@@ -22,11 +22,15 @@ To use this tool is necessary that the system contains the following software al
 > - sed;
 > - grep;
 > - GCC compiler; 
-> - [NEW] Uncrustify (v0.60 or higher) - http://uncrustify.sourceforge.net/
+> - Uncrustify (v0.60 or higher) - http://uncrustify.sourceforge.net/
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
 > - Ctags - http://ctags.sourceforge.net 
 > - PIPS - http://pips4u.org/
-================
+<<<<<<< HEAD
+
+=======
+>>>>>>> depthk readme update
+==============
 
 <b>How to install DepthK?</b>
 

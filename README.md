@@ -26,11 +26,7 @@ To use this tool is necessary that the system contains the following software al
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
 > - Ctags - http://ctags.sourceforge.net 
 > - PIPS - http://pips4u.org/
-<<<<<<< HEAD
-
-=======
->>>>>>> depthk readme update
-================
+==============
 
 <b>How to install DepthK?</b>
 
