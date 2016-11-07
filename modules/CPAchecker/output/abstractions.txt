@@ -1,0 +1,11 @@
+(set-info :source |printed by MathSAT|)
+
+1 (2) @17:
+(assert true)
+
+2 () @17:
+(assert true)
+
+0 (1) @8:
+(assert true)
+
