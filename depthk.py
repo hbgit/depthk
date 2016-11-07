@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: latin1 -*-
 # -------------------------------------------------
-# DepthK v1.0
+# DepthK v3.0
 # by Herbert Rocha
 #
 # e-mail: herberthb12@gmail.com
@@ -487,8 +487,8 @@ if __name__ == "__main__":
 
     # ############ Parse args options
 
-    parser = argparse.ArgumentParser(description='Run DepthK v2.0')
-    parser.add_argument('-v', '--version', action='version', version="version 2.0")
+    parser = argparse.ArgumentParser(description='Run DepthK v3.0')
+    parser.add_argument('-v', '--version', action='version', version="version 3.0")
     parser.add_argument(dest='inputCProgram', metavar='file.c or file.i (experimental)', type=str,
                         help='the C program file to be analyzed')
     parser.add_argument('-k', '--max-k-step', metavar='nr', type=int, dest='setMaxK',
