@@ -180,10 +180,14 @@ class TranslatePagai(object):
                     listcodewithinv.append(invariant)
                 invbuffer = []
 
-            if hasInvariantInLine and addassume and j < len(self.invlocation) - 1:
+            if hasInvariantInLine and addassume and j <= len(self.invlocation) - 1:
                 #for inv in self.invlocation.get(i):
-                inv = str(self.invlocation.items()[j][1]).replace("[", "").replace("]", "").replace("'", "").replace(",", " && ")
-                invbuffer.append(self.applyesbmcassume(inv))
+                #inv = str(self.invlocation.items()[j][1]).replace("[", "").replace("]", "").replace("'", "").replace(",", " && ")
+                #invbuffer.append(self.applyesbmcassume(inv))
+                lista = self.invlocation.items()[j][1]
+                for inv in lista:
+                    invbuffer.append(self.applyesbmcassume(inv))
+                hasInvariantInLine = False
                 j += 1
 
             matchinvprev = re.search(r'/\* invariant:', listfilec[i])

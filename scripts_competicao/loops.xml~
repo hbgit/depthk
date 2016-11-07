@@ -6,10 +6,10 @@
   <propertyfile>${inputfile_path}/ALL.prp</propertyfile>
   
   <sourcefiles name="Loops">
-    <includesfile>../../../sv-benchmarks/c/Loops.set</includesfile>    
+    <includesfile>../../sv-benchmarks/c/Loops.set</includesfile>    
   </sourcefiles>
 
-  <rundefinition name="DepthK K-Induction 1.25.2(pips and pagai)">    
+  <rundefinition name="ESBMC 3.0 Mikhail">    
   </rundefinition>
 
   <columns>

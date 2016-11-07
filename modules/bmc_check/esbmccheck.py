@@ -15,8 +15,6 @@ import re
 import os
 import sys
 import shutil
-from modules.invariant_tools.pagai.generate_inv_pagai import generate_inv_pagai
-from modules.invariant_tools.pagai.translate_inv_pagai import translate_pagai
 
 
 class DepthEsbmcCheck(object):
@@ -50,16 +48,31 @@ class DepthEsbmcCheck(object):
         self.esbmc_basecase_op = "--base-case"
         self.esbmc_forwardcond_op = "--forward-condition"
         self.esbmc_inductivestep_op = "--inductive-step --no-slice --show-counter-example"
-        self.fileToAddAssume = ""
-        self.rundepthk = None
 
-    #Creates a copy of original file to counter example
-    def createCopyFileToAddAssume(self, fileToCopy):
-        import shutil
-        destFile = os.path.dirname(fileToCopy) + '/' + 'INSERT_CE_' + os.path.basename(fileToCopy)
-        print(destFile)
-        shutil.copy(fileToCopy, destFile)
-        return destFile
+        self.dldv_error = " -DLDV_ERROR=ERROR "
+        self.dassert = " -D_Bool=int "
+        self.no_bounds_check = ""
+        self.no_pointer_check = ""
+        self.no_div_by_zero_check = ""
+        self.no_assertions = ""
+        self.memory_leak_check = ""
+        self.no_inductive_step = False
+        self.quiet = " --quiet "
+        self.context_switch = ""
+        self.force_malloc = " --force-malloc-success "
+        self.is_memory_safety = False
+        self.is_termination = False
+        self.overflow_check = " "
+
+        self.is_memory_safety = False
+        self.is_termination = False
+        self.overflow_check = " "
+        self.root_path = ""
+
+        self.enable_witnesschecker = True
+        self.file2witness = ""
+        self.cpachecker_path = commands.getoutput("readlink -f .") +  "/modules/CPAchecker/"
+        self.listproperty = ""#os.path.abspath(".")+"/ALL.prp"
 
     @staticmethod
     def getlastlinenumfromce(_esbmccepath, _indexliststartsearch):
@@ -485,8 +498,7 @@ class DepthEsbmcCheck(object):
 
                     if len(listnewassign) > 0:
                         txtassume = ' && '.join(listnewassign)
-                        #self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );//DepthK_Assert"
-                        self.dict_dataassume[ce_cs_line] = "assert( " + txtassume + " );//DepthK_Assert"
+                        self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
 
                 else:
                     # Identify a possible location to add the ASSUME to CS$
@@ -517,8 +529,7 @@ class DepthEsbmcCheck(object):
 
                     if len(listnewassign) > 0:
                         txtassume = ' && '.join(listnewassign)
-                        #self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
-                        self.dict_dataassume[ce_cs_line] = "assert( " + txtassume + " );//DepthK_Assert"
+                        self.dict_dataassume[ce_cs_line] = "__ESBMC_assume( " + txtassume + " );"
 
         #print(self.dict_dataassume)
         #sys.exit()
@@ -587,8 +598,7 @@ class DepthEsbmcCheck(object):
                         if len(listnewassign) > 0:
                             # >> Generating ASSUME to the next states
                             txtassume = ' && '.join(listnewassign)
-                            #self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
-                            self.dict_dataassume[nxt_state_line] = "assert( " + txtassume + " );//DepthK_Assert"
+                            self.dict_dataassume[nxt_state_line] = "__ESBMC_assume( " + txtassume + " );"
 
             countnxst += 1
 
@@ -606,7 +616,7 @@ class DepthEsbmcCheck(object):
     def addassumeinprogram(self, _cprogrampath):
         # print(_linenumtosetassume)
         # sys.exit()
-        fileprogram = None
+
         fileprogram = open(_cprogrampath, "r")
         listfilec = fileprogram.readlines()
         fileprogram.close()
@@ -664,29 +674,6 @@ class DepthEsbmcCheck(object):
 
         return _cprogrampath
 
-    def commentassumeinprogram(self, _cprogrampath, comment):
-
-        fileprogram = None
-        fileprogram = open(_cprogrampath, "r")
-        listfilec = fileprogram.readlines()
-        fileprogram.close()
-
-        newfile = open(_cprogrampath, "w")
-
-        i = 0
-        while i < len(listfilec):
-
-            if(comment == True and "//DepthK_Assert" in listfilec[i]):
-                newfile.write('//DepthK_Comment ' + listfilec[i])
-            elif (comment == False and "//DepthK_Comment" in listfilec[i]):
-                newfile.write(listfilec[i].replace("//DepthK_Comment", ""))
-            else:
-                newfile.write(listfilec[i])
-            i += 1
-
-        newfile.close()
-
-        return _cprogrampath
 
     @staticmethod
     def savelist2file(_pathfile, _list2file):
@@ -713,7 +700,7 @@ class DepthEsbmcCheck(object):
     def hastimeoutfromesbmc(_esbmcoutput):
         statusc = int(commands.getoutput("cat " + _esbmcoutput + " | grep -c \"Timed out\" "))
         if statusc > 0:
-            os.system("cat " + _esbmcoutput)
+            #os.system("cat " + _esbmcoutput)
             print(" ")
             print("VERIFICATION UNKNOWN - Time Out")
             return "UNKNOWN"
@@ -742,7 +729,7 @@ class DepthEsbmcCheck(object):
         # Checking TRUE
         status_true = int(commands.getoutput("tail -n 3 " + _actual_ce + " | grep -c \"VERIFICATION SUCCESSFUL\" "))
         if status_true > 0:
-            os.system("cat " + _actual_ce)
+            #os.system("cat " + _actual_ce)
             print(" ")
             self.cleantmpfiles(_listtmpfiles)
             return "TRUE"
@@ -750,19 +737,19 @@ class DepthEsbmcCheck(object):
         # Checking FAILED
         status_failed = int(commands.getoutput("tail -n 3 " + _actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
         if status_failed > 0:
-            os.system("cat " + _actual_ce)
+            #os.system("cat " + _actual_ce)
             self.cleantmpfiles(_listtmpfiles)
             return "FAILED"
 
         # Checking TO
         status_to = int(commands.getoutput("tail -n 3 " + _actual_ce + " | grep -c \"Timed out\" "))
         if status_to > 0:
-            os.system("cat " + _actual_ce)
+            #os.system("cat " + _actual_ce)
             print(" ")
             self.cleantmpfiles(_listtmpfiles)
             return "Timed Out"
         else:
-            os.system("cat " + _actual_ce)
+            #os.system("cat " + _actual_ce)
             print(" ")
             self.cleantmpfiles(_listtmpfiles)
             return "UNKNOWN"
@@ -776,164 +763,118 @@ class DepthEsbmcCheck(object):
             if os.path.exists(filepath):
                 os.remove(filepath)
 
-
-
     def kinductioncheck(self, _cprogrampath):
+        if(self.is_memory_safety or self.is_termination or self.overflow_check != ""):
+            return "UNKNOWN"
 
-        """
-         Applying k-induction algorithm
-         The K (unwind) should be defined.
-         >> (1) Checking base-case, i.e., there is a counterexample?
-         $ esbmc_v24 --64 --base-case --unwind 1 main.c
-         >> Only if there is NOT counterexample (2) increase k = k +1
-         $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
-         >> Only if in the (2) the result is: "The forward condition is unable to prove the property"
-         $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
-         >> If the result was SUCCESUFUL then STOP verification
-         >> Else
-         >>     IF not k <= maxk and actualdepthverification <= maxdepthverification
-         >>        # I.e., the next P' only is generated if the max k was reached
-         >>        generate a new program P' with an ESBMC_ASSUME from the counterexample and then go to (1)
+        self.listproperty = os.path.dirname(_cprogrampath) +"/ALL.prp"
 
-        :param _cprogrampath: the program <P'> with: the safety property <Fi> and invariants <I>
-        :return:
-            - "TRUE"    if there is no path that violates the safety property
-            - "FALSE"   if there exists a path that violates the safety property
-            - "UNKNOWN" if does not succeed in computing and answer "TRUE" or "FALSE"
-        """
         listtmpfiles = []
         actual_detphver = 1
-        actual_ce = re.sub("\.c$|\.i$",".acce", _cprogrampath)
-        #actual_ce = _cprogrampath.replace(".c", ".acce")
+
+        actual_ce  = ""
+        last_ce = ""
+        if os.path.splitext(_cprogrampath)[1] == '.c':
+            actual_ce = _cprogrampath.replace(".c", ".acce")
+            last_ce = _cprogrampath.replace(".c", ".ltce")
+        else:
+            actual_ce = _cprogrampath.replace(".i", ".acce")
+            last_ce = _cprogrampath.replace(".i", ".ltce")
         listtmpfiles.append(actual_ce)
         #actual_ce = "/tmp/ce_kinduction.txt"
-        last_ce = re.sub("\.c$|\.i$",".ltce", _cprogrampath)
-        #last_ce = _cprogrampath.replace(".c", ".ltce")
-        listtmpfiles.append(last_ce)
-        #last_ce = "/tmp/last_ce_kinduction.txt"
-        flag_forceassume = self.forceassume        
 
-        #flag_moreonecheckbase = True
-        flag_moreonecheckbase = self.moreonecheckbasecase
+        listtmpfiles.append(last_ce)
+
         lastresult = [False,"",""] # flag, result, step
 
         # generate data about the functions
         self.list_beginnumfuct = self.getnumbeginfuncts(_cprogrampath)
 
-        if self.use_counter_example:
-            print(">>Creating a copy of file to add ESBMC_ASSUME")
-            self.fileToAddAssume = self.createCopyFileToAddAssume(_cprogrampath)
-            print(">>The base file to add assume is: " + self.fileToAddAssume)
+        result = ""#Get the result of verification
 
         if self.debug:
             print(">> Starting the verification of the P\' program")
+
+        #try:
+        #    file = open(_cprogrampath, "r")
+        #    lines = file.readlines()
+        #    res = [y for y in lines if "safe_write" in y or "fflush_all" in y or "bb_show_usage" in y or "bb_error_msg_and_die" in y]
+        #    if(res is not None and len(res) > 0):
+        #        print("kinductioncheck: Busybox file.")
+        #        return "UNKNOWN"
+        #except:
+        #    print("kinductioncheck: Fails on open file.")
+        #finally:
+        #    file.close()
+
+        if self.enable_witnesschecker:
+            folderPath =  self.root_path + "/graphml/"
+            if not os.path.exists(folderPath):
+                os.makedirs(folderPath)
+
+            if os.path.splitext(_cprogrampath)[1] == ".i":
+                self.file2witness = folderPath + os.path.basename(_cprogrampath.replace(".i", ".graphml"))
+            else:
+                self.file2witness = folderPath + os.path.basename(_cprogrampath.replace(".c", ".graphml"))
+            self.esbmc_witness_op = " --witness-output " + str(self.file2witness) + " " #+ " --tokenizer " + str(esbmc_tokenizer_path)
+        else:
+            self.esbmc_witness_op = ""
+
         # Checking if we reached the MAX k defined
         while self.esbmc_bound <= self.maxk and actual_detphver <= self.maxdepthverification:
 
             if self.en_kparalell:
                 if self.debug:
                     print("\t -> Status: checking with k-induction parallel")
-                return self.checkwithkparallel(_cprogrampath, actual_ce, listtmpfiles)
+                result = self.checkwithkparallel(_cprogrampath, actual_ce, listtmpfiles)
+                break
 
             else:
                 # Sequencial
                 if self.debug:
                     print("\t -> Actual k = " + str(self.esbmc_bound))
 
-                if os.path.isfile(actual_ce):                    
+                if os.path.isfile(actual_ce):
                     shutil.copyfile(actual_ce, last_ce)
 
                 if self.debug:
                     print("\t\t Status: checking base case")
-                    
 
-                # >> (1) Checking base-case, i.e., there is a counterexample?
-                # e.g., $ esbmc_v24 --64 --base-case --unwind 5 main.c
-                #  --memlimit 4g --timeout 15m "--memlimit " + self.esbmc_memlimit_op + " " +
-                # print(self.esbmcpath + " " + self.esbmc_arch + " " +
-                #                                      self.esbmc_solver_op + " " +
-                #                                      self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                #                                      self.isdefiniedmemlimit() +
-                #                                      "--timeout " + self.esbmc_timeout_op + " " +
-                #                                      self.esbmc_nolibrary + " " +
-                #                                      self.esbmc_extra_op + " " +
-                #                                      self.esbmc_basecase_op + " " +
-                #                                      _cprogrampath)
 
                 # checking we are in the force last check
-                if lastresult[0]:
-                    #nextk = self.esbmc_bound + 25
-                    self.esbmc_bound += 8
-                    #while self.esbmc_bound <= nextk and self.esbmc_bound <= self.maxk and statusce_basecase <= 0:
-                    # print("---------------")
-                    if self.esbmc_bound <= self.maxk:
-                        result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                         self.esbmc_solver_op + " " +
-                                                         self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                                                         self.isdefiniedmemlimit() +
-                                                         "--timeout " + self.esbmc_timeout_op + " " +
-                                                         self.esbmc_nolibrary + " --no-pointer-check --falsification " +
-                                                         self.esbmc_extra_op + " " +
-                                                         self.esbmc_basecase_op + " " +
-                                                         _cprogrampath)
+                statusce_basecase = self.execBaseCase(_cprogrampath, actual_ce, lastresult)
 
-                        self.savelist2file(actual_ce, result_basecase)
-
-                        # Identify a possible timeout
-                        if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
-                            return ""
-
-                        # >> (1) Identifying if it was generated a counterexample
-                        statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
-                        #self.esbmc_bound += 1
-
-                else:
-                    result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                         self.esbmc_solver_op + " " +
-                                                         self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                                                         self.isdefiniedmemlimit() +
-                                                         "--timeout " + self.esbmc_timeout_op + " " +
-                                                         self.esbmc_nolibrary + " --no-pointer-check --falsification " +
-                                                         self.esbmc_extra_op + " " +
-                                                         self.esbmc_basecase_op + " " +
-                                                         _cprogrampath)
-
-                    self.savelist2file(actual_ce, result_basecase)
-
-                    # Identify a possible timeout
-                    if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
-                        return ""
-
-                    # >> (1) Identifying if it was generated a counterexample
-                    statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
-
-
-                if statusce_basecase > 0:
-                    # show counterexample
-                    if lastresult[0]:
-                        os.system("cat " + actual_ce)
-                        print(" ")                                                 
-                        print(" ")
-                        self.cleantmpfiles(listtmpfiles)
-                        return "\t\t *** Last adopted: " + lastresult[2].replace("Status: checking","") +\
-                               ", but the correct is the: base case \n"
-                        return "FALSE"
-                               
-                    else:
-                        os.system("cat " + actual_ce)
-                        print(" ")
-                        self.cleantmpfiles(listtmpfiles)
-                        return "FALSE"
-
+                if(statusce_basecase == "UNKNOWN" or statusce_basecase <> "no bug has been found"):
+                    result = statusce_basecase
+                    break
                 else:
 
                     # checking we are in the force last check
                     # This last force is always to TRUE
                     if lastresult[0]:
-                        os.system("cat " + last_ce)                        
-                        print(" ")                        
+                        #os.system("cat " + last_ce)
+                        print(" ")
+                        z3Error = int(commands.getoutput("cat " + last_ce +
+                                                                     " | grep -c " +
+                                                                     "\"Z3 error\" "))
+                        if(z3Error > 0):
+                            result = "UNKNOWN"
+                        else:
+                            cpachecker_ops = self.configureCPACheckerPath()
+                            result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                            endresult = self.check_witnessresult(result)
+                            if "IS CURRENTLY NOT SUPPORTED" in result.upper():
+                                lastresult[1] = "TRUE"
+                            if endresult == "TRUE":
+                                lastresult[1] = "TRUE"
+
+                            else:
+                                lastresult[1] = "UNKNOWN"
+
+                            result = "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
+
                         self.cleantmpfiles(listtmpfiles)
-                        return "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
+                        break
 
                     # >> (2) Only if there is NOT counterexample, then  increase k = k +1
                     # only to check if any crash was generated
@@ -941,247 +882,34 @@ class DepthEsbmcCheck(object):
                                                                      " | grep -c " +
                                                                      "\"No bug has been found in the base case\" "))
                     if statusce_basecase_nobug > 0:
-                        # increase k
-                        self.esbmc_bound += 1
-                        if self.debug:
-                            print("\t\t Status: checking forward condition")
-                        # Checking the forward condition
-                        # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
 
-                        result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                                self.esbmc_solver_op + " " +
-                                                                self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
-                                                                self.isdefiniedmemlimit() +
-                                                                "--timeout " + self.esbmc_timeout_op + " " +
-                                                                self.esbmc_nolibrary + "  " +
-                                                                self.esbmc_extra_op + " " +
-                                                                self.esbmc_forwardcond_op + " " +
-                                                                _cprogrampath)
+                        status_forwardcond = self.execForwardCondition(_cprogrampath, actual_ce, lastresult, listtmpfiles)
 
-                        #print(result_forwardcond)
-
-                        self.savelist2file(actual_ce, result_forwardcond)
-                        # Identify a possible timeout
-                        if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
-                            return ""
-
-                        # Checking if it was possible to prove the property
-                        #
-                        statusce_forwardcond = int(commands.getoutput("cat " + actual_ce +
-                                                                      " | grep -c " +
-                                                                      "\"The forward condition is unable to prove the property\" "))
-                        if statusce_forwardcond == 0:
-                            if self.hassuccessfulfromesbmc(actual_ce):
-                                # The property was proved
-                                # print("True")
-                                if flag_moreonecheckbase:
-                                    #lastresult = "TRUE"
-                                    lastresult[0] = True
-                                    lastresult[1] = "TRUE"
-                                    lastresult[2] = "Status: checking forward condition"
-                                    if self.debug:
-                                        print("\t\t > Forcing last check in base case")
-                                else:
-                                    os.system("cat " + actual_ce)
-                                    print(" ")
-                                    self.cleantmpfiles(listtmpfiles)
-                                    return "TRUE"
-                            else:
-                                # Some ERROR was identified in the verification of forward-condition
-                                os.system("cat " + actual_ce)
-                                print(" ")
-                                self.cleantmpfiles(listtmpfiles)
-                                return "ERROR. It was identified an error in the verification of forward condition"
-
+                        if(status_forwardcond == "TRUE" or status_forwardcond == "UNKNOWN"):
+                            result = status_forwardcond
+                            break
                         else:
-                            # The property was NOT proved
-                            if self.debug:
-                                print("\t\t Status: checking inductive step")
-                            # >> (3) Only if in the (2) the result is:
-                            # "The forward condition is unable to prove the property"
-                            # Checking the inductive step
-                            # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
-
-                            result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
-                                                                      self.esbmc_solver_op + " " +
-                                                                      self.esbmc_unwind_op + " " +
-                                                                      str(self.esbmc_bound) + " " +
-                                                                      self.isdefiniedmemlimit() +
-                                                                      "--timeout " + self.esbmc_timeout_op + " " +
-                                                                      self.esbmc_nolibrary + " " +
-                                                                      self.esbmc_extra_op + " " +
-                                                                      self.esbmc_inductivestep_op + " " +
-                                                                      _cprogrampath)
-
-                            # print(result_inductivestep)
-
-                            self.savelist2file(actual_ce, result_inductivestep)
-                            # Identify a possible timeout
-                            if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
-                                return ""
-
-                            # checking CE
-                            statusce_inductivestep = int(commands.getoutput("cat " + actual_ce +
-                                                                            " | grep -c " +
-                                                                            "\"VERIFICATION FAILED\" "))
-                            # >> If the result was SUCCESUFUL then STOP verification
-                            if statusce_inductivestep == 0:
-                                if self.hassuccessfulfromesbmc(actual_ce):
-                                    # print("True")
-                                    if flag_moreonecheckbase:
-                                        #lastresult = "TRUE"
-                                        lastresult[0] = True
-                                        lastresult[1] = "TRUE"
-                                        lastresult[2] = "Status: checking inductive step"
-                                        if self.debug:
-                                            print("\t\t > Forcing last check in base case")
-                                    else:
-                                        os.system("cat " + actual_ce)
-                                        print(" ")
-                                        self.cleantmpfiles(listtmpfiles)
-                                        return "TRUE"
-                                #else:
-                                    # Some ERROR was identified in the verification of inductive-step
-                                #    os.system("cat " + actual_ce)
-                                #    print(" ")
-                                #    self.cleantmpfiles(listtmpfiles)
-                                #    return "ERROR. It was identified an error in the verification of inductive step"
-
-                            if self.use_counter_example:
-                                # In this case, when the inductive step fail
-                                # in the first time we force the generation of the ESBMC assume.
-                                # It is worth to say that ONLY in this case we do not adopt
-                                # the D, only K is taken into account.
-
-                                # >> Else generate an ESBMC_ASSUME with the counterexample
-                                # then go to (1) with the actual K
-
-                                if self.debug:
-                                    print("\t\t -> Force the generation of ESBMC assume")
-                                    print("\t\t Status: generating a new ESBMC assume")
-
-                                # Possible BUG cuz the PLACE where the assume is added
-                                try:
-                                    if not self.getlastdatafromce(actual_ce):
-                                        # >> UNKNOWN
-                                        continue
-                                except:
-                                    continue
-
-                                    #self.cleantmpfiles(listtmpfiles)
-                                    #return "ERROR. NO DATA from counterexample! Sorry about that."
-
-                                # Getting the last valid location in the counterexample to add
-                                # the assume
-                                # linenumtosetassume = self.getlastlinenumfromce(actual_ce)
-                                # Adding in the new instance of the analyzed program (P')
-                                # the new assume generated from the counterexample
-
-                                _cprogrampath = self.addassumeinprogram(_cprogrampath)
-                                #sys.exit()
-
-                                _cprogrampath = self.commentassumeinprogram(_cprogrampath, False)
-                                'It generates assert from the counter example to refine PIPS invariants'
-                                if True:
-                                    # Generate invariants
-                                    if self.debug:
-                                        print(">> Running PAGAI to generate the invariants based on counter example")
-                                    geninvpagai = generate_inv_pagai.GeneratePagaiInv()
-                                    codewithinv = geninvpagai.generate_inv(_cprogrampath)
-
-                                    # Translate invariants
-                                    if self.debug:
-                                        print(">> Running PAGAI translation")
-
-                                    runtranspagai = translate_pagai.TranslatePagai()
-
-                                    runtranspagai.pathprogram = codewithinv
-                                    if codewithinv:
-                                        if runtranspagai.identifyInv(runtranspagai.pathprogram):
-                                            # Program invariants were detected
-                                            newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, False)
-                                            newprogram = runtranspagai.removenotprintable(newprogram)
-                                            newfileinv = open(codewithinv, "w")
-                                            for line in newprogram:
-                                                newfileinv.write(line)
-                                                #print(line, end="")
-                                            newfileinv.close()
-                                            pathcodeinvtranslated = codewithinv
-                                            #list_paths_to_delete.append(pathcodeinvtranslated)
-                                            _cprogrampath = runtranspagai.pathprogram
-                                        else:
-                                            if self.debug:
-                                                print("ERROR. Program invariants were NOT detected with PAGAI")
-                                            #rundepthk.cleantmpfiles(list_paths_to_delete)
-                                            ERROR_FLAG = True
-                                            #pathcodeinvtranslated = inputCFile
-                                            #sys.exit()
-                                    else:
-                                        ERROR_FLAG = True
-
-                                '''if True:
-                                    # Generating pips script
-                                    if self.debug:
-                                        print(">> Generating PIPS script")
-                                    scriptpipspath = self.rundepthk.generatepipsscript(_cprogrampath)
-                                    self.rundepthk.list_paths_to_delete.append(scriptpipspath)
-
-                                    # Generating invariants with PIPS
-                                    if self.debug:
-                                        print(">> Running PIPS to generate the invariants")
-                                    codewithinv = self.rundepthk.runpips(scriptpipspath, _cprogrampath, self.rundepthk.list_paths_to_delete)
-
-                                    if codewithinv:
-                                        # rundepthk.debug_gh = True
-                                        if self.debug:
-                                            print(">> Applying GNU hack")
-                                        codewithinv = self.rundepthk.applygnuhack(codewithinv)
-
-                                        # Identify #init from PIPS in the code with invariants
-                                        if self.debug:
-                                            print(">> Running PIPS Translation")
-                                        dict_init = self.rundepthk.identify_initpips(codewithinv)
-                                        # Generate auxiliary code to support the translation of #init from PIPS
-                                        pathcodeinit = self.rundepthk.generatecodewithinit(codewithinv, _cprogrampath, dict_init)
-                                        #pathcodeinvtranslated = pathcodeinit
-                                        # Translate the invariants generated by PIPS
-                                        pathcodeinvtranslated = self.rundepthk.translatepipsannot(pathcodeinit)
-                                        _cprogrampath = pathcodeinvtranslated
-                                        _cprogrampath = self.commentassumeinprogram(_cprogrampath, True)
-                                    else:
-                                        print("ERROR. Program invariants with PIPS")
-                                        #
-                                        # rundepthk.cleantmpfiles(list_paths_to_delete)'''
-
-                                if True:
-                                    # Program invariants were detected
-                                    runtranspagai.identifyInv(runtranspagai.pathprogram)
-                                    newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, True)
-                                    newprogram = runtranspagai.removenotprintable(newprogram)
-                                    newfileinv = open(runtranspagai.pathprogram, "w")
-                                    for line in newprogram:
-                                        newfileinv.write(line)
-                                        #print(line, end="")
-                                    newfileinv.close()
-                                    pathcodeinvtranslated = runtranspagai.pathprogram
-                                    _cprogrampath = pathcodeinvtranslated
-                                    self.rundepthk.list_paths_to_delete.append(pathcodeinvtranslated)
-                                    _cprogrampath = runtranspagai.pathprogram
-
+                            if self.no_inductive_step:
+                                continue
+                            status_inductiveStep = self.execInductiveStep(_cprogrampath, actual_ce, lastresult, listtmpfiles, actual_detphver)
+                            if(status_inductiveStep == ""):
+                                continue
+                            else:
+                                result = status_inductiveStep
+                                break
                     else:
                         # Some ERROR was identified in the verification of base-case
-                        os.system("cat " + actual_ce)
+                        #os.system("cat " + actual_ce)
                         print(" ")
                         self.cleantmpfiles(listtmpfiles)
-                        return "ERROR. It was identified an error in the verification of base-case"
+                        raise Exception("ERROR. It was identified an error in the verification of base-case")
 
         # >> END-WHILE
         # >> UNKNOWN
         # os.system("cat " + actual_ce)
-        # print(" ")
-        print("MAX k (" + str(self.maxk) + ") reached. ")
         self.cleantmpfiles(listtmpfiles)
-        return "UNKNOWN"
+
+        return result
 
 
     @staticmethod
@@ -1203,3 +931,271 @@ class DepthEsbmcCheck(object):
                 listbeginnumfuct[int(matchlinefuct.group(2)) - 1] = matchlinefuct.group(1).strip()
 
         return listbeginnumfuct
+
+    def configureCPACheckerPath(self):
+
+        return "./scripts/cpa.sh -noout " + \
+               " -heap 10000M -predicateAnalysis " +  \
+               " -setprop cfa.useMultiEdges=false " +  \
+               " -setprop cfa.simplifyCfa=false " +  \
+               " -setprop cfa.allowBranchSwapping=false " +  \
+               " -setprop cpa.predicate.ignoreIrrelevantVariables=false " +  \
+               " -setprop counterexample.export.assumptions.assumeLinearArithmetics=true " +  \
+               " -setprop analysis.traversal.byAutomatonVariable=__DISTANCE_TO_VIOLATION " +  \
+               " -setprop cpa.automaton.treatErrorsAsTargets=false " +  \
+               " -setprop WitnessAutomaton.cpa.automaton.treatErrorsAsTargets=true " +  \
+               " -setprop parser.transformTokensToLines=false " +  \
+               " -skipRecursion " +  \
+               " -spec " + self.file2witness + " " \
+               " -spec " + self.listproperty + " " \
+
+
+
+    def execCPAChecker(self, _cprogrampath, cpachecker_ops):
+        # show counterexample
+        cwd = os.getcwd()
+        # Apply witness checker
+        # making a copy of the P'
+        tmpname = _cprogrampath+"_c.c"
+        shutil.copy(_cprogrampath,tmpname)
+        # removing __ESBMC_ASSUME
+        commands.getoutput("sed -i \'s/__ESBMC_assume.*//\' "+ _cprogrampath)
+        os.chdir(self.cpachecker_path)
+        cpacommand = cpachecker_ops  + _cprogrampath
+        result_witness = commands.getoutput(cpacommand)
+        os.chdir(cwd)
+        os.remove(tmpname)
+
+        return result_witness.upper()
+
+    def execBaseCase(self, _cprogrampath, actual_ce, lastResult):
+        if(lastResult[0]):
+            self.esbmc_bound = self.esbmc_bound + 5
+
+        if self.esbmc_bound <= self.maxk:
+            result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                 self.esbmc_solver_op + " " +
+                                                 self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                 self.isdefiniedmemlimit() +
+                                                 self.esbmc_witness_op +
+                                                 "--timeout " + self.esbmc_timeout_op + " " +
+                                                 self.esbmc_nolibrary + " " +
+                                                 self.esbmc_extra_op + " " +
+                                                 self.overflow_check +
+                                                 self.dldv_error +
+                                                 self.dassert +
+                                                 self.no_bounds_check +
+                                                 self.no_pointer_check +
+                                                 self.no_div_by_zero_check +
+                                                 self.no_assertions +
+                                                 self.quiet +
+                                                 self.context_switch +
+                                                 self.force_malloc +
+                                                 self.memory_leak_check +
+                                                 self.esbmc_basecase_op + " " +
+                                                 _cprogrampath)
+
+            self.savelist2file(actual_ce, result_basecase)
+            # Identify a possible timeout
+            if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
+                return "UNKNOWN"
+
+            # >> (1) Identifying if it was generated a counterexample
+            statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
+
+            if statusce_basecase > 0:
+                if not self.is_memory_safety:
+                    # To witness checker
+                    cpachecker_ops = self.configureCPACheckerPath()
+                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                    endresult = self.check_witnessresult(result)
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper():
+                        return "FALSE"
+                    if endresult == "FALSE":
+                        return "FALSE"
+                    else:
+                        return "UNKNOWN"
+                else:
+                    #PROPERTY_FORGOTTEN_MEMORY_TAG
+                    if int(commands.getoutput("cat " + actual_ce +
+                                                      " | grep -c " +
+                                                      "\"dereference failure: forgotten memory\" ")) > 0:
+                        return "FALSE \n dereference failure: forgotten memory"
+                    #PROPERTY_INVALID_POINTER_TAG
+
+                    elif int(commands.getoutput("cat " + actual_ce +
+                                                      " | grep -c " +
+                                                      "\"dereference failure: invalid pointer\" ")) > 0:
+                        return "FALSE \n dereference failure: invalid pointer"
+                    #PROPERTY_ARRAY_BOUND_VIOLATED_TAG
+
+                    elif int(commands.getoutput("cat " + actual_ce +
+                                                      " | grep -c " +
+                                                      "\"dereference failure: array bounds violated\" ")) > 0:
+                        return "FALSE \n dereference failure: array bounds violated"
+                    #PROPERTY_UNWIND_ASSERTION_LOOP_TAG
+                    elif int(commands.getoutput("cat " + actual_ce +
+                                                      " | grep -c " +
+                                                      "\"unwinding assertion loop\" ")) > 0:
+                        return "UNKNOWN"
+                    return "UNKNOWN"
+            return "no bug has been found"
+
+    def execForwardCondition(self, _cprogrampath, actual_ce, lastResult, listtmpfiles):
+        # increase k
+        self.esbmc_bound += 1
+
+        if self.debug:
+            print("\t\t Status: checking forward condition")
+        # Checking the forward condition
+        # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
+        result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                self.esbmc_solver_op + " " +
+                                                self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                                                self.isdefiniedmemlimit() +
+                                                self.esbmc_witness_op +
+                                                "--timeout " + self.esbmc_timeout_op + " " +
+                                                self.esbmc_nolibrary + " " +
+                                                self.esbmc_extra_op + " " +
+                                                self.overflow_check +
+                                                self.dldv_error +
+                                                self.dassert +
+                                                self.no_bounds_check +
+                                                self.no_pointer_check +
+                                                self.no_div_by_zero_check +
+                                                self.no_assertions +
+                                                self.quiet +
+                                                self.context_switch +
+                                                self.force_malloc +
+                                                self.memory_leak_check +
+                                                self.esbmc_forwardcond_op + " " +
+                                                _cprogrampath)
+
+        self.savelist2file(actual_ce, result_forwardcond)
+        # Identify a possible timeout
+        if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
+            return "UNKNOWN"
+
+        # Checking if it was possible to prove the property
+        #
+        statusce_forwardcond = int(commands.getoutput("cat " + actual_ce +
+                                                      " | grep -c " +
+                                                      "\"The forward condition is unable to prove the property\" "))
+        if statusce_forwardcond == 0:
+            if self.hassuccessfulfromesbmc(actual_ce):
+                # The property was proved
+                if self.moreonecheckbasecase:
+                    lastResult[0] = True
+                    lastResult[1] = "TRUE"
+                    lastResult[2] = "Status: checking forward condition"
+                    if self.debug:
+                        print("\t\t v> Forcing last check in base case")
+                    return "CONTINUE"
+                else:
+                    #os.system("cat " + actual_ce)
+                    print(" ")
+                    self.cleantmpfiles(listtmpfiles)
+
+                    cpachecker_ops = self.configureCPACheckerPath()
+                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                    endresult = self.check_witnessresult(result)
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper():
+                        return "TRUE"
+                    if endresult == "TRUE":
+                        return "TRUE"
+
+                    return "UNKNOWN"
+        return ""
+
+    def execInductiveStep(self, _cprogrampath, actual_ce, lastResult, listtmpfiles, actual_detphver):
+        # The property was NOT proved
+        if self.debug:
+            print("\t\t Status: checking inductive step")
+        # >> (3) Only if in the (2) the result is:
+        # "The forward condition is unable to prove the property"
+        # Checking the inductive step
+        # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
+        result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+                                                  self.esbmc_solver_op + " " +
+                                                  self.esbmc_unwind_op + " " +
+                                                  str(self.esbmc_bound) + " " +
+                                                  self.isdefiniedmemlimit() +
+                                                  self.esbmc_witness_op +
+                                                  "--timeout " + self.esbmc_timeout_op + " " +
+                                                  self.esbmc_nolibrary + " " +
+                                                  self.esbmc_extra_op + " " +
+                                                  self.dldv_error +
+                                                  self.dassert +
+                                                  self.no_bounds_check +
+                                                  self.no_pointer_check +
+                                                  self.no_div_by_zero_check +
+                                                  self.no_assertions +
+                                                  self.quiet +
+                                                  self.overflow_check +
+                                                  self.context_switch +
+                                                  self.force_malloc +
+
+                                                  self.esbmc_inductivestep_op + " " +
+                                                  _cprogrampath)
+
+        # print(result_inductivestep)
+
+        self.savelist2file(actual_ce, result_inductivestep)
+        # Identify a possible timeout
+        if self.hastimeoutfromesbmc(actual_ce) == "UNKNOWN":
+            return "UNKNOWN"
+
+        # checking CE
+        statusce_inductivestep = int(commands.getoutput("cat " + actual_ce +
+                                                        " | grep -c " +
+                                                        "\"VERIFICATION FAILED\" "))
+        # >> If the result was SUCCESUFUL then STOP verification
+        if statusce_inductivestep == 0:
+            if self.hassuccessfulfromesbmc(actual_ce):
+                # print("True")
+                if self.moreonecheckbasecase:
+                    #lastresult = "TRUE"
+                    lastResult[0] = True
+                    lastResult[1] = "TRUE"
+                    lastResult[2] = "Status: checking inductive step"
+                    if self.debug:
+                        print("\t\t > Forcing last check in base case")
+                else:
+                    #os.system("cat " + actual_ce)
+                    print(" ")
+                    self.cleantmpfiles(listtmpfiles)
+                    cpachecker_ops = self.configureCPACheckerPath()
+                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                    endresult = self.check_witnessresult(result)
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper():
+                        return "TRUE"
+                    if endresult == "TRUE":
+                        return "TRUE"
+
+                    return "UNKNOWN"
+            else:
+                # Some ERROR was identified in the verification of inductive-step
+
+                status_unknown = int (commands.getoutput("cat " + actual_ce +
+                                                        " | grep -c " +
+                                                        "\"VERIFICATION UNKNOWN\" "))
+
+                if status_unknown > 0:
+                    return "UNKNOWN"
+
+        return ""
+    def check_witnessresult(self, _listresultwitness):
+        list_recheck = _listresultwitness.split("\n")
+        flag_cpa = False
+        for line in list_recheck:
+            #print(line)
+            match_failed_CPA = re.search(r"VERIFICATION RESULT: FALSE", line.upper())
+            match_nobug_CPA = re.search(r"VERIFICATION RESULT: TRUE", line.upper())
+            if match_failed_CPA:
+                return "FALSE"
+            elif match_nobug_CPA:
+                # "TRUE" not equal to actual
+                return "TRUE"
+
+        if not flag_cpa:
+            return "UNKNOWN"

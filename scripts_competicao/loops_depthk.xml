@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE benchmark SYSTEM "benchmark.dtd">
+
+<benchmark tool="depthkp_witness" memlimit="15000" cpuCores="1">
+
+  <propertyfile>${inputfile_path}/ALL.prp</propertyfile>
+  
+  <sourcefiles name="Loops">
+    <includesfile>../../sv-benchmarks2/c/Loops.set</includesfile>    
+  </sourcefiles>
+
+  <rundefinition name="ESBMC 3.0 DepthK">    
+  </rundefinition>
+
+  <columns>
+    <column title="k">k</column>
+    <column title="Step">Step</column>
+  </columns>
+
+</benchmark>
+
+
+
