@@ -863,11 +863,10 @@ class DepthEsbmcCheck(object):
                             cpachecker_ops = self.configureCPACheckerPath()
                             result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                             endresult = self.check_witnessresult(result)
-                            if "IS CURRENTLY NOT SUPPORTED" in result.upper():
+                            if "IS CURRENTLY NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                                 lastresult[1] = "TRUE"
-                            if endresult == "TRUE":
+                            elif endresult == "TRUE":
                                 lastresult[1] = "TRUE"
-
                             else:
                                 lastresult[1] = "UNKNOWN"
 
@@ -1009,7 +1008,7 @@ class DepthEsbmcCheck(object):
                     cpachecker_ops = self.configureCPACheckerPath()
                     result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
-                    if "IS CURRENTLY NOT SUPPORTED" in result.upper():
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                         return "FALSE"
                     if endresult == "FALSE":
                         return "FALSE"
@@ -1099,7 +1098,7 @@ class DepthEsbmcCheck(object):
                     cpachecker_ops = self.configureCPACheckerPath()
                     result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
-                    if "IS CURRENTLY NOT SUPPORTED" in result.upper():
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
@@ -1167,7 +1166,7 @@ class DepthEsbmcCheck(object):
                     cpachecker_ops = self.configureCPACheckerPath()
                     result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
-                    if "IS CURRENTLY NOT SUPPORTED" in result.upper():
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
