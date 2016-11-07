@@ -1,0 +1,7 @@
+digraph __list_del {
+470 [shape="circle" label="N470\n8"]
+471 [shape="circle" label="N471\n7"]
+471 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">471</td><td align="left">unsigned int __cil_tmp3;</td></tr><tr><td align="right">472</td><td align="left">unsigned int __cil_tmp4;</td></tr><tr><td align="right">473</td><td align="left">__cil_tmp3 = (unsigned int)next;</td></tr><tr><td align="right">474</td><td align="left">__cil_tmp4 = __cil_tmp3 + 4;</td></tr><tr><td align="right">475</td><td align="left">*((struct list_head **)__cil_tmp4) = prev;</td></tr><tr><td align="right">476</td><td align="left">*((struct list_head **)prev) = next;</td></tr><tr><td align="right">477</td><td align="left">return;</td></tr></table>>]
+471 -> 469[label=""]
+470 -> 471 [label="Function start dummy edge" fontname="Courier New"]
+}
