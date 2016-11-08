@@ -63,7 +63,10 @@ class DepthEsbmcCheck(object):
         self.is_memory_safety = False
         self.is_termination = False
         self.overflow_check = " "
-        
+
+        self.is_memory_safety = False
+        self.is_termination = False
+        self.overflow_check = " "
         self.root_path = ""
 
         self.enable_witnesschecker = True
@@ -761,8 +764,7 @@ class DepthEsbmcCheck(object):
                 os.remove(filepath)
 
     def kinductioncheck(self, _cprogrampath):
-        #if(self.is_memory_safety or self.is_termination or self.overflow_check != ""):
-        if(self.is_memory_safety or self.is_termination):
+        if(self.is_memory_safety or self.is_termination or self.overflow_check != ""):
             return "UNKNOWN"
 
         self.listproperty = os.path.dirname(_cprogrampath) +"/ALL.prp"
@@ -861,7 +863,7 @@ class DepthEsbmcCheck(object):
                             cpachecker_ops = self.configureCPACheckerPath()
                             result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                             endresult = self.check_witnessresult(result)
-                            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                            if "IS CURRENTLY NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                                 lastresult[1] = "TRUE"
                             elif endresult == "TRUE":
                                 lastresult[1] = "TRUE"
@@ -896,7 +898,7 @@ class DepthEsbmcCheck(object):
                                 break
                     else:
                         # Some ERROR was identified in the verification of base-case
-                        os.system("cat " + actual_ce)
+                        #os.system("cat " + actual_ce)
                         print(" ")
                         self.cleantmpfiles(listtmpfiles)
                         raise Exception("ERROR. It was identified an error in the verification of base-case")
@@ -1006,7 +1008,7 @@ class DepthEsbmcCheck(object):
                     cpachecker_ops = self.configureCPACheckerPath()
                     result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                         return "FALSE"
                     if endresult == "FALSE":
                         return "FALSE"
@@ -1096,7 +1098,7 @@ class DepthEsbmcCheck(object):
                     cpachecker_ops = self.configureCPACheckerPath()
                     result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
@@ -1164,7 +1166,7 @@ class DepthEsbmcCheck(object):
                     cpachecker_ops = self.configureCPACheckerPath()
                     result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                    if "IS CURRENTLY NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
@@ -1196,4 +1198,3 @@ class DepthEsbmcCheck(object):
 
         if not flag_cpa:
             return "UNKNOWN"
-

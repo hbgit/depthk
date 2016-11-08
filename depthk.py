@@ -553,7 +553,7 @@ if __name__ == "__main__":
 
             # Define ESBMC path
             rundepthk.esbmcpath = "./esbmc"
-            # rundepthk.esbmcpath = "~/Downloads/ESBMC/bin/esbmc_v24"
+
             if args.setMaxK:
                 rundepthk.maxk = args.setMaxK
             if args.setMaxDepthCheck:
@@ -570,8 +570,17 @@ if __name__ == "__main__":
                 rundepthk.esbmc_extraop = args.setOpESBMC
             if args.setKParallel:
                 rundepthk.en_kparalell = args.setKParallel
-            #if args.setDisableCEUse:
-            #    rundepthk.disableuse_ce = args.setDisableCEUse
+
+            if args.setOverflowCheck:
+                rundepthk.esbmc_overflow_check = " --overflow-check "
+                
+            if args.setMemorySafetyCategory:
+                rundepthk.esbmc_is_memory_safety = args.setMemorySafetyCategory
+
+            if args.setTerminationCategory:
+                rundepthk.esbmc_is_termination = args.setTerminationCategory
+
+
             if args.setESBMCSolver:
                 # Checking if this solver is supported by ESBMC
                 if rundepthk.checkesbmcsolversupport(args.setESBMCSolver):
@@ -783,3 +792,4 @@ if __name__ == "__main__":
                 rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
             # Removing tmp files
             rundepthk.cleantmpfiles(list_paths_to_delete)
+
