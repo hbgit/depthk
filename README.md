@@ -79,3 +79,30 @@ By default ESBMC is called, as follows:
 For help and others options: 
 
 > $ ./depthk.py --help
+
+
+
+===========================
+
+<b> Instructions for SV-COMP'17 </b>
+
+Use the 'depthk-wrapper.sh' script in the installation directory to verify each single test-case. 
+
+Usage: 
+
+> $ ./wrapper_script_tests.sh <[-p|]> <file.c|file.i>
+
+<p align="justify">
+DepthK provides as verification result:
+<b>TRUE + Witness</b> The specification is satisfied (i.e., there is no path that violates the specification) and 
+a correctness witness is produced; 
+<b>FALSE + Witness</b> The specification is violated (i.e., there exists a path that violates the specification) 
+and an violation witness is produced; 
+or <b>UNKNOWN</b> The tool cannot decide the problem or terminates by a tool crash, time-out, or out-of-memory 
+(i.e., the competition candidate does not succeed in computing an answer TRUE or FALSE).
+For each witness produced it is genetared a file in DepthK root-path graphml folder; this file has the same name
+of the verification task with the extension </b>graphml</b>.
+There is timeout of 895 seconds set by this script, using "timeout" tool that is part of coreutils 
+on debian and fedora. 
+</p>
+
