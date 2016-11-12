@@ -1,9 +1,6 @@
 <h1>DepthK 3.0</h1>
 <h3>K-Induction adopting program invariants</h3>
 
-Author: Herbert O. Rocha <br>
-E-mail: herberthb12@gmail.com
-
 ================ 
 
           .-.          
@@ -25,7 +22,8 @@ To use this tool is necessary that the system contains the following software al
 > - Uncrustify (v0.60 or higher) - http://uncrustify.sourceforge.net/
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
 > - Ctags - http://ctags.sourceforge.net 
-> - PIPS - http://pips4u.org/
+> - PIPS - http://pips4u.org
+
 ==============
 
 <b>How to install DepthK?</b>
@@ -64,7 +62,7 @@ Testing tool. DepthK can be invoked through a standard command-line interface. D
 in the installation directory as follows:  
 </p>
 
-> $ ./depthk.py test_cases/conceptproof/invgen/confuse/confuse.c -g <br> 
+> $ ./depthk.py samples/conceptproof/invgen/confuse/confuse.c -g <br> 
 > \>\> Running PIPS to generate the invariants <br>
 > \>\> Translating the PIPS annotation with the invariants <br>
 > \>\> Starting the verification of the P' program <br>

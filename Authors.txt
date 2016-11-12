@@ -1,0 +1,9 @@
+Maintainers:
+  Herbert O. Rocha (since 2014), Federal University of Roraima, Brazil
+  Williame Rocha (since 2015), Federal University of Amazonas, Brazil
+  
+Contributors:
+  Hussama Ismail (since 2015), Federal University of Amazonas, Brazil
+
+Questions and bug reports:
+Herbert O. Rocha: herberthb12@gmail.com
