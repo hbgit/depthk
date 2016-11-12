@@ -90,7 +90,7 @@ Use the 'depthk-wrapper.sh' script in the installation directory to verify each 
 
 Usage: 
 
-> $ ./wrapper_script_tests.sh <[-p|]> <file.c|file.i>
+> $ ./wrapper_script_tests.sh <[-p|]>  file.i
 
 <p align="justify">
 DepthK provides as verification result:
