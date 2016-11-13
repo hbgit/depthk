@@ -1,12 +1,14 @@
 /test export-ignore  
 /docs export-ignore
+/modules/logs.txt export-ignore
+/modules/utils_exp export-ignore
+/modules/not_used export-ignore
 /modules/CPAchecker/.svn export-ignore
-/modules/CPAchecker/.idea
-/modules/CPAchecker/.settings
-/modules/CPAchecker/.pydevproject
-/modules/CPAchecker/.project
-/modules/CPAchecker/.factorypath.template
-/modules/CPAchecker/.classpath
+/modules/CPAchecker/.idea export-ignore
+/modules/CPAchecker/.settings export-ignore
+/modules/CPAchecker/.pydevproject export-ignore
+/modules/CPAchecker/.project export-ignore
+/modules/CPAchecker/.factorypath.template export-ignore
 .gitattributes export-ignore  
 .gitignore export-ignore
 
