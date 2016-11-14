@@ -1029,6 +1029,7 @@ class DepthEsbmcCheck(object):
             if statusce_basecase > 0:
                 if not self.is_memory_safety:
                     # To witness checker
+                    #return "FALSE"
                     if not self.useUltimateAutomizer:
                         cpachecker_ops = self.configureCPACheckerPath()
                         result = self.execCPAChecker(_cprogrampath, cpachecker_ops)

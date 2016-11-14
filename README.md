@@ -22,7 +22,6 @@ To use this tool is necessary that the system contains the following software al
 > - Uncrustify (v0.60 or higher) - http://uncrustify.sourceforge.net/
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
 > - Ctags - http://ctags.sourceforge.net 
-> - PIPS - http://pips4u.org
 
 ==============
 
@@ -37,10 +36,6 @@ First of all, you need to install the required packages:
 > - <b>Uncrustify</b>: <br> Ubuntu $ sudo apt-get install uncrustify <br> Fedora $ sudo yum install uncrustify
 > - <b>Pycparser</b>: <br> Ubuntu $ sudo apt-get install python-pycparser <br> Fedora $ sudo yum install python-pycparser
 > - <b>Ctags</b>: <br> Ubuntu $ sudo apt-get install exuberant-ctags <br>Fedora $ sudo yum install ctags
-> - <b>PIPS</b>: <br>Available at http://pips4u.org/copy_of_getting-pips/building-and-installing-pips-from%20svn <br>
-You should set the environment variable PATH in your .bashrc file. <br> 
-Checkout Step 4: Load the PIPS environment variables from that link<br>
-
 
 - <b>STEP 1:</b>
 
