@@ -45,7 +45,7 @@ class DepthEsbmcCheck(object):
         self.esbmc_solver_op = "--z3"
         self.use_counter_example = False
         # k-induction options
-        self.esbmc_basecase_op = "--base-case"
+        self.esbmc_basecase_op = " --base-case"
         self.esbmc_forwardcond_op = "--forward-condition"
         self.esbmc_inductivestep_op = "--inductive-step --no-slice --show-counter-example"
 
@@ -70,6 +70,9 @@ class DepthEsbmcCheck(object):
         self.file2witness = ""
         self.cpachecker_path = commands.getoutput("readlink -f .") +  "/modules/CPAchecker/"
         self.listproperty = ""#os.path.abspath(".")+"/ALL.prp"
+
+        self.useUltimateAutomizer = False
+        self.ultimateautomizer_path = commands.getoutput("readlink -f .") +  "/modules/UAutomizer/"
 
     @staticmethod
     def getlastlinenumfromce(_esbmccepath, _indexliststartsearch):
@@ -858,15 +861,24 @@ class DepthEsbmcCheck(object):
                         if(z3Error > 0):
                             result = "UNKNOWN"
                         else:
-                            cpachecker_ops = self.configureCPACheckerPath()
-                            result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
-                            endresult = self.check_witnessresult(result)
-                            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-                                lastresult[1] = "TRUE"
-                            elif endresult == "TRUE":
-                                lastresult[1] = "TRUE"
+                            if not self.useUltimateAutomizer:
+                                cpachecker_ops = self.configureCPACheckerPath()
+                                result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                                endresult = self.check_witnessresult(result)
+                                if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                                    lastresult[1] = "TRUE"
+                                elif endresult == "TRUE":
+                                    lastresult[1] = "TRUE"
+                                else:
+                                    lastresult[1] = "UNKNOWN"
                             else:
-                                lastresult[1] = "UNKNOWN"
+                                result = self.execUltimateAutomizer(_cprogrampath)
+                                if "NOT SUPPORTED" in result or "UNSUPPORTED PROPERTY" in result:
+                                    lastresult[1] = "TRUE"
+                                elif "TRUE" in result:
+                                    lastresult[1] = "TRUE"
+                                else:
+                                    lastresult[1] = "UNKNOWN"
 
                             result = "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
 
@@ -946,7 +958,21 @@ class DepthEsbmcCheck(object):
                " -spec " + self.file2witness + " " \
                " -spec " + self.listproperty + " " \
 
+    def execUltimateAutomizer(self, _cprogrampath):
+        # show counterexample
+        cwd = os.getcwd()
+        # Apply witness checker
 
+        ultimateautomizercommand = "python3 Ultimate.py " + \
+                                   " " + self.listproperty + \
+                                   " 32bit precise " + \
+                                   " " + _cprogrampath + " " \
+                                   " " + self.file2witness + " "
+
+        os.chdir(self.ultimateautomizer_path)
+        result_witness = commands.getoutput(ultimateautomizercommand)
+        os.chdir(cwd)
+        return self.check_witnessresult_ultimate_automizer(result_witness)
 
     def execCPAChecker(self, _cprogrampath, cpachecker_ops):
         # show counterexample
@@ -1003,15 +1029,25 @@ class DepthEsbmcCheck(object):
             if statusce_basecase > 0:
                 if not self.is_memory_safety:
                     # To witness checker
-                    cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
-                    endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-                        return "FALSE"
-                    if endresult == "FALSE":
-                        return "FALSE"
+                    if not self.useUltimateAutomizer:
+                        cpachecker_ops = self.configureCPACheckerPath()
+                        result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                        endresult = self.check_witnessresult(result)
+                        if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                            return "FALSE"
+                        if endresult == "FALSE":
+                            return "FALSE"
+                        else:
+                            return "UNKNOWN"
                     else:
-                        return "UNKNOWN"
+                        result = self.execUltimateAutomizer(_cprogrampath)
+                        if "NOT SUPPORTED" in result:
+                            return "FALSE"
+                        if "FALSE" in result:
+                            return "FALSE"
+                        else:
+                            return  "UNKNOWN"
+
                 else:
                     #PROPERTY_FORGOTTEN_MEMORY_TAG
                     if int(commands.getoutput("cat " + actual_ce +
@@ -1092,15 +1128,20 @@ class DepthEsbmcCheck(object):
                     #os.system("cat " + actual_ce)
                     print(" ")
                     self.cleantmpfiles(listtmpfiles)
-
-                    cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
-                    endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-                        return "TRUE"
-                    if endresult == "TRUE":
-                        return "TRUE"
-
+                    if not self.useUltimateAutomizer:
+                        cpachecker_ops = self.configureCPACheckerPath()
+                        result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                        endresult = self.check_witnessresult(result)
+                        if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                            return "TRUE"
+                        if endresult == "TRUE":
+                            return "TRUE"
+                    else:
+                        result = self.execUltimateAutomizer(_cprogrampath)
+                        if "NOT SUPPORTED" in result:
+                            return "TRUE"
+                        if "TRUE" in result:
+                            return "TRUE"
                     return "UNKNOWN"
         return ""
 
@@ -1161,14 +1202,20 @@ class DepthEsbmcCheck(object):
                     #os.system("cat " + actual_ce)
                     print(" ")
                     self.cleantmpfiles(listtmpfiles)
-                    cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
-                    endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-                        return "TRUE"
-                    if endresult == "TRUE":
-                        return "TRUE"
-
+                    if not self.useUltimateAutomizer:
+                        cpachecker_ops = self.configureCPACheckerPath()
+                        result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                        endresult = self.check_witnessresult(result)
+                        if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                            return "TRUE"
+                        if endresult == "TRUE":
+                            return "TRUE"
+                    else:
+                        result = self.execUltimateAutomizer(_cprogrampath)
+                        if "NOT SUPPORTED" in result:
+                            return "TRUE"
+                        if "TRUE" in result:
+                            return "TRUE"
                     return "UNKNOWN"
             else:
                 # Some ERROR was identified in the verification of inductive-step
@@ -1196,4 +1243,9 @@ class DepthEsbmcCheck(object):
 
         if not flag_cpa:
             return "UNKNOWN"
+
+    def check_witnessresult_ultimate_automizer(self, _listresultwitness):
+        list_recheck = _listresultwitness.split("\n")
+        result = list_recheck[len(list_recheck) - 1]
+        return result
 
