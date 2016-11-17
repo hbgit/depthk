@@ -502,7 +502,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--force-check-base-case', action="store_true", dest='setForceBaseCase',
                         help='force a last check in the base case of the k-induction algorithm', default=True)
     parser.add_argument('-i', '--invariant-generation', metavar='name', type=str, dest='setInvariantTool',
-                        help='set the invariant generation {pips, pagai, all} to be adopted (default is pips)', default="pips")
+                        help='set the invariant generation {pips, pagai, all} to be adopted (default is pips)', default="pagai")
 
     # --16, --32, --64             set width of machine word
     parser.add_argument('-a', '--arch', metavar='nr', type=int, dest='setArchCheck',
@@ -686,13 +686,14 @@ if __name__ == "__main__":
                     if codewithinv:
                         if runtranspagai.identifyInv(runtranspagai.pathprogram):
                             # Program invariants were detected
-                            newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, False)
-                            newprogram = runtranspagai.removenotprintable(newprogram)
+                            newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, False)                            
+                            newprogram = runtranspagai.removenotprintable(newprogram)                            
                             newfileinv = open(codewithinv, "w")
                             for line in newprogram:
                                 newfileinv.write(line)
                                 #print(line, end="")
-                            newfileinv.close()
+                            newfileinv.close()                            
+                                                        
                             pathcodeinvtranslated = codewithinv
                             list_paths_to_delete.append(pathcodeinvtranslated)
                             inputCFile = runtranspagai.pathprogram
@@ -738,19 +739,19 @@ if __name__ == "__main__":
                         ERROR_FLAG = True
 
 
-                if (__invgeneration == "pagai" or __invgeneration == "all"):
-                        # Program invariants were detected
-                        runtranspagai.identifyInv(runtranspagai.pathprogram)
-                        newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, True)
-                        newprogram = runtranspagai.removenotprintable(newprogram)
-                        newfileinv = open(runtranspagai.pathprogram, "w")
-                        for line in newprogram:
-                            newfileinv.write(line)
-                            #print(line, end="")
-                        newfileinv.close()
-                        pathcodeinvtranslated = runtranspagai.pathprogram
-                        list_paths_to_delete.append(pathcodeinvtranslated)
-                        inputCFile = runtranspagai.pathprogram
+                #if (__invgeneration == "pagai" or __invgeneration == "all"):
+                        ## Program invariants were detected
+                        #runtranspagai.identifyInv(runtranspagai.pathprogram)
+                        #newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, True)
+                        #newprogram = runtranspagai.removenotprintable(newprogram)
+                        #newfileinv = open(runtranspagai.pathprogram, "w")
+                        #for line in newprogram:
+                            #newfileinv.write(line)
+                            ##print(line, end="")
+                        #newfileinv.close()
+                        #pathcodeinvtranslated = runtranspagai.pathprogram
+                        #list_paths_to_delete.append(pathcodeinvtranslated)
+                        #inputCFile = runtranspagai.pathprogram
 
                 #else:
                 #    ERROR_FLAG = True
