@@ -292,6 +292,8 @@ class DepthK(object):
         runesbmc.is_memory_safety = self.esbmc_is_memory_safety
         runesbmc.is_termination = self.esbmc_is_termination
         runesbmc.overflow_check = self.esbmc_overflow_check
+        runesbmc.original_file = self.cfilepath
+
 
         if _enableforceassume:
             runesbmc.forceassume = True
@@ -308,6 +310,7 @@ class DepthK(object):
             runesbmc.esbmc_solver_op = "--" + self.esbmcsolver.strip()
 
         print(runesbmc.kinductioncheck(_cfilepath))
+        #print(runesbmc.default_esbmc(_cfilepath))
 
 
     def generatepipsscript(self, _cfilepath):

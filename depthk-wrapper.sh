@@ -143,7 +143,7 @@ echo "$result_check" &> "${benchmark}"".log"
 # mv "${benchmark}"".log" "$LOGS_depthk"
 # Getting K adopted by ESBMC
 bound="-"
-bond_check1=`tac  "${benchmark}"".log" | grep -o "^\*\*\* K-Induction Loop Iteration.*" | grep -o "[0-9]*[^ ]*" -m 1`
+bond_check1=`tac  "${benchmark}"".log" |grep -o "^\*\*\* K-Induction Loop Iteration.*" | grep -o "[0-9]*[^ ]*" -m 1`
 if [ ! -z "$bond_check1" ]; then
    bound=$bond_check1
 else 
