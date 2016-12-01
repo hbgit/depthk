@@ -16,15 +16,16 @@ To use this tool is necessary that the system contains the following software al
 
 > - Linux OS
 > - Python (v2.7.1 or higher);
-> - sed;
-> - grep;
-> - GCC compiler; 
 > - Uncrustify (v0.60 or higher) - http://uncrustify.sourceforge.net/
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
 > - Ctags - http://ctags.sourceforge.net 
 > - Clang - http://clang.llvm.org
 > - LLVM - http://apt.llvm.org
 > - PIPS - http://pips4u.org
+> - sed
+> - grep
+> - timeout
+> - GCC compiler
 
 ==============
 
@@ -77,9 +78,6 @@ in the installation directory as follows:
 > TRUE <br>
 
 
-By default ESBMC is called, as follows: 
-> $ ./esbmc --64 --no-library --z3 --unwind \<nr\> --timeout 15m [--base-case|--forward-condition|--inductive-step] <file.c>
-
 For help and others options: 
 
 > $ ./depthk.py --help
@@ -94,7 +92,7 @@ Use the 'depthk-wrapper.sh' script in the installation directory to verify each 
 
 Usage: 
 
-> $ ./wrapper_script_tests.sh -c  propertyFile.prp file.i
+> $ ./depthk-wrapper.sh -c  full/path/propertyFile.prp full/path/file.i
 
 <p align="justify">
 DepthK provides as verification result:
