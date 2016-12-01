@@ -69,7 +69,7 @@ class DepthEsbmcCheck(object):
         self.enable_witnesschecker = True
         self.file2witness = ""
         self.cpachecker_path = commands.getoutput("readlink -f .") +  "/modules/CPAchecker/"
-        self.listproperty = ""#os.path.abspath(".")+"/ALL.prp"
+        self.listproperty = ""
         self.original_file = ""
 
     @staticmethod
@@ -766,8 +766,6 @@ class DepthEsbmcCheck(object):
         if(self.is_memory_safety or self.is_termination):
             return "UNKNOWN"
 
-        self.listproperty = os.path.dirname(_cprogrampath) +"/ALL.prp"
-
         listtmpfiles = []
         actual_detphver = 1
 
@@ -906,41 +904,6 @@ class DepthEsbmcCheck(object):
         self.cleantmpfiles(listtmpfiles)
 
         return result
-
-    def default_esbmc(self, _cprogrampath):
-        self.listproperty = os.path.dirname(_cprogrampath) +"/ALL.prp"
-        folder_path = commands.getoutput("readlink -f .")
-
-        self.file2witness = folder_path + "/graphml/" + os.path.basename(_cprogrampath) +  ".graphml"
-
-
-        #removido o comando --floatbv --incremental-bmc --unlimited-k-steps para os testes com outros parametros para o bitvector
-        commands.getoutput(self.esbmcpath + " --timeout 895s --boolector --memlimit 15g --no-div-by-zero-check --force-malloc-success --context-bound 7  --witness-output " + self.file2witness + " --unroll-loops --unwind 128 --clang-frontend " + \
-                            _cprogrampath + " >  " + folder_path + "/result.txt")
-
-        result_true = commands.getoutput("grep 'VERIFICATION SUCCESSFUL' " +  folder_path + "/result.txt")
-        result_false = commands.getoutput("grep 'VERIFICATION FAILED' " +  folder_path + "/result.txt")
-
-        if result_false == "VERIFICATION FAILED":
-            cpachecker_ops = self.configureCPACheckerPath()
-            result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
-            endresult = self.check_witnessresult(result)
-            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-               return "FALSE"
-            if endresult == "FALSE":
-                return "FALSE"
-            else:
-                return "UNKNOWN"
-        if result_true == "VERIFICATION SUCCESSFUL":
-            cpachecker_ops = self.configureCPACheckerPath()
-            result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
-            endresult = self.check_witnessresult(result)
-            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-                return "TRUE"
-            if endresult == "TRUE":
-                return "TRUE"
-
-        return  "UNKNOWN"
 
     @staticmethod
     def getnumbeginfuncts(_cfilepath):

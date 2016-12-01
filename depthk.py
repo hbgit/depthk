@@ -69,6 +69,7 @@ class DepthK(object):
         self.esbmc_is_memory_safety = False
         self.esbmc_is_termination = False
         self.esbmc_overflow_check = ""
+        self.listproperty = ""
 
     def identify_initpips(self, _cfilepath):
         """
@@ -293,6 +294,7 @@ class DepthK(object):
         runesbmc.is_termination = self.esbmc_is_termination
         runesbmc.overflow_check = self.esbmc_overflow_check
         runesbmc.original_file = self.cfilepath
+        runesbmc.listproperty = self.listproperty
 
 
         if _enableforceassume:
@@ -536,7 +538,7 @@ if __name__ == "__main__":
 
     parser.add_argument('-y', '--termination-category', action="store_true", dest='setTerminationCategory', help='Is termination category', default=False)
 
-
+    parser.add_argument('-z', '--prp', metavar='name', type=str, dest='setProperty', help='path to property file (ALL.prp)', default="")
 
     args = parser.parse_args()
 
@@ -583,6 +585,8 @@ if __name__ == "__main__":
             if args.setTerminationCategory:
                 rundepthk.esbmc_is_termination = args.setTerminationCategory
 
+            if args.setProperty:
+                rundepthk.listproperty = args.setProperty
 
             if args.setESBMCSolver:
                 # Checking if this solver is supported by ESBMC
@@ -651,9 +655,6 @@ if __name__ == "__main__":
                 # HackGNUext: Generate a copy the analyzed program to a tmp file
                 # now with the extension replaced from .i to .c
                 inputCFile = rundepthk.applygnuhack(inputCFile)
-                #print(inputCFile)
-                #os.system("cat " + inputCFile)
-                #sys.exit()
 
             #if args.setOnlyCEUse or args.setInvariantTool == "all":
             rundepthk.use_counter_example = True
@@ -740,24 +741,6 @@ if __name__ == "__main__":
                         print("ERROR. Program invariants with PIPS")
                         rundepthk.cleantmpfiles(list_paths_to_delete)
                         ERROR_FLAG = True
-
-
-                #if (__invgeneration == "pagai" or __invgeneration == "all"):
-                        ## Program invariants were detected
-                        #runtranspagai.identifyInv(runtranspagai.pathprogram)
-                        #newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, True)
-                        #newprogram = runtranspagai.removenotprintable(newprogram)
-                        #newfileinv = open(runtranspagai.pathprogram, "w")
-                        #for line in newprogram:
-                            #newfileinv.write(line)
-                            ##print(line, end="")
-                        #newfileinv.close()
-                        #pathcodeinvtranslated = runtranspagai.pathprogram
-                        #list_paths_to_delete.append(pathcodeinvtranslated)
-                        #inputCFile = runtranspagai.pathprogram
-
-                #else:
-                #    ERROR_FLAG = True
 
                 includespath = os.path.dirname(pathcodeinvtranslated)
 

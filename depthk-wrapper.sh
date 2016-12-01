@@ -82,19 +82,19 @@ fi
 depthk_options=""
 if test ${parallel} = 1; then
   if test ${do_memsafety} = 0; then
-    depthk_options="--debug --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --extra-option-esbmc=\"--no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""    
+    depthk_options="--force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" "--extra-option-esbmc=\"--no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""    
   else
-    depthk_options="--debug --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --memory-leak-check --extra-option-esbmc=\"--floatbv --error-label ERROR\""    
+    depthk_options="--force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" " --memory-leak-check --extra-option-esbmc=\"--floatbv --error-label ERROR\""    
   fi
 else
     if test ${do_term} = 1; then
-	    depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --termination-category --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --termination-category --prp " "$property_list" " --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
 	elif test ${do_overflow} = 1; then
-	    depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --overflow-check --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp " "$property_list"  "--extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
     elif test ${do_memsafety} = 0; then
-        depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list"  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
     else
-        depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp " "$property_list" " --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
     fi
 fi
 
@@ -113,6 +113,7 @@ fi
 run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
 #echo "$run_cmdline"
 #exit
+# Invoke our command, wrapped in a timeout so that we can
 # postprocess the results. `timeout` is part of coreutils on debian and fedora.
 result_check=$(timeout 895 bash -c "$run_cmdline")
 
@@ -120,8 +121,8 @@ VPROP=""
 
 if test ${IS_MEMSAFETY_BENCHMARK} = 1; then
    
-   false_valid_mamtrack=$(echo "${result_check}" | grep -c "${BENCHMARK_FALSE_VALID_MEMTRACK}")
-   false_valid_deref=$(echo "${result_check}" | grep -c "${BENCHMARK_FALSE_VALID_DEREF}")
+   false_valid_mamtrack=$(echo "${result_check}" |grep -c "${BENCHMARK_FALSE_VALID_MEMTRACK}")
+   false_valid_deref=$(echo "${result_check}" |grep -c "${BENCHMARK_FALSE_VALID_DEREF}")
 
    if [ "$false_valid_mamtrack" -gt 0 ]; then
       VPROP=$"(valid-memtrack)"
@@ -132,8 +133,8 @@ elif test ${do_overflow} = 1; then
     VPROP=$"(no-overflow)"
 fi
 
-failed=$(echo "${result_check}" | grep -c "FALSE")
-success=$(echo "${result_check}" | grep -c "TRUE")
+failed=$(echo "${result_check}" |grep -c "FALSE")
+success=$(echo "${result_check}" |grep -c "TRUE")
 
 # Decide which result we determined here.
 if [ "$failed" -gt 0 ]; then
