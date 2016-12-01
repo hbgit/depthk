@@ -1,0 +1,27 @@
+digraph ARG {
+node [style="filled" shape="box" color="white"]
+subgraph cluster_78 {
+label="reachedset_78"
+78 [fillcolor="cornflowerblue" label="78 @ N10\nid2 entry\nValueAnalysisState: []\n AbstractionState: ABS20: true\n AutomatonState: WitnessAutomaton: n7\n" id="78"]
+79 [label="79 @ N11\nid2\nValueAnalysisState: []\n AutomatonState: WitnessAutomaton: n7\n" id="79"]
+82 [label="82 @ N13\nid2\nValueAnalysisState: []\n AutomatonState: WitnessAutomaton: n8\n" id="82"]
+143 [fillcolor="orange" label="143 @ N9\nid2 exit\nValueAnalysisState: []\n AbstractionState: ABS48: true\n AutomatonState: WitnessAutomaton: n8\n" id="143"]
+81 [label="81 @ N12\nid2\nValueAnalysisState: []\n AutomatonState: WitnessAutomaton: n8\n" id="81"]
+84 [fillcolor="cornflowerblue" label="84 @ N15\nid2\nValueAnalysisState: []\n AbstractionState: ABS21: true\n AutomatonState: WitnessAutomaton: n8\n" id="84"]
+86 [fillcolor="orange" label="86 @ N1\nid entry\nValueAnalysisState: []\n AbstractionState: ABS22: true\n AutomatonState: WitnessAutomaton: n8\n" id="86"]
+137 [fillcolor="cornflowerblue" label="137 @ N0\nid exit\nValueAnalysisState: []\n AbstractionState: ABS45: true\n AutomatonState: WitnessAutomaton: n9\n" id="137"]
+139 [fillcolor="cornflowerblue" label="139 @ N16\nid2\nValueAnalysisState: []\n AbstractionState: ABS46: true\n AutomatonState: WitnessAutomaton: n9\n" id="139"]
+141 [fillcolor="orange" label="141 @ N9\nid2 exit\nValueAnalysisState: []\n AbstractionState: ABS47: true\n AutomatonState: WitnessAutomaton: n9\n" id="141"]
+78 -> 79 [label="Line 0: \lFunction start dummy edge\l" id="78 -> 79"]
+79 -> 81 [label="Line 13: \l[!(x == 0)]\l" id="79 -> 81"]
+79 -> 82 [label="Line 13: \l[x == 0]\l" id="79 -> 82"]
+82 -> 143 [label="Line 13: \lreturn 0;\l" id="82 -> 143"]
+81 -> 84 [label="Line 14: \lint __CPAchecker_TMP_0;\l" id="81 -> 84"]
+84 -> 86 [label="Line 14: \lid(x - 1)\l" id="84 -> 86"]
+86 -> 137 [style="bold" color="blue" label="dummy edge" id="86 -> 137"]
+137 -> 139 [label="Line 14: \lReturn edge from id to id2: __CPAchecker_TMP_0 = id(x - 1);\l" id="137 -> 139"]
+139 -> 141 [label="Line 14: \lreturn __CPAchecker_TMP_0 + 1;\l" id="139 -> 141"]
+}
+86 -> 87 [color=green style=bold]
+132 -> 137 [color=green style=bold]
+}

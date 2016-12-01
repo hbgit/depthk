@@ -1,0 +1,27 @@
+digraph ARG {
+node [style="filled" shape="box" color="white"]
+subgraph cluster_27 {
+label="reachedset_27"
+27 [fillcolor="cornflowerblue" label="27 @ N1\nid entry\nValueAnalysisState: []\n AbstractionState: ABS5: true\n AutomatonState: WitnessAutomaton: n2\n" id="27"]
+28 [label="28 @ N2\nid\nValueAnalysisState: []\n AutomatonState: WitnessAutomaton: n2\n" id="28"]
+31 [label="31 @ N4\nid\nValueAnalysisState: []\n AutomatonState: WitnessAutomaton: n3\n" id="31"]
+92 [fillcolor="orange" label="92 @ N0\nid exit\nValueAnalysisState: []\n AbstractionState: ABS33: true\n AutomatonState: WitnessAutomaton: n4\n" id="92"]
+30 [label="30 @ N3\nid\nValueAnalysisState: []\n AutomatonState: WitnessAutomaton: n3\n" id="30"]
+33 [fillcolor="cornflowerblue" label="33 @ N6\nid\nValueAnalysisState: []\n AbstractionState: ABS6: true\n AutomatonState: WitnessAutomaton: n3\n" id="33"]
+35 [fillcolor="orange" label="35 @ N1\nid entry\nValueAnalysisState: []\n AbstractionState: ABS7: true\n AutomatonState: WitnessAutomaton: n3\n" id="35"]
+86 [fillcolor="cornflowerblue" label="86 @ N0\nid exit\nValueAnalysisState: []\n AbstractionState: ABS30: true\n AutomatonState: WitnessAutomaton: n5\n" id="86"]
+88 [fillcolor="cornflowerblue" label="88 @ N7\nid\nValueAnalysisState: []\n AbstractionState: ABS31: true\n AutomatonState: WitnessAutomaton: n5\n" id="88"]
+90 [fillcolor="orange" label="90 @ N0\nid exit\nValueAnalysisState: []\n AbstractionState: ABS32: true\n AutomatonState: WitnessAutomaton: n5\n" id="90"]
+27 -> 28 [label="Line 0: \lFunction start dummy edge\l" id="27 -> 28"]
+28 -> 30 [label="Line 5: \l[!(x == 0)]\l" id="28 -> 30"]
+28 -> 31 [label="Line 5: \l[x == 0]\l" id="28 -> 31"]
+31 -> 92 [label="Line 5: \lreturn 0;\l" id="31 -> 92"]
+30 -> 33 [label="Line 6: \lint __CPAchecker_TMP_0;\l" id="30 -> 33"]
+33 -> 35 [label="Line 6: \lid(x - 1)\l" id="33 -> 35"]
+35 -> 86 [style="bold" color="blue" label="dummy edge" id="35 -> 86"]
+86 -> 88 [label="Line 6: \lReturn edge from id to id: __CPAchecker_TMP_0 = id(x - 1);\l" id="86 -> 88"]
+88 -> 90 [label="Line 6: \lreturn __CPAchecker_TMP_0 + 1;\l" id="88 -> 90"]
+}
+35 -> 36 [color=green style=bold]
+81 -> 86 [color=green style=bold]
+}

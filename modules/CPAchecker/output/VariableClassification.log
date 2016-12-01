@@ -1,0 +1,15 @@
+IntBool
+
+[main::k, main::__retval__]
+
+IntEq
+
+[]
+
+IntAdd
+
+[main::j, main::SIZE]
+
+ALL
+
+[main::k, main::array, main::j, main::SIZE, main::menor, main::__retval__, __VERIFIER_assert::cond]
