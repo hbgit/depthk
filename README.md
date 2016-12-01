@@ -64,24 +64,16 @@ or from https://github.com
 
 <p align="justify">
 Testing tool. DepthK can be invoked through a standard command-line interface. DepthK should be called 
-in the installation directory as follows:  
-</p>
-
-> $ ./depthk.py samples/conceptproof/invgen/confuse/confuse.c -g <br> 
-> \>\> Running PIPS to generate the invariants <br>
-> \>\> Translating the PIPS annotation with the invariants <br>
-> \>\> Starting the verification of the P' program <br>
-> 	 \-\> Actual k = 1 <br>
-> 		 Status: checking base case <br>
-> 		 Status: checking forward condition <br>
-> 		 Status: checking inductive step <br>
-> TRUE <br>
-
-
-For help and others options: 
+in the installation directory. For help and others options: 
 
 > $ ./depthk.py --help
 
+</p>
+
+Use the 'depthk-wrapper.sh' script in the installation directory to verify each single test-case:
+
+> $ ./depthk-wrapper.sh -c  /home/user/depthk/samples/ALL.prp /home/user/depthk/samples/example1_true-unreach-call.c
+> TRUE
 
 
 ===========================
