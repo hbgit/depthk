@@ -72,8 +72,8 @@ in the installation directory. For help and others options:
 
 Use the 'depthk-wrapper.sh' script in the installation directory to verify each single test-case:
 
-> $ ./depthk-wrapper.sh -c  /home/user/depthk/samples/ALL.prp /home/user/depthk/samples/example1_true-unreach-call.c
-> TRUE
+> $ ./depthk-wrapper.sh -c  /home/user/depthk/samples/ALL.prp /home/user/depthk/samples/example1_true-unreach-call.c <br>
+> TRUE <br>
 
 
 ===========================
