@@ -1,5 +1,14 @@
 #!/bin/bash
 
+DEBUG_SCRIPT=0
+if [ $DEBUG_SCRIPT -eq 1 ]; then
+  ps axfl
+  cat /etc/lsb-release
+  uname -a
+  pwd
+fi
+
+
 # ------------- DepthK wrapper script to tests
 # Usage: ./wrapper_script_tests.sh <[-p|]> <file.c|file.i>
 
