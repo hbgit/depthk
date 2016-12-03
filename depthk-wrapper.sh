@@ -26,6 +26,7 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	
 	echo "Timeout command: Testing"
 	result_to=$(timeout 1 sleep 3s)
+	echo "$result_to"
 	
 fi
 
@@ -101,11 +102,13 @@ if [ -z "$property_list" ]; then
    directory=$(dirname "$benchmark")
    possible_file="$directory/ALL.prp"
    if [ -e "$possible_file" ]; then
-      if grep -q -E "LTL[(]G (valid-free|valid-deref|valid-memtrack)" "$possible_file"; then
+      prp_mem_z_result=$( grep -c "LTL(G[ ]*(valid-free|valid-deref|valid-memtrack)" "$possible_file")
+	  if [ "$prp_mem_z_result" -ge 1 ]; then      
         do_memsafety=1
  	    IS_MEMSAFETY_BENCHMARK=1
       fi
-      if grep -q -E "LTL[(]F end" "$possible_file"; then
+      prp_term_z_result=$( grep -c "LTL(F[ ]*" "$possible_file")
+	  if [ "$prp_term_z_result" -ge 1 ]; then      
           do_term=1
       fi
    fi
@@ -125,7 +128,7 @@ else
 	elif test ${do_overflow} = 1; then
 	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp " "$property_list"  "--extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
     elif test ${do_memsafety} = 0; then
-        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list"  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp $property_list  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
     else
         depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp " "$property_list" " --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
     fi
