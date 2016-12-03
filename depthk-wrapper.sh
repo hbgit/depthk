@@ -9,7 +9,7 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	
 	echo "GREP command: Testing 1 "
 	value=$( grep -c "depthk" depthk.py )
-	if [ $value -ge 1 ]
+	if [ "$value" -ge 1 ]
 	then
 	  echo "Grep works"
 	else
@@ -17,7 +17,7 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	fi
 	echo "GREP command: Testing 2 "
 	value=$( grep -c "LTL(G.*" samples/ALL.prp )
-	if [ $value -ge 1 ]
+	if [ "$value" -ge 1 ]
 	then
 	  echo "Grep works"
 	else
@@ -76,18 +76,18 @@ Options:
             #if ! grep -q __VERIFIER_error $OPTARG; then
             property_list=$OPTARG
             prp_overflow_result=$( grep -c "LTL(G[ ]*\![ ]*overflow" "$OPTARG")            
-			if [ $prp_overflow_result -ge 1 ]; then
+			if [ "$prp_overflow_result" -ge 1 ]; then
 				do_overflow=1
 			fi
 
 			prp_mem_result=$( grep -c "LTL(G[ ]*(valid-free|valid-deref|valid-memtrack)" "$OPTARG")
-			if [ $prp_mem_result -ge 1 ]; then
+			if [ "$prp_mem_result" -ge 1 ]; then
 					do_memsafety=1
 					IS_MEMSAFETY_BENCHMARK=1
 			fi
 			
 			prp_term_result=$( grep -c "LTL(F[ ]*" "$OPTARG")
-			if [ $prp_term_result -ge 1 ]; then
+			if [ "$prp_term_result" -ge 1 ]; then
 					do_term=1
 			fi
         ;;
