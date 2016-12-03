@@ -2,10 +2,31 @@
 
 DEBUG_SCRIPT=0
 if [ $DEBUG_SCRIPT -eq 1 ]; then
-  ps axfl
-  cat /etc/lsb-release
-  uname -a
-  pwd
+	ps axfl
+	cat /etc/lsb-release
+	uname -a
+	pwd
+	
+	echo "GREP command: Testing 1 "
+	value=$( grep -c "depthk" depthk.py )
+	if [ $value -ge 1 ]
+	then
+	  echo "Grep works"
+	else
+	  echo "NOT works"
+	fi
+	echo "GREP command: Testing 2 "
+	value=$( grep -c "LTL(G.*" samples/ALL.prp )
+	if [ $value -ge 1 ]
+	then
+	  echo "Grep works"
+	else
+	  echo "NOT works"
+	fi
+	
+	echo "Timeout command: Testing"
+	result_to=$(timeout 1 sleep 3s)
+	
 fi
 
 
@@ -54,18 +75,21 @@ Options:
             # error labels from other directories to be ERROR.
             #if ! grep -q __VERIFIER_error $OPTARG; then
             property_list=$OPTARG
-	    if grep -q -E "LTL[(]G \! overflow" "$OPTARG"; then
-		    do_overflow=1
-        fi
+            prp_overflow_result=$( grep -c "LTL(G[ ]*\![ ]*overflow" "$OPTARG")            
+			if [ $prp_overflow_result -ge 1 ]; then
+				do_overflow=1
+			fi
 
-	    if grep -q -E "LTL[(]G (valid-free|valid-deref|valid-memtrack)" "$OPTARG"; then
-                do_memsafety=1
-                IS_MEMSAFETY_BENCHMARK=1
-        fi
-	    
-	    if grep -q -E "LTL[(]F end" "$OPTARG"; then
-            	do_term=1
-        fi
+			prp_mem_result=$( grep -c "LTL(G[ ]*(valid-free|valid-deref|valid-memtrack)" "$OPTARG")
+			if [ $prp_mem_result -ge 1 ]; then
+					do_memsafety=1
+					IS_MEMSAFETY_BENCHMARK=1
+			fi
+			
+			prp_term_result=$( grep -c "LTL(F[ ]*" "$OPTARG")
+			if [ $prp_term_result -ge 1 ]; then
+					do_term=1
+			fi
         ;;
 	p) parallel=1
         ;;
