@@ -1,16 +1,16 @@
 #!/bin/bash
 
-DEBUG_SCRIPT=0
+DEBUG_SCRIPT=1
 if [ $DEBUG_SCRIPT -eq 1 ]; then
+	echo "DepthK version"
+	./depthk.py --version
+	echo ""
+	
 	ps axfl
 	cat /etc/lsb-release
 	uname -a
 	pwd
-	
-	depthk_ver="./depthk.py --version"
-	echo "DepthK version $depthk_ver"
-	
-	
+		
 	echo "GREP command: Testing 1 "
 	value=$( grep -c "depthk" depthk.py )
 	if [ "$value" -ge 1 ]
