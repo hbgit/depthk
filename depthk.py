@@ -493,7 +493,7 @@ if __name__ == "__main__":
     # ############ Parse args options
 
     parser = argparse.ArgumentParser(description='Run DepthK v3.0')
-    parser.add_argument('-v', '--version', action='version', version="version 3.0")
+    parser.add_argument('-v', '--version', action='version', version="version 3.0 - Mon Dec  5 17:18:48 AMT 2016")
     parser.add_argument(dest='inputCProgram', metavar='file.c or file.i (experimental)', type=str,
                         help='the C program file to be analyzed')
     parser.add_argument('-k', '--max-k-step', metavar='nr', type=int, dest='setMaxK',

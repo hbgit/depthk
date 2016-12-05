@@ -7,6 +7,10 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	uname -a
 	pwd
 	
+	depthk_ver="./depthk.py --version"
+	echo "DepthK version $depthk_ver"
+	
+	
 	echo "GREP command: Testing 1 "
 	value=$( grep -c "depthk" depthk.py )
 	if [ "$value" -ge 1 ]

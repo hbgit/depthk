@@ -20,7 +20,6 @@ To use this tool is necessary that the system contains the following software al
 > - Pycparser (v2.10) - https://github.com/eliben/pycparser
 > - Ctags - http://ctags.sourceforge.net 
 > - Clang (v3.5) - http://clang.llvm.org
-> - LLVM - http://apt.llvm.org
 > - PIPS - http://pips4u.org
 > - sed
 > - grep
@@ -42,8 +41,7 @@ First of all, you need to install the required packages:
 > - <b>Pycparser</b>: <br> Ubuntu $ sudo apt-get install python-pycparser <br> Fedora $ sudo yum install python-pycparser
 > - <b>Ctags</b>: <br> Ubuntu $ sudo apt-get install exuberant-ctags <br> Fedora $ sudo yum install ctags
 > - <b>Clang</b>: <br> Ubuntu $ sudo apt-get install clang-3.5 <br> Fedora $ sudo yum install clang-3.5
-> - <b>llvm</b>: <br> Ubuntu $ sudo apt-get install llvm <br> Fedora $ sudo yum install llvm
-> - <b>GCC</b>: <br> Ubuntu $ sudo apt-get install build-essential <br> Fedora $ sudo yum groupinstall "Development Tools"
+> - <b>GCC</b>: <br> Ubuntu $ sudo apt-get install gcc <br> Fedora $ sudo yum groupinstall "Development Tools"
 > - <b>Java</b>: <br> Ubuntu $ apt-get install default-jdk <br> Fedora $ sudo yum install java
 > - <b>PIPS (optional)</b>: <br>Available at http://pips4u.org/copy_of_getting-pips/building-and-installing-pips-from%20svn <br>
 You should set the environment variable PATH in your .bashrc file. <br> 
