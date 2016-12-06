@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export PATH="$PATH:`pwd`"
 DEBUG_SCRIPT=1
 if [ $DEBUG_SCRIPT -eq 1 ]; then
 	echo "DepthK version"
