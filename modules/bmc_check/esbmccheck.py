@@ -938,6 +938,8 @@ class DepthEsbmcCheck(object):
         os.chdir(self.cpachecker_path)
         cpacommand = "timeout 60 " + cpachecker_ops  + _cprogrampath
         result_witness = commands.getoutput(cpacommand)
+        if self.debug:
+            print(result_witness)
         os.chdir(cwd)
 
         return result_witness.upper()
