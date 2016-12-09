@@ -20,10 +20,6 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	  echo "NOT works"
 	fi
 	
-	echo "Timeout command: Testing"
-	result_to=$(timeout 1 sleep 3s)
-	echo "$result_to"
-	
 fi
 
 
@@ -56,14 +52,16 @@ parallel=0
 
 
 
-while getopts "c:mhp" arg; do
+while getopts "c:mhpt" arg; do
     case $arg in
         h)
             echo "Usage: $0 [options] path_to_benchmark
 Options:
 -h             Print this message
 -c propfile    Specifythe given property file
--p             Using k-induction with parallel algorithm"
+-p             Using k-induction with parallel algorithm
+-t             Testing a sample"
+exit
             ;;
         c)
             # Given the lack of variation in the property file... we don't
@@ -89,6 +87,14 @@ Options:
 			fi
         ;;
 	p) parallel=1
+        ;;
+	t) getpwd=$( pwd )		
+		echo ""
+		prpfile="$getpwd/samples/ALL.prp"
+		opt_test="--debug --force-check-base-case --solver z3 --memlimit 15g --prp ""$prpfile"" --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
+		run_test="${path_to_depthk} $opt_test $getpwd/samples/example1_true-unreach-call.c"
+		"$run_test"
+		exit
         ;;
     esac
 done
