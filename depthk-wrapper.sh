@@ -19,14 +19,6 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	else
 	  echo "NOT works"
 	fi
-	echo "GREP command: Testing 2 "
-	value=$( grep -c "LTL(G.*" samples/ALL.prp )
-	if [ "$value" -ge 1 ]
-	then
-	  echo "Grep works"
-	else
-	  echo "NOT works"
-	fi
 	
 	echo "Timeout command: Testing"
 	result_to=$(timeout 1 sleep 3s)
@@ -122,19 +114,19 @@ fi
 depthk_options=""
 if test ${parallel} = 1; then
   if test ${do_memsafety} = 0; then
-    depthk_options="--force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" "--extra-option-esbmc=\"--no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""    
+    depthk_options="--debug --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" "--extra-option-esbmc=\"--no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""    
   else
-    depthk_options="--force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" " --memory-leak-check --extra-option-esbmc=\"--floatbv --error-label ERROR\""    
+    depthk_options="--debug --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" " --memory-leak-check --extra-option-esbmc=\"--floatbv --error-label ERROR\""    
   fi
 else
     if test ${do_term} = 1; then
-	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --termination-category --prp " "$property_list" " --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+	    depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --termination-category --prp " "$property_list" " --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
 	elif test ${do_overflow} = 1; then
-	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp " "$property_list"  "--extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+	    depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp " "$property_list"  "--extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
     elif test ${do_memsafety} = 0; then
-        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp $property_list  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+        depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --prp $property_list  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
     else
-        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp " "$property_list" " --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
+        depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --prp " "$property_list" " --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
     fi
 fi
 
@@ -156,6 +148,10 @@ run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
 # Invoke our command, wrapped in a timeout so that we can
 # postprocess the results. `timeout` is part of coreutils on debian and fedora.
 result_check=$(timeout 895 bash -c "$run_cmdline")
+
+if [ $DEBUG_SCRIPT -eq 1 ]; then
+	echo "${result_check}"
+fi
 
 VPROP=""
 
