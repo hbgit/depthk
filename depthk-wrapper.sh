@@ -91,7 +91,7 @@ exit
 	t) getpwd=$( pwd )		
 		echo ""
 		prpfile="$getpwd/samples/ALL.prp"
-		opt_test="--debug --force-check-base-case --solver z3 --memlimit 15g --prp ""$prpfile"" --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
+		opt_test="--debug --force-check-base-case --solver z3 --memlimit 15g --prp $prpfile  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
 		run_test="${path_to_depthk} $opt_test $getpwd/samples/example1_true-unreach-call.c"
 		result_check=$(timeout 895 bash -c "$run_test")
 		echo "$result_check"
