@@ -586,7 +586,9 @@ if __name__ == "__main__":
                 rundepthk.esbmc_is_termination = args.setTerminationCategory
 
             if args.setProperty:
-                rundepthk.listproperty = args.setProperty
+                fileDir = os.path.dirname(os.path.realpath('__file__'))
+                rundepthk.listproperty = os.path.join(fileDir, args.setProperty)
+                rundepthk.listproperty = os.path.abspath(os.path.relpath(rundepthk.listproperty))
 
             if args.setESBMCSolver:
                 # Checking if this solver is supported by ESBMC
