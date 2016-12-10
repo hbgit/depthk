@@ -590,6 +590,7 @@ if __name__ == "__main__":
                 if rundepthk.debug_op:
                     print("depthk.py path: " + fileDir)
                     print("PRP Relative Path: " + args.setProperty)
+                    print("File to verification: " + inputCFile)
                 rundepthk.listproperty = os.path.join(fileDir, args.setProperty)
                 rundepthk.listproperty = os.path.abspath(os.path.relpath(rundepthk.listproperty))
                 if rundepthk.debug_op:
