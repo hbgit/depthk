@@ -587,8 +587,13 @@ if __name__ == "__main__":
 
             if args.setProperty:
                 fileDir = os.path.dirname(os.path.realpath('__file__'))
+                if rundepthk.debug_op:
+                    print("depthk.py path: " + fileDir)
+                    print("PRP Relative Path: " + args.setProperty)
                 rundepthk.listproperty = os.path.join(fileDir, args.setProperty)
                 rundepthk.listproperty = os.path.abspath(os.path.relpath(rundepthk.listproperty))
+                if rundepthk.debug_op:
+                    print("PRP Absolute Path: " + rundepthk.listproperty)
 
             if args.setESBMCSolver:
                 # Checking if this solver is supported by ESBMC
