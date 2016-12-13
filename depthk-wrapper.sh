@@ -121,19 +121,19 @@ fi
 depthk_options=""
 if test ${parallel} = 1; then
   if test ${do_memsafety} = 0; then
-    depthk_options="--debug --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" "--extra-option-esbmc=\"--no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""    
+    depthk_options=" --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" "--extra-option-esbmc=\"--no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""    
   else
-    depthk_options="--debug --force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" " --memory-leak-check --extra-option-esbmc=\"--floatbv --error-label ERROR\""    
+    depthk_options="--force-check-base-case --k-induction-parallel --solver z3 --memlimit 15g --prp " "$property_list" " --memory-leak-check --extra-option-esbmc=\"--floatbv --error-label ERROR\""    
   fi
 else
     if test ${do_term} = 1; then
-	    depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --termination-category --prp " "$property_list" " --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --termination-category --prp " "$property_list" " --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
 	elif test ${do_overflow} = 1; then
-	    depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp " "$property_list"  "--extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+	    depthk_options=" --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp " "$property_list"  "--extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
     elif test ${do_memsafety} = 0; then
-        depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --prp $property_list  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp $property_list  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
     else
-        depthk_options="--debug --force-check-base-case --solver z3 --memlimit 15g --prp " "$property_list" " --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp " "$property_list" " --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
     fi
 fi
 

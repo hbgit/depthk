@@ -837,7 +837,7 @@ class DepthEsbmcCheck(object):
 
 
                 # checking we are in the force last check
-                statusce_basecase = self.execBaseCase(_cprogrampath, actual_ce, lastresult)
+                statusce_basecase = self.execBaseCase(self.original_file, actual_ce, lastresult)
 
                 if(statusce_basecase == "UNKNOWN" or statusce_basecase <> "no bug has been found"):
                     result = statusce_basecase
@@ -877,7 +877,7 @@ class DepthEsbmcCheck(object):
                                                                      "\"No bug has been found in the base case\" "))
                     if statusce_basecase_nobug > 0:
 
-                        status_forwardcond = self.execForwardCondition(_cprogrampath, actual_ce, lastresult, listtmpfiles)
+                        status_forwardcond = self.execForwardCondition(self.original_file, actual_ce, lastresult, listtmpfiles)
 
                         if(status_forwardcond == "TRUE" or status_forwardcond == "UNKNOWN"):
                             result = status_forwardcond
@@ -982,15 +982,16 @@ class DepthEsbmcCheck(object):
             if statusce_basecase > 0:
                 if not self.is_memory_safety:
                     # To witness checker
-                    cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(self.original_file, cpachecker_ops)
-                    endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-                        return "FALSE"
-                    if endresult == "FALSE":
-                        return "FALSE"
-                    else:
-                        return "UNKNOWN"
+                    #cpachecker_ops = self.configureCPACheckerPath()
+                    #result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                    #endresult = self.check_witnessresult(result)
+                    #if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                    #    return "FALSE"
+                    #if endresult == "FALSE":
+                    #    return "FALSE"
+                    #else:
+                    #    return "UNKNOWN"
+                    return "FALSE"
                 else:
                     #PROPERTY_FORGOTTEN_MEMORY_TAG
                     if int(commands.getoutput("cat " + actual_ce +
@@ -1073,7 +1074,7 @@ class DepthEsbmcCheck(object):
                     self.cleantmpfiles(listtmpfiles)
 
                     cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(self.original_file, cpachecker_ops)
+                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
                     if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                         return "TRUE"

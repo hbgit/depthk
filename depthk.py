@@ -312,7 +312,6 @@ class DepthK(object):
             runesbmc.esbmc_solver_op = "--" + self.esbmcsolver.strip()
 
         print(runesbmc.kinductioncheck(_cfilepath))
-        #print(runesbmc.default_esbmc(_cfilepath))
 
 
     def generatepipsscript(self, _cfilepath):
