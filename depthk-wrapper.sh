@@ -1,6 +1,6 @@
 #!/bin/bash
 export PATH="$PATH:`pwd`"
-DEBUG_SCRIPT=1
+DEBUG_SCRIPT=0
 if [ $DEBUG_SCRIPT -eq 1 ]; then
 	echo "DepthK version"
 	./depthk.py --version
