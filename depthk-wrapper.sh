@@ -1,6 +1,6 @@
 #!/bin/bash
 export PATH="$PATH:`pwd`"
-DEBUG_SCRIPT=0
+DEBUG_SCRIPT=1
 if [ $DEBUG_SCRIPT -eq 1 ]; then
 	echo "DepthK version"
 	./depthk.py --version
@@ -52,7 +52,7 @@ parallel=0
 
 
 
-while getopts "c:mhpt" arg; do
+while getopts "c:mhptv" arg; do
     case $arg in
         h)
             echo "Usage: $0 [options] path_to_benchmark
@@ -93,6 +93,14 @@ exit
 		prpfile="$getpwd/samples/ALL.prp"
 		opt_test="--debug --force-check-base-case --solver z3 --memlimit 15g --prp $prpfile  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
 		run_test="${path_to_depthk} $opt_test $getpwd/samples/example1_true-unreach-call.c"
+		result_check=$(timeout 895 bash -c "$run_test")
+		echo "$result_check"
+		exit
+        ;;
+	v) 
+	
+		
+		run_test="./depthk.py --version"
 		result_check=$(timeout 895 bash -c "$run_test")
 		echo "$result_check"
 		exit
