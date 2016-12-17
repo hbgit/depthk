@@ -1,0 +1,12 @@
+digraph rr_fail_path {
+23 [shape="circle" label="N23\n2"]
+24 [shape="circle" label="N24\n1"]
+19 [shape="circle" label="N19\n0"]
+20 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">20</td><td align="left">Function start dummy edge</td></tr><tr><td align="right">21</td><td align="left">int *__cil_tmp2;</td></tr><tr><td align="right">22</td><td align="left">__cil_tmp2 = &amp;(pi-&gt;list);</td></tr></table>>]
+20 -> 23[label=""]
+100001 [shape="component" label="list_add"]
+23 -> 100001 [label="list_add(__cil_tmp2);" fontname="Courier New"]
+100001 -> 24 [label="" fontname="Courier New"]
+23 -> 24 [label="list_add(__cil_tmp2);" fontname="Courier New"]
+24 -> 19 [label="return;" fontname="Courier New"]
+}

@@ -1,0 +1,14 @@
+digraph getPtr {
+20 [shape="circle" label="N20\n4"]
+21 [shape="circle" label="N21\n3"]
+22 [shape="circle" label="N22\n2"]
+17 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">17</td><td align="left">Function start dummy edge</td></tr><tr><td align="right">18</td><td align="left">rr *r;</td></tr><tr><td align="right">19</td><td align="left">rr *tmp;</td></tr></table>>]
+17 -> 20[label=""]
+22 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">22</td><td align="left">r-&gt;state = 1;</td></tr><tr><td align="right">23</td><td align="left">return r;</td></tr></table>>]
+22 -> 16[label=""]
+100002 [shape="component" label="getrr"]
+20 -> 100002 [label="tmp = getrr();" fontname="Courier New"]
+100002 -> 21 [label="" fontname="Courier New"]
+20 -> 21 [label="tmp = getrr();" fontname="Courier New"]
+21 -> 22 [label="r = tmp;" fontname="Courier New"]
+}

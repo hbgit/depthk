@@ -1,0 +1,7 @@
+digraph bar {
+9 [shape="circle" label="N9\n4"]
+10 [shape="circle" label="N10\n3"]
+10 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">10</td><td align="left">int __CPAchecker_TMP_0;</td></tr><tr><td align="right">11</td><td align="left">__CPAchecker_TMP_0 = __VERIFIER_nondet_int();</td></tr><tr><td align="right">12</td><td align="left">return __CPAchecker_TMP_0;</td></tr></table>>]
+10 -> 8[label=""]
+9 -> 10 [label="Function start dummy edge" fontname="Courier New"]
+}

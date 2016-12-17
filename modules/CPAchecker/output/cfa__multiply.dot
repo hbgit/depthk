@@ -1,0 +1,13 @@
+digraph multiply {
+5 [shape="diamond" label="N5\n4"]
+7 [shape="circle" label="N7\n3"]
+6 [shape="circle" label="N6\n1"]
+0 [shape="circle" label="N0\n0"]
+1 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">1</td><td align="left">Function start dummy edge</td></tr><tr><td align="right">2</td><td align="left">float f1 = 0.5;</td></tr><tr><td align="right">3</td><td align="left">float f2 = 2.3509885615147286E-38;</td></tr><tr><td align="right">4</td><td align="left">float res = f1 * f2;</td></tr></table>>]
+1 -> 5[label=""]
+7 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">7</td><td align="left">__VERIFIER_error();</td></tr><tr><td align="right">8</td><td align="left"></td></tr></table>>]
+7 -> 6[label=""]
+5 -> 7 [label="[(res == 1.1754943508222875E-38) == 0]" fontname="Courier New"]
+5 -> 6 [label="[!((res == 1.1754943508222875E-38) == 0)]" fontname="Courier New"]
+6 -> 0 [label="default return" fontname="Courier New"]
+}
