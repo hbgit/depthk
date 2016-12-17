@@ -156,8 +156,8 @@ fi
 
 # The complete command to be executed
 run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
-#echo "$run_cmdline"
-#exit
+echo "$run_cmdline"
+exit
 # Invoke our command, wrapped in a timeout so that we can
 # postprocess the results. `timeout` is part of coreutils on debian and fedora.
 result_check=$(timeout 895 bash -c "$run_cmdline")
