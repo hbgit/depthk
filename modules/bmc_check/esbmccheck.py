@@ -34,9 +34,8 @@ class DepthEsbmcCheck(object):
         self.maxdepthverification = 25
         self.en_kparalell = False
         self.esbmcpath = ''
-        self.esbmc_arch = "--64"
         self.esbmc_bound = 1
-        self.esbmc_unwind_op = "--unwind"
+        self.esbmc_unwind_op = " --context-bound 7 --unwind"
         self.esbmc_memlimit_op = ""
         self.esbmc_timeout_op = "15m"
         #self.esbmc_nolibrary = "--no-library"
@@ -713,7 +712,7 @@ class DepthEsbmcCheck(object):
 
 
     def checkwithkparallel(self, _cprogrampath, _actual_ce, _listtmpfiles):
-        result_parallel = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+        result_parallel = commands.getoutput(self.esbmcpath +  " " +
                                              self.esbmc_solver_op + " " +
                                              "--k-induction-parallel" + " " +
                                              self.isdefiniedmemlimit() +
@@ -949,7 +948,7 @@ class DepthEsbmcCheck(object):
             return "no bug has been found"#self.esbmc_bound = self.esbmc_bound + 5
 
         if self.esbmc_bound <= self.maxk:
-            result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+            result_basecase = commands.getoutput(self.esbmcpath + " " +
                                                  self.esbmc_solver_op + " " +
                                                  self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                  self.isdefiniedmemlimit() +
@@ -1176,4 +1175,5 @@ class DepthEsbmcCheck(object):
 
         if not flag_cpa:
             return "UNKNOWN"
+
 

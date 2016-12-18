@@ -133,13 +133,13 @@ if test ${parallel} = 1; then
   fi
 else
     if test ${do_term} = 1; then
-	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --termination-category --prp "$property_list" --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --termination-category --prp "$property_list" --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
 	elif test ${do_overflow} = 1; then
-	    depthk_options=" --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp "$property_list"  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+	    depthk_options=" --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp "$property_list"  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
     elif test ${do_memsafety} = 0; then
-        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
     else
-        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --clang-frontend --error-label ERROR\""
     fi
 fi
 
@@ -156,8 +156,8 @@ fi
 
 # The complete command to be executed
 run_cmdline="${path_to_depthk} ${depthk_options} \"${benchmark}\";"
-echo "$run_cmdline"
-exit
+#echo "$run_cmdline"
+#exit
 # Invoke our command, wrapped in a timeout so that we can
 # postprocess the results. `timeout` is part of coreutils on debian and fedora.
 result_check=$(timeout 895 bash -c "$run_cmdline")
