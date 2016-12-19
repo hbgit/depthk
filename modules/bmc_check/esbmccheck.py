@@ -762,8 +762,8 @@ class DepthEsbmcCheck(object):
 
     def kinductioncheck(self, _cprogrampath):
         #if(self.is_memory_safety or self.is_termination or self.overflow_check != ""):
-        if(self.is_memory_safety or self.is_termination):
-            return "UNKNOWN"
+        #if(self.is_memory_safety or self.is_termination):
+        #    return "UNKNOWN"
 
         listtmpfiles = []
         actual_detphver = 1
