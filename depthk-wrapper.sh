@@ -19,7 +19,7 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	else
 	  echo "NOT works"
 	fi
-	
+echo "DepthK version 3.0 - Mon Dez 19 17:40:02 AMT 2016"
 fi
 
 
@@ -69,7 +69,9 @@ exit
             # tests (except for the memory checking ones), and define all the
             # error labels from other directories to be ERROR.
             #if ! grep -q __VERIFIER_error $OPTARG; then
-            property_list=$OPTARG
+  	    cat $OPTARG > ./ALL.prp
+            property_list="./ALL.prp"
+	    echo "PRP: " "$property_list"
             prp_overflow_result=$( grep -c "LTL(G[ ]*\![ ]*overflow" "$OPTARG")            
 			if [ "$prp_overflow_result" -ge 1 ]; then
 				do_overflow=1
@@ -99,7 +101,7 @@ exit
         ;;
 	v) 
 
-		./depthk.py --version
+		echo "DepthK version 3.0 - Mon Dez 19 17:40:02 AMT 2016"
 		exit	
 
         ;;
