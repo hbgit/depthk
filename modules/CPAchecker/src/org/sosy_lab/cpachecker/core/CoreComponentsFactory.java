@@ -56,7 +56,7 @@ import org.sosy_lab.cpachecker.core.algorithm.impact.ImpactAlgorithm;
 import org.sosy_lab.cpachecker.core.algorithm.pcc.AlgorithmWithPropertyCheck;
 import org.sosy_lab.cpachecker.core.algorithm.pcc.ProofCheckAlgorithm;
 import org.sosy_lab.cpachecker.core.algorithm.pcc.ResultCheckAlgorithm;
-import org.sosy_lab.cpachecker.core.algorithm.pdr.PDRAlgorithm;
+import org.sosy_lab.cpachecker.core.algorithm.pdr.ctigar.PDRAlgorithm;
 import org.sosy_lab.cpachecker.core.algorithm.termination.TerminationAlgorithm;
 import org.sosy_lab.cpachecker.core.interfaces.ConfigurableProgramAnalysis;
 import org.sosy_lab.cpachecker.core.reachedset.AggregatedReachedSets;
@@ -66,6 +66,8 @@ import org.sosy_lab.cpachecker.core.reachedset.HistoryForwardingReachedSet;
 import org.sosy_lab.cpachecker.core.reachedset.ReachedSet;
 import org.sosy_lab.cpachecker.core.reachedset.ReachedSetFactory;
 import org.sosy_lab.cpachecker.cpa.PropertyChecker.PropertyCheckerCPA;
+import org.sosy_lab.cpachecker.cpa.bam.BAMCPA;
+import org.sosy_lab.cpachecker.cpa.bam.BAMCounterexampleCheckAlgorithm;
 import org.sosy_lab.cpachecker.cpa.location.LocationCPA;
 import org.sosy_lab.cpachecker.exceptions.CPAException;
 
@@ -307,7 +309,29 @@ public class CoreComponentsFactory {
       }
 
       if (checkCounterexamples) {
-        algorithm = new CounterexampleCheckAlgorithm(algorithm, cpa, config, logger, shutdownNotifier, cfa, programDenotation);
+        if (cpa instanceof BAMCPA) {
+          algorithm =
+              new BAMCounterexampleCheckAlgorithm(
+                  algorithm,
+                  cpa,
+                  config,
+                  logger,
+                  shutdownNotifier,
+                  specification,
+                  cfa,
+                  programDenotation);
+        } else {
+          algorithm =
+              new CounterexampleCheckAlgorithm(
+                  algorithm,
+                  cpa,
+                  config,
+                  specification,
+                  logger,
+                  shutdownNotifier,
+                  cfa,
+                  programDenotation);
+        }
       }
 
       algorithm =
@@ -406,7 +430,8 @@ public class CoreComponentsFactory {
       throws InvalidConfigurationException {
     Preconditions.checkState(useTerminationAlgorithm);
     Specification terminationSpecification =
-        TerminationAlgorithm.loadTerminationSpecification(cfa, config, logger);
+        TerminationAlgorithm.loadTerminationSpecification(
+            originalSpecification.getProperties(), cfa, config, logger);
 
     if (!originalSpecification.equals(Specification.alwaysSatisfied())
         && !originalSpecification.equals(terminationSpecification)) {

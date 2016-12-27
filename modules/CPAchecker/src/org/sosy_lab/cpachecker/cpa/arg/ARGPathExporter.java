@@ -38,12 +38,12 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
-import com.google.common.collect.TreeMultimap;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -104,6 +104,7 @@ import org.sosy_lab.cpachecker.cfa.model.FunctionEntryNode;
 import org.sosy_lab.cpachecker.cfa.model.FunctionExitNode;
 import org.sosy_lab.cpachecker.cfa.postprocessing.global.CFACloner;
 import org.sosy_lab.cpachecker.cfa.types.MachineModel;
+import org.sosy_lab.cpachecker.core.Specification;
 import org.sosy_lab.cpachecker.core.counterexample.AssumptionToEdgeAllocator;
 import org.sosy_lab.cpachecker.core.counterexample.CExpressionToOrinalCodeVisitor;
 import org.sosy_lab.cpachecker.core.counterexample.CFAEdgeWithAssumptions;
@@ -126,10 +127,10 @@ import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon;
 import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon.AssumeCase;
 import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon.ElementType;
 import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon.GraphMlBuilder;
-import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon.GraphType;
 import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon.KeyDef;
 import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon.NodeFlag;
 import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon.NodeType;
+import org.sosy_lab.cpachecker.util.automaton.AutomatonGraphmlCommon.WitnessType;
 import org.sosy_lab.cpachecker.util.automaton.VerificationTaskMetaData;
 import org.sosy_lab.cpachecker.util.expressions.ExpressionTree;
 import org.sosy_lab.cpachecker.util.expressions.ExpressionTreeFactory;
@@ -206,12 +207,13 @@ public class ARGPathExporter {
   private final ExpressionTreeFactory<Object> factory = ExpressionTrees.newCachingFactory();
   private final Simplifier<Object> simplifier = ExpressionTrees.newSimplifier(factory);
 
-  private VerificationTaskMetaData verificationTaskMetaData;
+  private final VerificationTaskMetaData verificationTaskMetaData;
 
   public ARGPathExporter(
       final Configuration pConfig,
       final LogManager pLogger,
-      CFA pCFA)
+      final Specification pSpecification,
+      final CFA pCFA)
       throws InvalidConfigurationException {
     Preconditions.checkNotNull(pConfig);
     pConfig.inject(this);
@@ -219,7 +221,8 @@ public class ARGPathExporter {
     this.machineModel = pCFA.getMachineModel();
     this.language = pCFA.getLanguage();
     this.assumptionToEdgeAllocator = new AssumptionToEdgeAllocator(pConfig, pLogger, machineModel);
-    this.verificationTaskMetaData = new VerificationTaskMetaData(pConfig, pLogger);
+    this.verificationTaskMetaData =
+        new VerificationTaskMetaData(pConfig, Optional.of(pSpecification));
   }
 
   public void writeErrorWitness(
@@ -231,7 +234,7 @@ public class ARGPathExporter {
       throws IOException {
 
     String defaultFileName = getInitialFileName(pRootState);
-    WitnessWriter writer = new WitnessWriter(defaultFileName, GraphType.ERROR_WITNESS);
+    WitnessWriter writer = new WitnessWriter(defaultFileName, WitnessType.ERROR_WITNESS);
     writer.writePath(
         pTarget,
         pRootState,
@@ -315,7 +318,7 @@ public class ARGPathExporter {
 
     String defaultFileName = getInitialFileName(pRootState);
     WitnessWriter writer =
-        new WitnessWriter(defaultFileName, GraphType.PROOF_WITNESS, pInvariantProvider);
+        new WitnessWriter(defaultFileName, WitnessType.PROOF_WITNESS, pInvariantProvider);
     writer.writePath(
         pTarget,
         pRootState,
@@ -347,12 +350,12 @@ public class ARGPathExporter {
 
   private class WitnessWriter implements EdgeAppender {
 
-    private final Multimap<String, NodeFlag> nodeFlags = TreeMultimap.create();
+    private final Multimap<String, NodeFlag> nodeFlags = LinkedHashMultimap.create();
     private final Multimap<String, Property> violatedProperties = HashMultimap.create();
     private final Map<DelayedAssignmentsKey, CFAEdgeWithAssumptions> delayedAssignments = Maps.newHashMap();
 
-    private final Multimap<String, Edge> leavingEdges = TreeMultimap.create();
-    private final Multimap<String, Edge> enteringEdges = TreeMultimap.create();
+    private final Multimap<String, Edge> leavingEdges = LinkedHashMultimap.create();
+    private final Multimap<String, Edge> enteringEdges = LinkedHashMultimap.create();
 
     private final Map<String, ExpressionTree<Object>> stateInvariants = Maps.newLinkedHashMap();
     private final Map<String, String> stateScopes = Maps.newLinkedHashMap();
@@ -360,18 +363,20 @@ public class ARGPathExporter {
     private final Map<Edge, CFANode> loopHeadEnteringEdges = Maps.newHashMap();
 
     private final String defaultSourcefileName;
-    private final GraphType graphType;
+    private final WitnessType graphType;
 
     private final InvariantProvider invariantProvider;
 
     private boolean isFunctionScope = false;
 
-    public WitnessWriter(@Nullable String pDefaultSourcefileName, GraphType pGraphType) {
+    public WitnessWriter(@Nullable String pDefaultSourcefileName, WitnessType pGraphType) {
       this(pDefaultSourcefileName, pGraphType, InvariantProvider.TrueInvariantProvider.INSTANCE);
     }
 
     public WitnessWriter(
-        String pDefaultSourceFileName, GraphType pGraphType, InvariantProvider pInvariantProvider) {
+        String pDefaultSourceFileName,
+        WitnessType pGraphType,
+        InvariantProvider pInvariantProvider) {
       this.defaultSourcefileName = pDefaultSourceFileName;
       this.graphType = pGraphType;
       this.invariantProvider = pInvariantProvider;
@@ -434,9 +439,9 @@ public class ARGPathExporter {
         final Optional<Collection<ARGState>> pFromState,
         final Map<ARGState, CFAEdgeWithAssumptions> pValueMap) {
 
-      TransitionCondition result = new TransitionCondition();
+      TransitionCondition result = TransitionCondition.empty();
 
-      if (graphType != GraphType.ERROR_WITNESS) {
+      if (graphType != WitnessType.ERROR_WITNESS) {
         ExpressionTree<Object> invariant = ExpressionTrees.getTrue();
         if (exportInvariant(pEdge)) {
           invariant = simplifier.simplify(invariantProvider.provideInvariantFor(pEdge, pFromState));
@@ -482,7 +487,7 @@ public class ARGPathExporter {
                           .anyMatch(
                               sibling -> sibling.getRawStatement().startsWith("pointer call")))) {
             // remove all info from transitionCondition
-            return new TransitionCondition();
+            return TransitionCondition.empty();
           }
           AssumeCase assumeCase = a.getTruthAssumption() ? AssumeCase.THEN : AssumeCase.ELSE;
           result = result.putAndCopy(KeyDef.CONTROLCASE, assumeCase.toString());
@@ -678,7 +683,7 @@ public class ARGPathExporter {
         }
       }
 
-      if (graphType != GraphType.PROOF_WITNESS && exportAssumptions && !code.isEmpty()) {
+      if (graphType != WitnessType.PROOF_WITNESS && exportAssumptions && !code.isEmpty()) {
         ExpressionTree<Object> invariant = factory.or(code);
         CExpressionToOrinalCodeVisitor transformer =
             resultVariable.isPresent()
@@ -905,7 +910,7 @@ public class ARGPathExporter {
 
       // Merge nodes with empty or repeated edges
       Supplier<Iterator<Edge>> redundantEdgeIteratorSupplier =
-          () -> Iterables.filter(leavingEdges.values(), isEdgeRedundant).iterator();
+          () -> FluentIterable.from(leavingEdges.values()).filter(isEdgeRedundant).iterator();
 
       Iterator<Edge> redundantEdgeIterator = redundantEdgeIteratorSupplier.get();
       while (redundantEdgeIterator.hasNext()) {

@@ -24,7 +24,6 @@
 package org.sosy_lab.cpachecker.util.predicates.pathformula.ctoformula;
 
 import java.util.logging.Level;
-
 import org.sosy_lab.common.log.LogManager;
 import org.sosy_lab.common.log.LogManagerWithoutDuplicates;
 import org.sosy_lab.cpachecker.cfa.types.MachineModel;
@@ -80,6 +79,24 @@ public class CtoFormulaTypeHandler {
     return size;
   }
 
+  public int getBitsPerByte() {
+    return machineModel.getSizeofCharInBits();
+  }
+
+  /**
+   * Returns the size in bits of the given type.
+   * Always use this method instead of machineModel.getSizeOf,
+   * because this method can handle dereference-types.
+   * @param pType the type to calculate the size of.
+   * @return the size in bits of the given type.
+   */
+  public int getBitSizeof(CType pType) {
+    if (pType.isBitField()) {
+      return pType.getBitFieldSize();
+    }
+    return getSizeof(pType) * machineModel.getSizeofCharInBits();
+  }
+
   public FormulaType<?> getFormulaTypeFromCType(CType type) {
     if (type instanceof CSimpleType) {
       CSimpleType simpleType = (CSimpleType)type;
@@ -93,11 +110,9 @@ public class CtoFormulaTypeHandler {
       }
     }
 
-    int byteSize = getSizeof(type);
+    int bitSize = getBitSizeof(type);
 
-    int bitsPerByte = machineModel.getSizeofCharInBits();
-    // byte to bits
-    return FormulaType.getBitvectorTypeWithSize(byteSize * bitsPerByte);
+    return FormulaType.getBitvectorTypeWithSize(bitSize);
   }
 
   public FormulaType<?> getPointerType() {

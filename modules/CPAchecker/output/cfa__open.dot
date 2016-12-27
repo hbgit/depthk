@@ -1,7 +1,0 @@
-digraph open {
-6 [shape="circle" label="N6\n4"]
-7 [shape="circle" label="N7\n3"]
-7 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">7</td><td align="left">int tmp;</td></tr><tr><td align="right">8</td><td align="left">tmp = __VERIFIER_nondet_int();</td></tr><tr><td align="right">9</td><td align="left">return tmp;</td></tr></table>>]
-7 -> 5[label=""]
-6 -> 7 [label="Function start dummy edge" fontname="Courier New"]
-}

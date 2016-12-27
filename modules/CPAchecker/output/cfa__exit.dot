@@ -1,8 +1,0 @@
-digraph exit {
-1 [shape="circle" label="N1\n2"]
-2 [shape="circle" label="N2\n1"]
-3 [shape="doublecircle" label="N3\n0"]
-1 -> 2 [label="Function start dummy edge" fontname="Courier New"]
-3 -> 3 [label="Goto: _EXIT" fontname="Courier New"]
-2 -> 3 [label="Label: _EXIT" fontname="Courier New"]
-}

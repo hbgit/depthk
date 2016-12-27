@@ -1,7 +1,0 @@
-digraph isLowWaterSensorDry {
-329 [shape="circle" label="N329\n4"]
-330 [shape="circle" label="N330\n3"]
-330 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">330</td><td align="left">int retValue_acc;</td></tr><tr><td align="right">331</td><td align="left">retValue_acc = waterLevel == 0;</td></tr><tr><td align="right">332</td><td align="left">return retValue_acc;</td></tr></table>>]
-330 -> 328[label=""]
-329 -> 330 [label="Function start dummy edge" fontname="Courier New"]
-}

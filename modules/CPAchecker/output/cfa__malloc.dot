@@ -1,7 +1,0 @@
-digraph malloc {
-83 [shape="circle" label="N83\n5"]
-84 [shape="circle" label="N84\n4"]
-84 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">84</td><td align="left">int tmp;</td></tr><tr><td align="right">85</td><td align="left">tmp = counter;</td></tr><tr><td align="right">86</td><td align="left">counter = counter + 1;</td></tr><tr><td align="right">87</td><td align="left">return (void *)tmp;</td></tr></table>>]
-84 -> 82[label=""]
-83 -> 84 [label="Function start dummy edge" fontname="Courier New"]
-}

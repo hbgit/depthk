@@ -1,7 +1,0 @@
-digraph stub_driver_init {
-1 [shape="circle" label="N1\n9"]
-2 [shape="circle" label="N2\n8"]
-2 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">2</td><td align="left">s = NP;</td></tr><tr><td align="right">3</td><td align="left">pended = 0;</td></tr><tr><td align="right">4</td><td align="left">compFptr = 0;</td></tr><tr><td align="right">5</td><td align="left">compRegistered = 0;</td></tr><tr><td align="right">6</td><td align="left">lowerDriverReturn = 0;</td></tr><tr><td align="right">7</td><td align="left">setEventCalled = 0;</td></tr><tr><td align="right">8</td><td align="left">customIrp = 0;</td></tr><tr><td align="right">9</td><td align="left">return;</td></tr></table>>]
-2 -> 0[label=""]
-1 -> 2 [label="Function start dummy edge" fontname="Courier New"]
-}

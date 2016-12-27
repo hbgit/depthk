@@ -1,4 +1,0 @@
-digraph allocate_memory {
-6 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">6</td><td align="left">Function start dummy edge</td></tr><tr><td align="right">7</td><td align="left">void *tmp;</td></tr><tr><td align="right">8</td><td align="left">unsigned int __cil_tmp2;</td></tr><tr><td align="right">9</td><td align="left">__cil_tmp2 = 8U;</td></tr><tr><td align="right">10</td><td align="left">tmp = malloc(__cil_tmp2);</td></tr><tr><td align="right">11</td><td align="left">return tmp;</td></tr></table>>]
-6 -> 5[label=""]
-}

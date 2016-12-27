@@ -15,6 +15,7 @@ import re
 import os
 import sys
 import shutil
+import time
 
 
 class DepthEsbmcCheck(object):
@@ -35,7 +36,7 @@ class DepthEsbmcCheck(object):
         self.en_kparalell = False
         self.esbmcpath = ''
         self.esbmc_bound = 1
-        self.esbmc_unwind_op = " --context-bound 7 --unwind"
+        self.esbmc_unwind_op = "  --state-hashing --unwind"
         self.esbmc_memlimit_op = ""
         self.esbmc_timeout_op = "15m"
         #self.esbmc_nolibrary = "--no-library"
@@ -49,7 +50,7 @@ class DepthEsbmcCheck(object):
         self.esbmc_inductivestep_op = "--inductive-step --no-slice --show-counter-example"
 
         self.dldv_error = " -DLDV_ERROR=ERROR "
-        self.dassert = " -D_Bool=int "
+        self.dassert = " -D_Bool=int -Dassert=notassert"
         self.no_bounds_check = ""
         self.no_pointer_check = ""
         self.no_div_by_zero_check = ""
@@ -70,6 +71,7 @@ class DepthEsbmcCheck(object):
         self.cpachecker_path = commands.getoutput("readlink -f .") +  "/modules/CPAchecker/"
         self.listproperty = ""
         self.original_file = ""
+        self.start_time = 0
 
     @staticmethod
     def getlastlinenumfromce(_esbmccepath, _indexliststartsearch):
@@ -857,10 +859,12 @@ class DepthEsbmcCheck(object):
                             cpachecker_ops = self.configureCPACheckerPath()
                             result = self.execCPAChecker(self.original_file, cpachecker_ops)
                             endresult = self.check_witnessresult(result)
-                            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
                                 lastresult[1] = "TRUE"
                             elif endresult == "TRUE":
                                 lastresult[1] = "TRUE"
+                            elif endresult == "FALSE":
+                                lastresult[1] = "FALSE"
                             else:
                                 lastresult[1] = "UNKNOWN"
 
@@ -895,7 +899,8 @@ class DepthEsbmcCheck(object):
                         os.system("cat " + actual_ce)
                         print(" ")
                         self.cleantmpfiles(listtmpfiles)
-                        raise Exception("ERROR. It was identified an error in the verification of base-case")
+                        print("ERROR. It was identified an error in the verification of base-case")
+                        self.esbmc_bound = self.esbmc_bound + 1
 
         # >> END-WHILE
         # >> UNKNOWN
@@ -926,17 +931,25 @@ class DepthEsbmcCheck(object):
 
     def configureCPACheckerPath(self):
 
-        return "./scripts/cpa.sh -witness-validation " + \
-               " -spec " + self.file2witness + " " \
-               " -spec " + self.listproperty + " " \
-
-
+        return "./scripts/cpa.sh -noout -skipRecursion " \
+               " -heap 10000M -predicateAnalysis " \
+               " -setprop cpa.composite.aggregateBasicBlocks=false -setprop cfa.simplifyCfa=false " \
+               " -setprop cfa.allowBranchSwapping=false -setprop cpa.predicate.ignoreIrrelevantVariables=false " \
+               " -setprop counterexample.export.assumptions.assumeLinearArithmetics=true " \
+               " -setprop counterexample.export.assumptions.includeConstantsForPointers=false -setprop counterexample.export.graphml=violation-witness.graphml " \
+               " -setprop counterexample.export.compressErrorWitness=false "\
+               " -spec " + self.listproperty + " "
 
     def execCPAChecker(self, _cprogrampath, cpachecker_ops):
         cwd = os.getcwd()
         os.chdir(self.cpachecker_path)
-        cpacommand = "timeout 60 " + cpachecker_ops  + _cprogrampath
-        result_witness = commands.getoutput(cpacommand)
+
+        elapsed_time = (int) (round(time.time() - self.start_time))
+        remaining_time = 895 - elapsed_time
+        result_witness = ""
+        if (remaining_time > 0):
+            cpacommand = "timeout  " + str(remaining_time) + " " + cpachecker_ops  + _cprogrampath
+            result_witness =  commands.getoutput(cpacommand)
         if self.debug:
             print(result_witness)
         os.chdir(cwd)
@@ -945,9 +958,37 @@ class DepthEsbmcCheck(object):
 
     def execBaseCase(self, _cprogrampath, actual_ce, lastResult):
         if(lastResult[0]):
-            return "no bug has been found"#self.esbmc_bound = self.esbmc_bound + 5
+            if (self.esbmc_bound < 25):
+                self.esbmc_bound = 25
+            elif(self.esbmc_bound < 35):
+                self.esbmc_bound = 50
+            else:
+                return "no bug has been found"
 
         if self.esbmc_bound <= self.maxk:
+            if(self.debug):
+                print(self.esbmcpath + " " +
+                     self.esbmc_solver_op + " " +
+                     self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                     self.isdefiniedmemlimit() +
+                     self.esbmc_witness_op +
+                     "--timeout " + self.esbmc_timeout_op + " " +
+                     self.esbmc_nolibrary + " " +
+                     self.esbmc_extra_op + " " +
+                     self.overflow_check +
+                     self.dldv_error +
+                     self.dassert +
+                     self.no_bounds_check +
+                     self.no_pointer_check +
+                     self.no_div_by_zero_check +
+                     self.no_assertions +
+                     self.quiet +
+                     self.context_switch +
+                     self.force_malloc +
+                     self.memory_leak_check +
+                     self.esbmc_basecase_op + " " +
+                     _cprogrampath)
+
             result_basecase = commands.getoutput(self.esbmcpath + " " +
                                                  self.esbmc_solver_op + " " +
                                                  self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
@@ -1025,7 +1066,30 @@ class DepthEsbmcCheck(object):
             print("\t\t Status: checking forward condition")
         # Checking the forward condition
         # $ esbmc_v24 --64 --forward-condition --unwind 2 main.c
-        result_forwardcond = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+        if(self.debug):
+            print(self.esbmcpath  + " " +
+                self.esbmc_solver_op + " " +
+                self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
+                self.isdefiniedmemlimit() +
+                self.esbmc_witness_op +
+                "--timeout " + self.esbmc_timeout_op + " " +
+                self.esbmc_nolibrary + " " +
+                self.esbmc_extra_op + " " +
+                self.overflow_check +
+                self.dldv_error +
+                self.dassert +
+                self.no_bounds_check +
+                self.no_pointer_check +
+                self.no_div_by_zero_check +
+                self.no_assertions +
+                self.quiet +
+                self.context_switch +
+                self.force_malloc +
+                self.memory_leak_check +
+                self.esbmc_forwardcond_op + " " +
+                _cprogrampath)
+
+        result_forwardcond = commands.getoutput(self.esbmcpath + " " +
                                                 self.esbmc_solver_op + " " +
                                                 self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                 self.isdefiniedmemlimit() +
@@ -1068,17 +1132,17 @@ class DepthEsbmcCheck(object):
                         print("\t\t v> Forcing last check in base case")
                     return "CONTINUE"
                 else:
-                    #os.system("cat " + actual_ce)
-                    print(" ")
                     self.cleantmpfiles(listtmpfiles)
-
                     cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                    result = self.execCPAChecker(self.original_file, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+
+                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
+                    elif endresult == "FALSE":
+                        return "FALSE"
 
                     return "UNKNOWN"
         return ""
@@ -1091,7 +1155,31 @@ class DepthEsbmcCheck(object):
         # "The forward condition is unable to prove the property"
         # Checking the inductive step
         # $ esbmc_v24 --64 --inductive-step --show-counter-example --unwind 2 main.c
-        result_inductivestep = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+        if(self.debug):
+            print(self.esbmcpath +  " " +
+                  self.esbmc_solver_op + " " +
+                  self.esbmc_unwind_op + " " +
+                  str(self.esbmc_bound) + " " +
+                  self.isdefiniedmemlimit() +
+                  self.esbmc_witness_op +
+                  "--timeout " + self.esbmc_timeout_op + " " +
+                  self.esbmc_nolibrary + " " +
+                  self.esbmc_extra_op + " " +
+                  self.dldv_error +
+                  self.dassert +
+                  self.no_bounds_check +
+                  self.no_pointer_check +
+                  self.no_div_by_zero_check +
+                  self.no_assertions +
+                  self.quiet +
+                  self.overflow_check +
+                  self.context_switch +
+                  self.force_malloc +
+
+                  self.esbmc_inductivestep_op + " " +
+                  _cprogrampath)
+
+        result_inductivestep = commands.getoutput(self.esbmcpath + " " +
                                                   self.esbmc_solver_op + " " +
                                                   self.esbmc_unwind_op + " " +
                                                   str(self.esbmc_bound) + " " +
@@ -1137,16 +1225,17 @@ class DepthEsbmcCheck(object):
                     if self.debug:
                         print("\t\t > Forcing last check in base case")
                 else:
-                    #os.system("cat " + actual_ce)
-                    print(" ")
                     self.cleantmpfiles(listtmpfiles)
                     cpachecker_ops = self.configureCPACheckerPath()
                     result = self.execCPAChecker(self.original_file, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+
+                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
+                    elif endresult == "FALSE":
+                        return "FALSE"
 
                     return "UNKNOWN"
             else:

@@ -1,6 +1,0 @@
-line 9:	N10 -{unsigned int x;}-> N11
-lines 10-12:	N11 -{while}-> N12
-line 10:	N12 -{[!(x < 268435455)]}-> N14
-line 13:	N14 -{__VERIFIER_assert(x > 268435455)}-> N1
-line 3:	N2 -{[cond == 0]}-> N4
-line 4:	N5 -{__VERIFIER_error();}-> N6

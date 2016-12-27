@@ -1,7 +1,0 @@
-digraph ibmphp_init_devno {
-39 [shape="circle" label="N39\n4"]
-40 [shape="circle" label="N40\n3"]
-40 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">40</td><td align="left">int tmp;</td></tr><tr><td align="right">41</td><td align="left">tmp = __VERIFIER_nondet_int();</td></tr><tr><td align="right">42</td><td align="left">return tmp;</td></tr></table>>]
-40 -> 38[label=""]
-39 -> 40 [label="Function start dummy edge" fontname="Courier New"]
-}

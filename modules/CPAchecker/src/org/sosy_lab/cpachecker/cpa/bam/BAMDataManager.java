@@ -24,7 +24,12 @@
 package org.sosy_lab.cpachecker.cpa.bam;
 
 import com.google.common.collect.Lists;
-
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 import org.sosy_lab.common.log.LogManager;
 import org.sosy_lab.cpachecker.cfa.blocks.Block;
 import org.sosy_lab.cpachecker.core.interfaces.AbstractState;
@@ -32,11 +37,6 @@ import org.sosy_lab.cpachecker.core.interfaces.Precision;
 import org.sosy_lab.cpachecker.core.reachedset.ReachedSet;
 import org.sosy_lab.cpachecker.core.reachedset.ReachedSetFactory;
 import org.sosy_lab.cpachecker.cpa.arg.ARGState;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Data structures required for BAM.
@@ -61,26 +61,26 @@ public class BAMDataManager {
    * Mapping of non-reduced initial states
    * to {@link ReachedSet}.
    **/
-  final Map<AbstractState, ReachedSet> initialStateToReachedSet = new HashMap<>();
+  private final Map<AbstractState, ReachedSet> initialStateToReachedSet = new LinkedHashMap<>();
 
   /**
    * Mapping from expanded states at the end of the block to corresponding
    * reduced states, from which the key state was originally expanded.
    * */
-  final Map<AbstractState, AbstractState> expandedStateToReducedState = new HashMap<>();
+  private final Map<AbstractState, AbstractState> expandedStateToReducedState = new LinkedHashMap<>();
 
   /**
    * Mapping from expanded states at a block-end to
    * inner blocks of the corresponding reduced state,
    * from which the key was originally expanded.
    **/
-  private final Map<AbstractState, Block> expandedStateToBlock = new HashMap<>();
+  private final Map<AbstractState, Block> expandedStateToBlock = new LinkedHashMap<>();
 
   /**
    * Mapping from expanded states at a block-end to
    * corresponding expanded precisions.
    **/
-  final Map<AbstractState, Precision> expandedStateToExpandedPrecision = new HashMap<>();
+  final Map<AbstractState, Precision> expandedStateToExpandedPrecision = new LinkedHashMap<>();
 
   public BAMDataManager(
       BAMCache pArgCache,
@@ -119,7 +119,7 @@ public class BAMDataManager {
     }
   }
 
-  /** unused? */
+  @Deprecated /* unused */
   void clearCaches() {
     bamCache.clear();
     initialStateToReachedSet.clear();
@@ -187,5 +187,64 @@ public class BAMDataManager {
       lst.add(tmp);
     }
     return Lists.reverse(lst);
+  }
+
+
+  void registerInitialState(AbstractState state, ReachedSet reachedSet) {
+    ReachedSet oldReachedSet = initialStateToReachedSet.get(state);
+    if (oldReachedSet != null && oldReachedSet != reachedSet) {
+      // TODO This might be a hint for a memory leak, i.e., the old reachedset
+      // is no longer accessible through BAMDataManager, but registered in BAM-cache.
+      // This happens, when the reducer changes, e.g., BAMPredicateRefiner.refineRelevantPredicates.
+      logger.logf(
+          Level.ALL,
+          "New abstract state %s overrides old reachedset %s with new reachedset %s.",
+          state,
+          oldReachedSet.getFirstState(),
+          reachedSet.getFirstState());
+    }
+    initialStateToReachedSet.put(state, reachedSet);
+  }
+
+  ReachedSet getReachedSetForInitialState(AbstractState state) {
+    assert initialStateToReachedSet.containsKey(state) : "no initial state for a block: " + state;
+    return initialStateToReachedSet.get(state);
+  }
+
+  boolean hasInitialState(AbstractState state) {
+    return initialStateToReachedSet.containsKey(state);
+  }
+
+
+  AbstractState getReducedStateForExpandedState(AbstractState state) {
+    assert expandedStateToReducedState.containsKey(state) : "no match for state: " + state;
+    return expandedStateToReducedState.get(state);
+  }
+
+  boolean hasExpandedState(AbstractState state) {
+    return expandedStateToReducedState.containsKey(state);
+  }
+
+  static int getId(AbstractState state) {
+    return ((ARGState) state).getStateId();
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder str = new StringBuilder("BAM DATA MANAGER\n");
+
+    str.append("initial state to (first state of) reached set:\n");
+    for (Entry<AbstractState, ReachedSet> entry : initialStateToReachedSet.entrySet()) {
+      str.append(
+          String.format(
+              "    %s -> %s%n", getId(entry.getKey()), getId((entry.getValue()).getFirstState())));
+    }
+
+    str.append("expanded state to reduced state:\n");
+    for (Entry<AbstractState, AbstractState> entry : expandedStateToReducedState.entrySet()) {
+      str.append(String.format("    %s -> %s%n", getId(entry.getKey()), getId(entry.getValue())));
+    }
+
+    return str.toString();
   }
 }

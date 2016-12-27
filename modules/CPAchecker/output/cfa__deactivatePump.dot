@@ -1,7 +1,0 @@
-digraph deactivatePump {
-63 [shape="circle" label="N63\n3"]
-64 [shape="circle" label="N64\n2"]
-64 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">64</td><td align="left">pumpRunning = 0;</td></tr><tr><td align="right">65</td><td align="left">return;</td></tr></table>>]
-64 -> 62[label=""]
-63 -> 64 [label="Function start dummy edge" fontname="Courier New"]
-}

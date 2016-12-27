@@ -1,7 +1,0 @@
-digraph __utac_acc__Specification9_spec__1 {
-774 [shape="circle" label="N774\n7"]
-775 [shape="circle" label="N775\n6"]
-775 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">775</td><td align="left">floorButtons_spc9_0 = 0;</td></tr><tr><td align="right">776</td><td align="left">floorButtons_spc9_1 = 0;</td></tr><tr><td align="right">777</td><td align="left">floorButtons_spc9_2 = 0;</td></tr><tr><td align="right">778</td><td align="left">floorButtons_spc9_3 = 0;</td></tr><tr><td align="right">779</td><td align="left">floorButtons_spc9_4 = 0;</td></tr><tr><td align="right">780</td><td align="left">return;</td></tr></table>>]
-775 -> 773[label=""]
-774 -> 775 [label="Function start dummy edge" fontname="Courier New"]
-}

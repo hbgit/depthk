@@ -39,6 +39,7 @@ import com.google.common.io.ByteStreams;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -298,7 +299,15 @@ public class RestartAlgorithm implements Algorithm, StatisticsProvider, ReachedS
           logger.logUserException(Level.WARNING, e, "Skipping one analysis because the configuration file " + singleConfigFileName.toString() + " is invalid");
           continue;
         } catch (IOException e) {
-          logger.logUserException(Level.WARNING, e, "Skipping one analysis because the configuration file " + singleConfigFileName.toString() + " could not be read");
+          String message =
+              "Skipping one analysis because the configuration file "
+                  + singleConfigFileName.toString()
+                  + " could not be read";
+          if (shutdownNotifier.shouldShutdown() && e instanceof ClosedByInterruptException) {
+            logger.log(Level.WARNING, message);
+          } else {
+            logger.logUserException(Level.WARNING, e, message);
+          }
           continue;
         }
 
@@ -315,10 +324,9 @@ public class RestartAlgorithm implements Algorithm, StatisticsProvider, ReachedS
         stats.noOfAlgorithmsUsed++;
 
         // run algorithm
+        registerReachedSetUpdateListeners();
         try {
-          registerReachedSetUpdateListeners();
           status = currentAlgorithm.run(currentReached);
-          unegisterReachedSetUpdateListeners();
 
           if (from(currentReached).anyMatch(IS_TARGET_STATE) && status.isPrecise()) {
 
@@ -373,6 +381,7 @@ public class RestartAlgorithm implements Algorithm, StatisticsProvider, ReachedS
           }
         }
       } finally {
+        unregisterReachedSetUpdateListeners();
         singleShutdownManager.getNotifier().unregister(logShutdownListener);
         singleShutdownManager.requestShutdown("Analysis terminated"); // shutdown any remaining components
         stats.totalTime.stop();
@@ -551,15 +560,16 @@ public class RestartAlgorithm implements Algorithm, StatisticsProvider, ReachedS
     }
   }
 
-  private void unegisterReachedSetUpdateListeners() {
+  private void unregisterReachedSetUpdateListeners() {
     if (currentAlgorithm instanceof ReachedSetUpdater) {
       ReachedSetUpdater algorithm = (ReachedSetUpdater) currentAlgorithm;
       for (ReachedSetUpdateListener listener : reachedSetUpdateListenersAdded) {
         algorithm.unregister(listener);
-        reachedSetUpdateListenersAdded.add(listener);
       }
+      reachedSetUpdateListenersAdded.clear();
     } else {
       Preconditions.checkState(reachedSetUpdateListenersAdded.isEmpty());
     }
+    assert reachedSetUpdateListenersAdded.isEmpty();
   }
 }

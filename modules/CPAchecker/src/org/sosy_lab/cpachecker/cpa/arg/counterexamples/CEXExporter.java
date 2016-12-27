@@ -49,6 +49,7 @@ import org.sosy_lab.common.io.PathTemplate;
 import org.sosy_lab.common.log.LogManager;
 import org.sosy_lab.cpachecker.cfa.CFA;
 import org.sosy_lab.cpachecker.cfa.model.CFAEdge;
+import org.sosy_lab.cpachecker.core.Specification;
 import org.sosy_lab.cpachecker.core.counterexample.CounterexampleInfo;
 import org.sosy_lab.cpachecker.core.interfaces.ConfigurableProgramAnalysis;
 import org.sosy_lab.cpachecker.cpa.arg.ARGPath;
@@ -120,10 +121,10 @@ public class CEXExporter {
 
   @Option(
     secure = true,
-    name = "compressErrorWitness",
+    name = "compressWitness",
     description = "compress the produced error-witness automata using GZIP compression."
   )
-  private boolean compressErrorWitness = true;
+  private boolean compressWitness = true;
 
   @Option(secure=true, name="codeStyle",
           description="exports either CMBC format or a concrete path program")
@@ -155,14 +156,18 @@ public class CEXExporter {
   private final HarnessExporter harnessExporter;
 
   public CEXExporter(
-      Configuration config, LogManager logger, CFA cfa, ConfigurableProgramAnalysis cpa)
+      Configuration config,
+      LogManager logger,
+      CFA cfa,
+      Specification pSpecification,
+      ConfigurableProgramAnalysis cpa)
       throws InvalidConfigurationException {
     config.inject(this);
     this.logger = logger;
 
     cexFilter =
         CounterexampleFilter.createCounterexampleFilter(config, logger, cpa, cexFilterClasses);
-    witnessExporter = new ARGPathExporter(config, logger, cfa);
+    witnessExporter = new ARGPathExporter(config, logger, pSpecification, cfa);
     harnessExporter = new HarnessExporter(config, logger, cfa);
 
     if (!exportSource) {
@@ -315,7 +320,7 @@ public class CEXExporter {
                     Predicates.in(pathElements),
                     isTargetPathEdge,
                     counterexample),
-        compressErrorWitness);
+        compressWitness);
 
     if (exportHarness) {
       writeErrorPathFile(

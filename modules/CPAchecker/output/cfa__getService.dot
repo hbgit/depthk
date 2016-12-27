@@ -1,7 +1,0 @@
-digraph getService {
-23 [shape="circle" label="N23\n8"]
-24 [shape="circle" label="N24\n7"]
-24 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">24</td><td align="left">long localVar;</td></tr><tr><td align="right">25</td><td align="left">const char *__cil_tmp2;</td></tr><tr><td align="right">26</td><td align="left">localVar = (ssize_t )999999999999LL;</td></tr><tr><td align="right">27</td><td align="left">globalSize = 4;</td></tr><tr><td align="right">28</td><td align="left">__cil_tmp2 = (const char *)\"localVar: %d\n\";</td></tr><tr><td align="right">29</td><td align="left">printf(__cil_tmp2, localVar);</td></tr><tr><td align="right">30</td><td align="left">return localVar;</td></tr></table>>]
-24 -> 22[label=""]
-23 -> 24 [label="Function start dummy edge" fontname="Courier New"]
-}

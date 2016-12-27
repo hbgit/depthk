@@ -1,7 +1,0 @@
-digraph isPumpRunning {
-75 [shape="circle" label="N75\n4"]
-76 [shape="circle" label="N76\n3"]
-76 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">76</td><td align="left">int retValue_acc;</td></tr><tr><td align="right">77</td><td align="left">retValue_acc = pumpRunning;</td></tr><tr><td align="right">78</td><td align="left">return retValue_acc;</td></tr></table>>]
-76 -> 74[label=""]
-75 -> 76 [label="Function start dummy edge" fontname="Courier New"]
-}

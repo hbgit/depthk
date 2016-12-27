@@ -1,7 +1,0 @@
-digraph ibmphp_find_same_bus_num {
-27 [shape="circle" label="N27\n4"]
-28 [shape="circle" label="N28\n3"]
-28 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">28</td><td align="left">void *tmp;</td></tr><tr><td align="right">29</td><td align="left">tmp = __VERIFIER_nondet_pointer();</td></tr><tr><td align="right">30</td><td align="left">return (struct bus_info *)tmp;</td></tr></table>>]
-28 -> 26[label=""]
-27 -> 28 [label="Function start dummy edge" fontname="Courier New"]
-}

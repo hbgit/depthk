@@ -23,29 +23,30 @@
  */
 package org.sosy_lab.cpachecker.util.automaton;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
-import com.google.common.io.ByteSource;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
+import java.util.Set;
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.FileOption;
+import org.sosy_lab.common.configuration.FileOption.Type;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
 import org.sosy_lab.common.io.MoreFiles;
-import org.sosy_lab.common.log.LogManager;
+import org.sosy_lab.cpachecker.core.Specification;
+import org.sosy_lab.cpachecker.cpa.automaton.AutomatonGraphmlParser;
+import org.sosy_lab.cpachecker.util.PropertyFileParser.SpecificationProperty;
 
 public class VerificationTaskMetaData {
 
@@ -66,53 +67,50 @@ public class VerificationTaskMetaData {
 
     @Option(
       secure = true,
-      name = "properties",
-      description = "List of property files (INTERNAL USAGE ONLY - DO NOT USE)"
+      name = "specification",
+      description =
+          "comma-separated list of files with specifications that should be checked"
+              + "\n(see config/specification/ for examples)"
     )
     @FileOption(FileOption.Type.OPTIONAL_INPUT_FILE)
-    private List<Path> propertyFiles = ImmutableList.of();
+    private List<Path> specificationFiles = ImmutableList.of();
 
     @Option(
       secure = true,
-      name = "cpa.predicate.handlePointerAliasing",
-      description =
-          "Handle aliasing of pointers. "
-              + "This adds disjunctions to the formulas, so be careful when using cartesian abstraction."
+      name = "witness.validation.file",
+      description = "The witness to validate."
     )
-    private boolean handlePointerAliasing = true;
+    @FileOption(FileOption.Type.OPTIONAL_INPUT_FILE)
+    private Path inputWitness;
+
+    @Option(
+      secure = true,
+      name = "invariantGeneration.kInduction.invariantsAutomatonFile",
+      description =
+          "Provides additional candidate invariants to the k-induction invariant generator."
+    )
+    @FileOption(Type.OPTIONAL_INPUT_FILE)
+    private Path invariantsAutomatonFile = null;
   }
 
   private final VerificationTaskMetaData.HackyOptions hackyOptions = new HackyOptions();
 
-  private final String memoryModel;
-
-  private final Iterable<String> specifications;
-
   private final Optional<Iterable<String>> programNames;
 
-  private String programHash;
+  private final Optional<Specification> specification;
 
-  public VerificationTaskMetaData(Configuration pConfig, LogManager pLogger)
+  private List<String> programHash;
+
+  private List<String> inputWitnessHashes = null;
+
+  private List<Path> nonWitnessAutomatonFiles = null;
+
+  private List<Path> witnessAutomatonFiles = null;
+
+  public VerificationTaskMetaData(Configuration pConfig, Optional<Specification> pSpecification)
       throws InvalidConfigurationException {
     pConfig.inject(hackyOptions);
-
-    memoryModel = hackyOptions.handlePointerAliasing ? "precise" : "simple";
-    specifications =
-        FluentIterable.from(hackyOptions.propertyFiles)
-            .transform(
-                new Function<Path, String>() {
-
-                  @Override
-                  public String apply(Path pArg0) {
-                    try {
-                      return MoreFiles.toString(pArg0, Charsets.UTF_8).trim();
-                    } catch (IOException e) {
-                      pLogger.logUserException(
-                          Level.WARNING, e, "Could not export specification to witness.");
-                      return "Unknown specification";
-                    }
-                  }
-                });
+    specification = pSpecification;
     if (hackyOptions.programs == null) {
       programNames = Optional.empty();
     } else {
@@ -121,14 +119,8 @@ public class VerificationTaskMetaData {
     }
   }
 
-  private static String computeProgramHash(Iterable<String> pProgramDenotations)
-      throws IOException {
-    List<ByteSource> sources = new ArrayList<>(1);
-    for (String programDenotation : pProgramDenotations) {
-      Path programPath = Paths.get(programDenotation);
-      sources.add(MoreFiles.asByteSource(programPath));
-    }
-    HashCode hash = ByteSource.concat(sources).hash(Hashing.sha1());
+  private static String computeHash(Path pPath) throws IOException {
+    HashCode hash = MoreFiles.asByteSource(pPath).hash(Hashing.sha1());
     return BaseEncoding.base16().lowerCase().encode(hash.asBytes());
   }
 
@@ -143,38 +135,104 @@ public class VerificationTaskMetaData {
   }
 
   /**
-   * Gets the SHA-1 hash sum of the source-code files of the verification task if they are
+   * Gets the SHA-1 hash values of the source-code files of the verification task if they are
    * available.
    *
-   * @return the SHA-1 hash sum of the source-code files of the verification task.
+   * @return the SHA-1 hash values of the source-code files of the verification task.
    * @throws IOException if an {@code IOException} occurs while trying to read the source-code
    *     files.
    */
-  public Optional<String> getProgramHash() throws IOException {
+  public Optional<List<String>> getProgramHashes() throws IOException {
     if (!programNames.isPresent()) {
       return Optional.empty();
     }
     if (programHash == null) {
-      programHash = computeProgramHash(programNames.get());
+      ImmutableList.Builder<String> programHashesBuilder = ImmutableList.builder();
+      for (String programDenotation : programNames.get()) {
+        programHashesBuilder.add(computeHash(Paths.get(programDenotation)));
+      }
+      programHash = programHashesBuilder.build();
     }
     return Optional.of(programHash);
   }
 
-  /**
-   * Gets an identifier for the assumed memory model.
-   *
-   * @return an identifier for the assumed memory model.
-   */
-  public String getMemoryModel() {
-    return memoryModel;
+  public List<String> getInputWitnessHashes() throws IOException {
+    if (inputWitnessHashes == null) {
+      classifyAutomataFiles();
+      ImmutableList.Builder<String> inputWitnessHashesBuilder = ImmutableList.builder();
+      for (Path witnessAutomatonFile : witnessAutomatonFiles) {
+        inputWitnessHashesBuilder.add(computeHash(witnessAutomatonFile));
+      }
+      inputWitnessHashes = inputWitnessHashesBuilder.build();
+    }
+    return inputWitnessHashes;
   }
 
   /**
-   * Gets the specifications considered for this verification task.
+   * Gets the specifications considered for this verification task that are not associated with
+   * specification properties (see {@link VerificationTaskMetaData#getProperties}.
    *
    * @return the specifications considered for this verification task.
+   * @throws IOException if the specification files cannot be accessed.
    */
-  public Iterable<String> getSpecifications() {
-    return specifications;
+  public List<Path> getNonPropertySpecificationFiles() throws IOException {
+    classifyAutomataFiles();
+    Set<String> pathsAssociatedWithPropertyFiles =
+        FluentIterable.from(getProperties())
+            .transform(SpecificationProperty::getInternalSpecificationPath)
+            .filter(Optional::isPresent)
+            .transform(Optional::get)
+            .toSet();
+    return FluentIterable.from(nonWitnessAutomatonFiles)
+        .filter(p -> !pathsAssociatedWithPropertyFiles.contains(p.toString()))
+        .toList();
+  }
+
+  /**
+   * The specification properties considered for this verification task.
+   *
+   * @return the specification properties considered for this verification task.
+   */
+  public Set<SpecificationProperty> getProperties() {
+    if (specification.isPresent()) {
+      return specification.get().getProperties();
+    }
+    return Collections.emptySet();
+  }
+
+  private final void classifyAutomataFiles() throws IOException {
+    if (nonWitnessAutomatonFiles == null) {
+      assert witnessAutomatonFiles == null;
+      ImmutableList.Builder<Path> nonWitnessAutomatonFilesBuilder = ImmutableList.builder();
+      ImmutableList.Builder<Path> witnessAutomatonFilesBuilder = ImmutableList.builder();
+      Iterable<Path> specs =
+          specification.isPresent()
+              ? specification.get().getSpecFiles()
+              : hackyOptions.specificationFiles;
+      specs = FluentIterable.from(specs).transform(Path::normalize);
+      for (Path path : specs) {
+        if (AutomatonGraphmlParser.isGraphmlAutomaton(path)) {
+          witnessAutomatonFilesBuilder.add(path);
+        } else {
+          nonWitnessAutomatonFilesBuilder.add(path);
+        }
+      }
+      Optional<Path> inputWitness =
+          Optional.ofNullable(hackyOptions.inputWitness).map(Path::normalize);
+      if (inputWitness.isPresent() && !Iterables.contains(specs, inputWitness.get())) {
+        witnessAutomatonFilesBuilder.add(inputWitness.get());
+      }
+      Optional<Path> correctnessWitness =
+          Optional.ofNullable(hackyOptions.invariantsAutomatonFile).map(Path::normalize);
+      if (correctnessWitness.isPresent()
+          && !correctnessWitness.equals(inputWitness)
+          && !Iterables.contains(specs, correctnessWitness.get())) {
+        witnessAutomatonFilesBuilder.add(correctnessWitness.get());
+      }
+      witnessAutomatonFiles = witnessAutomatonFilesBuilder.build();
+      nonWitnessAutomatonFiles = nonWitnessAutomatonFilesBuilder.build();
+    } else {
+      assert witnessAutomatonFiles != null;
+    }
   }
 }

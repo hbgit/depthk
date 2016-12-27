@@ -23,6 +23,7 @@ import random
 import string
 from pipes import quote
 import platform
+import time
 
 # From project
 from modules.run_ast import ast
@@ -70,6 +71,7 @@ class DepthK(object):
         self.esbmc_is_termination = False
         self.esbmc_overflow_check = ""
         self.listproperty = ""
+        self.start_time = time.time()
 
     def identify_initpips(self, _cfilepath):
         """
@@ -295,7 +297,7 @@ class DepthK(object):
         runesbmc.overflow_check = self.esbmc_overflow_check
         runesbmc.original_file = self.cfilepath
         runesbmc.listproperty = self.listproperty
-
+        runesbmc.start_time = self.start_time
 
         if _enableforceassume:
             runesbmc.forceassume = True

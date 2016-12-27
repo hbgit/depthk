@@ -130,17 +130,16 @@ public class CoverageReport {
       ARGState argState = AbstractStates.extractStateByType(state, ARGState.class);
       if (argState != null ) {
         for (ARGState child : argState.getChildren()) {
-          if (!child.isCovered()) {
-            List<CFAEdge> edges = argState.getEdgesToChild(child);
-            if (edges.size() > 1) {
-              for (CFAEdge innerEdge : edges) {
-                handleCoveredEdge(innerEdge, infosPerFile);
-              }
-
-              //BAM produces paths with no edge connection thus the list will be empty
-            } else if (!edges.isEmpty()) {
-              handleCoveredEdge(Iterables.getOnlyElement(edges), infosPerFile);
+          // Do not specially check child.isCovered, as the edge to covered state also should be marked as covered edge
+          List<CFAEdge> edges = argState.getEdgesToChild(child);
+          if (edges.size() > 1) {
+            for (CFAEdge innerEdge : edges) {
+              handleCoveredEdge(innerEdge, infosPerFile);
             }
+
+            //BAM produces paths with no edge connection thus the list will be empty
+          } else if (!edges.isEmpty()) {
+            handleCoveredEdge(Iterables.getOnlyElement(edges), infosPerFile);
           }
         }
       } else {
@@ -184,7 +183,8 @@ public class CoverageReport {
       collector.addExistingAssume((AssumeEdge) pEdge);
     }
 
-    collector.addExistingLine(pEdge.getLineNumber());
+    //Do not extract lines from edge - there are not origin lines
+    collector.addExistingLine(loc.getStartingLineInOrigin());
   }
 
 
@@ -207,7 +207,8 @@ public class CoverageReport {
       collector.addVisitedAssume((AssumeEdge) pEdge);
     }
 
-    collector.addVisitedLine(pEdge.getLineNumber());
+    //Do not extract lines from edge - there are not origin lines
+    collector.addVisitedLine(loc.getStartingLineInOrigin());
   }
 
   private FileCoverageInformation getFileInfoTarget(

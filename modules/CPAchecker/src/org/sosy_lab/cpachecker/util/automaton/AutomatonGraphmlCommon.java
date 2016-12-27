@@ -23,11 +23,14 @@
  */
 package org.sosy_lab.cpachecker.util.automaton;
 
-import com.google.common.base.Joiner;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.io.CharStreams;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,6 +45,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.sosy_lab.common.io.MoreFiles;
 import org.sosy_lab.cpachecker.cfa.Language;
 import org.sosy_lab.cpachecker.cfa.ast.AAssignment;
 import org.sosy_lab.cpachecker.cfa.ast.AIdExpression;
@@ -61,6 +65,7 @@ import org.sosy_lab.cpachecker.cfa.model.c.CFunctionSummaryStatementEdge;
 import org.sosy_lab.cpachecker.cfa.types.MachineModel;
 import org.sosy_lab.cpachecker.core.CPAchecker;
 import org.sosy_lab.cpachecker.util.CFAUtils;
+import org.sosy_lab.cpachecker.util.PropertyFileParser.SpecificationProperty;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -106,9 +111,9 @@ public class AutomatonGraphmlCommon {
     PROGRAMFILE("programfile", ElementType.GRAPH, "programFile", "string"),
     PROGRAMHASH("programhash", ElementType.GRAPH, "programHash", "string"),
     SPECIFICATION("specification", ElementType.GRAPH, "specification", "string"),
-    MEMORYMODEL("memorymodel", ElementType.GRAPH, "memoryModel", "string"),
     ARCHITECTURE("architecture", ElementType.GRAPH, "architecture", "string"),
     PRODUCER("producer", ElementType.GRAPH, "producer", "string"),
+    CREATIONTIME("creationtime", ElementType.GRAPH, "creationTime", "string"),
     SOURCECODE("sourcecode", ElementType.EDGE, "sourcecode", "string"),
     ORIGINLINE("startline", ElementType.EDGE, "startline", "int"),
     OFFSET("startoffset", ElementType.EDGE, "startoffset", "int"),
@@ -122,7 +127,8 @@ public class AutomatonGraphmlCommon {
     FUNCTIONEXIT("returnFrom", ElementType.EDGE, "returnFromFunction", "string"),
     CFAPREDECESSORNODE("predecessor", ElementType.EDGE, "predecessor", "string"),
     CFASUCCESSORNODE("successor", ElementType.EDGE, "successor", "string"),
-    GRAPH_TYPE("witness-type", ElementType.GRAPH, "witness-type", "string");
+    WITNESS_TYPE("witness-type", ElementType.GRAPH, "witness-type", "string"),
+    INPUTWITNESSHASH("inputwitnesshash", ElementType.GRAPH, "inputWitnessHash", "string");
 
     public final String id;
     public final ElementType keyFor;
@@ -195,13 +201,13 @@ public class AutomatonGraphmlCommon {
     }
   }
 
-  public enum GraphType {
+  public enum WitnessType {
     ERROR_WITNESS("violation_witness"),
     PROOF_WITNESS("correctness_witness");
 
     public final String text;
 
-    private GraphType(String text) {
+    private WitnessType(String text) {
       this.text = text;
     }
 
@@ -210,8 +216,8 @@ public class AutomatonGraphmlCommon {
       return text;
     }
 
-    public static Optional<GraphType> tryParse(String pTextualRepresentation) {
-      for (GraphType element : values()) {
+    public static Optional<WitnessType> tryParse(String pTextualRepresentation) {
+      for (WitnessType element : values()) {
         if (element.text.equals(pTextualRepresentation)) {
           return Optional.of(element);
         }
@@ -280,7 +286,7 @@ public class AutomatonGraphmlCommon {
     private final Element graph;
 
     public GraphMlBuilder(
-        GraphType pGraphType,
+        WitnessType pGraphType,
         String pDefaultSourceFileName,
         Language pLanguage,
         MachineModel pMachineModel,
@@ -305,43 +311,40 @@ public class AutomatonGraphmlCommon {
       graph = doc.createElement("graph");
       root.appendChild(graph);
       graph.setAttribute("edgedefault", "directed");
-      graph.appendChild(createDataElement(KeyDef.GRAPH_TYPE, pGraphType.toString()));
+      graph.appendChild(createDataElement(KeyDef.WITNESS_TYPE, pGraphType.toString()));
       graph.appendChild(createDataElement(KeyDef.SOURCECODELANGUAGE, pLanguage.toString()));
       graph.appendChild(
           createDataElement(KeyDef.PRODUCER, "CPAchecker " + CPAchecker.getCPAcheckerVersion()));
-      for (String specification : pVerificationTaskMetaData.getSpecifications()) {
-        graph.appendChild(createDataElement(KeyDef.SPECIFICATION, specification));
+
+      for (SpecificationProperty property : pVerificationTaskMetaData.getProperties()) {
+        graph.appendChild(createDataElement(KeyDef.SPECIFICATION, property.toString()));
       }
 
-      /*
-       * TODO: We should allow multiple program files here.
-       * As soon as we do, we should also hash each file separately.
-       */
+      for (Path specFile : pVerificationTaskMetaData.getNonPropertySpecificationFiles()) {
+        graph.appendChild(
+            createDataElement(
+                KeyDef.SPECIFICATION, MoreFiles.toString(specFile, Charsets.UTF_8).trim()));
+      }
+      for (String inputWitnessHash : pVerificationTaskMetaData.getInputWitnessHashes()) {
+        graph.appendChild(createDataElement(KeyDef.INPUTWITNESSHASH, inputWitnessHash));
+      }
+
       if (pVerificationTaskMetaData.getProgramNames().isPresent()) {
-        graph.appendChild(
-            createDataElement(
-                KeyDef.PROGRAMFILE,
-                Joiner.on(", ").join(pVerificationTaskMetaData.getProgramNames().get())));
+        for (String programName : pVerificationTaskMetaData.getProgramNames().get()) {
+          graph.appendChild(createDataElement(KeyDef.PROGRAMFILE, programName));
+        }
       }
-      if (pVerificationTaskMetaData.getProgramHash().isPresent()) {
-        graph.appendChild(
-            createDataElement(
-                KeyDef.PROGRAMHASH, pVerificationTaskMetaData.getProgramHash().get()));
+      if (pVerificationTaskMetaData.getProgramHashes().isPresent()) {
+        for (String programHash : pVerificationTaskMetaData.getProgramHashes().get()) {
+          graph.appendChild(createDataElement(KeyDef.PROGRAMHASH, programHash));
+        }
       }
 
+      graph.appendChild(createDataElement(KeyDef.ARCHITECTURE, getArchitecture(pMachineModel)));
+      ZonedDateTime now = ZonedDateTime.now().withNano(0);
       graph.appendChild(
-          createDataElement(KeyDef.MEMORYMODEL, pVerificationTaskMetaData.getMemoryModel()));
-      switch (pMachineModel) {
-        case LINUX32:
-          graph.appendChild(createDataElement(KeyDef.ARCHITECTURE, "32bit"));
-          break;
-        case LINUX64:
-          graph.appendChild(createDataElement(KeyDef.ARCHITECTURE, "64bit"));
-          break;
-        default:
-          graph.appendChild(createDataElement(KeyDef.ARCHITECTURE, pMachineModel.toString()));
-          break;
-      }
+          createDataElement(
+              KeyDef.CREATIONTIME, now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)));
     }
 
     private Element createElement(GraphMlTag tag) {
@@ -497,5 +500,20 @@ public class AutomatonGraphmlCommon {
     return false;
   }
 
+  public static String getArchitecture(MachineModel pMachineModel) {
+    final String architecture;
+    switch (pMachineModel) {
+      case LINUX32:
+        architecture = "32bit";
+        break;
+      case LINUX64:
+        architecture = "64bit";
+        break;
+      default:
+        architecture = pMachineModel.toString();
+        break;
+    }
+    return architecture;
+  }
 
 }

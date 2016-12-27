@@ -1,7 +1,0 @@
-digraph merge_single_node {
-6 [shape="circle" label="N6\n12"]
-7 [shape="circle" label="N7\n11"]
-7 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">7</td><td align="left">struct node *node;</td></tr><tr><td align="right">8</td><td align="left">void *__cil_tmp4;</td></tr><tr><td align="right">9</td><td align="left">struct node **__cil_tmp5;</td></tr><tr><td align="right">10</td><td align="left">node = *data;</td></tr><tr><td align="right">11</td><td align="left">*data = *((struct node **)node);</td></tr><tr><td align="right">12</td><td align="left">__cil_tmp4 = (void *)0;</td></tr><tr><td align="right">13</td><td align="left">*((struct node **)node) = (struct node *)__cil_tmp4;</td></tr><tr><td align="right">14</td><td align="left">__cil_tmp5 = *dst;</td></tr><tr><td align="right">15</td><td align="left">*__cil_tmp5 = node;</td></tr><tr><td align="right">16</td><td align="left">*dst = (struct node **)node;</td></tr><tr><td align="right">17</td><td align="left">return;</td></tr></table>>]
-7 -> 5[label=""]
-6 -> 7 [label="Function start dummy edge" fontname="Courier New"]
-}

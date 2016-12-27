@@ -42,7 +42,7 @@ First of all, you need to install the required packages:
 > - <b>Ctags</b>: <br> Ubuntu $ sudo apt-get install exuberant-ctags <br> Fedora $ sudo yum install ctags
 > - <b>Clang</b>: <br> Ubuntu $ sudo apt-get install clang-3.5 <br> Fedora $ sudo yum install clang-3.5
 > - <b>GCC</b>: <br> Ubuntu $ sudo apt-get install gcc <br> Fedora $ sudo yum groupinstall "Development Tools"
-> - <b>Java</b>: <br> Ubuntu $ apt-get install default-jdk <br> Fedora $ sudo yum install java
+> - <b>Java</b>: <br> Ubuntu $ sudo apt-get install openjdk-8-jre <br>
 > - <b>PIPS (optional)</b>: <br>Available at http://pips4u.org/copy_of_getting-pips/building-and-installing-pips-from%20svn <br>
 You should set the environment variable PATH in your .bashrc file. <br> 
 Checkout Step 4: Load the PIPS environment variables from that link<br>

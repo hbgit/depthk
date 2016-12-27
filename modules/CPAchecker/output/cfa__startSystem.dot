@@ -1,7 +1,0 @@
-digraph startSystem {
-493 [shape="circle" label="N493\n3"]
-494 [shape="circle" label="N494\n2"]
-494 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">494</td><td align="left">systemActive = 1;</td></tr><tr><td align="right">495</td><td align="left">return;</td></tr></table>>]
-494 -> 492[label=""]
-493 -> 494 [label="Function start dummy edge" fontname="Courier New"]
-}

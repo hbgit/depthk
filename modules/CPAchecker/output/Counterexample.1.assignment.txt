@@ -1,2 +1,0 @@
-__VERIFIER_assert::cond@2: 0
-main::x@2: 268435455
