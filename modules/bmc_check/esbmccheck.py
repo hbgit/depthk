@@ -863,8 +863,8 @@ class DepthEsbmcCheck(object):
                                 lastresult[1] = "TRUE"
                             elif endresult == "TRUE":
                                 lastresult[1] = "TRUE"
-                            elif endresult == "FALSE":
-                                lastresult[1] = "FALSE"
+                            #elif endresult == "FALSE":
+                            #    lastresult[1] = "FALSE"
                             else:
                                 lastresult[1] = "UNKNOWN"
 
@@ -1141,8 +1141,8 @@ class DepthEsbmcCheck(object):
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
-                    elif endresult == "FALSE":
-                        return "FALSE"
+                    #elif endresult == "FALSE":
+                    #    return "FALSE"
 
                     return "UNKNOWN"
         return ""
@@ -1234,8 +1234,8 @@ class DepthEsbmcCheck(object):
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
-                    elif endresult == "FALSE":
-                        return "FALSE"
+                    #elif endresult == "FALSE":
+                    #    return "FALSE"
 
                     return "UNKNOWN"
             else:
