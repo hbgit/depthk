@@ -71,7 +71,7 @@ exit
             #if ! grep -q __VERIFIER_error $OPTARG; then
   	    cat $OPTARG > ./ALL.prp
             property_list="./ALL.prp"
-	    echo "PRP: " "$property_list"
+	    #echo "PRP: " "$property_list"
             prp_overflow_result=$( grep -c "LTL(G[ ]*\![ ]*overflow" "$OPTARG")            
 			if [ "$prp_overflow_result" -ge 1 ]; then
 				do_overflow=1
