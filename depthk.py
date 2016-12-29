@@ -438,6 +438,8 @@ class DepthK(object):
             return True
         if _namesolver == "boolector":
             return True
+        if _namesolver == "mathsat":
+            return True
         else:
             return False
 
@@ -679,7 +681,7 @@ if __name__ == "__main__":
             __invgeneration = args.setInvariantTool
             pathcodeinvtranslated = ""
             ERROR_FLAG = False
-            if not args.setOnlyCEUse or args.setInvariantTool == "all":
+            if (not args.setOnlyCEUse or args.setInvariantTool == "all") and  (not rundepthk.esbmc_is_termination and not rundepthk.esbmc_is_memory_safety):
                 try:
                     # Choose invariant generation __invgeneration
                     # Applying steps of DepthK

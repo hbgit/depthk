@@ -50,7 +50,7 @@ class DepthEsbmcCheck(object):
         self.esbmc_inductivestep_op = "--inductive-step --no-slice --show-counter-example"
 
         self.dldv_error = " -DLDV_ERROR=ERROR "
-        self.dassert = " -D_Bool=int -Dassert=notassert"
+        self.dassert = "  -Dassert=notassert"
         self.no_bounds_check = ""
         self.no_pointer_check = ""
         self.no_div_by_zero_check = ""
@@ -859,12 +859,14 @@ class DepthEsbmcCheck(object):
                             cpachecker_ops = self.configureCPACheckerPath()
                             result = self.execCPAChecker(self.original_file, cpachecker_ops)
                             endresult = self.check_witnessresult(result)
-                            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
+                            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() \
+                                    or "UNSUPPORTED FEATURE" in result.upper() or result == "" \
+                                    or "UNRECOGNIZED C CODE" in result:
                                 lastresult[1] = "TRUE"
                             elif endresult == "TRUE":
                                 lastresult[1] = "TRUE"
-                            #elif endresult == "FALSE":
-                            #    lastresult[1] = "FALSE"
+                            elif endresult == "FALSE":
+                                lastresult[1] = "FALSE"
                             else:
                                 lastresult[1] = "UNKNOWN"
 
@@ -931,14 +933,28 @@ class DepthEsbmcCheck(object):
 
     def configureCPACheckerPath(self):
 
-        return "./scripts/cpa.sh -noout -skipRecursion " \
-               " -heap 10000M -predicateAnalysis " \
-               " -setprop cpa.composite.aggregateBasicBlocks=false -setprop cfa.simplifyCfa=false " \
-               " -setprop cfa.allowBranchSwapping=false -setprop cpa.predicate.ignoreIrrelevantVariables=false " \
-               " -setprop counterexample.export.assumptions.assumeLinearArithmetics=true " \
-               " -setprop counterexample.export.assumptions.includeConstantsForPointers=false -setprop counterexample.export.graphml=violation-witness.graphml " \
-               " -setprop counterexample.export.compressErrorWitness=false "\
-               " -spec " + self.listproperty + " "
+        if(self.is_memory_safety):
+            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -config config/sv-comp17--memorysafety.properties " \
+                    " -spec " + self.listproperty + " "
+        if(self.is_termination):
+            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -config config/sv-comp17--termination.properties " \
+                    " -spec " + self.listproperty + " "
+
+        if(self.overflow_check):
+            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -config config/sv-comp17--overflow.properties " \
+                    " -spec " + self.listproperty + " "
+
+        return  "./scripts/cpa.sh  -timelimit 900 -disable-java-assertions -heap 10000m -config config/sv-comp17.properties " \
+                    " -spec " + self.listproperty + " "
+
+        #return "./scripts/cpa.sh -noout -skipRecursion " \
+        #       " -heap 10000M -predicateAnalysis " \
+        #       " -setprop cpa.composite.aggregateBasicBlocks=false -setprop cfa.simplifyCfa=false " \
+        #       " -setprop cfa.allowBranchSwapping=false -setprop cpa.predicate.ignoreIrrelevantVariables=false " \
+        #       " -setprop counterexample.export.assumptions.assumeLinearArithmetics=true " \
+        #       " -setprop counterexample.export.assumptions.includeConstantsForPointers=false -setprop counterexample.export.graphml=violation-witness.graphml " \
+        #       " -setprop counterexample.export.compressErrorWitness=false "\
+        #       " -spec " + self.listproperty + " "
 
     def execCPAChecker(self, _cprogrampath, cpachecker_ops):
         cwd = os.getcwd()
@@ -1050,6 +1066,10 @@ class DepthEsbmcCheck(object):
                                                       " | grep -c " +
                                                       "\"dereference failure: array bounds violated\" ")) > 0:
                         return "FALSE \n dereference failure: array bounds violated"
+                    elif int(commands.getoutput("cat " + actual_ce +
+                                                      " | grep -c " +
+                                                      "\"dereference failure: NULL pointer\" ")) > 0:
+                        return "FALSE \n dereference failure: NULL pointer"
                     #PROPERTY_UNWIND_ASSERTION_LOOP_TAG
                     elif int(commands.getoutput("cat " + actual_ce +
                                                       " | grep -c " +
@@ -1141,8 +1161,8 @@ class DepthEsbmcCheck(object):
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
-                    #elif endresult == "FALSE":
-                    #    return "FALSE"
+                    elif endresult == "FALSE":
+                        return "FALSE"
 
                     return "UNKNOWN"
         return ""
@@ -1234,8 +1254,8 @@ class DepthEsbmcCheck(object):
                         return "TRUE"
                     if endresult == "TRUE":
                         return "TRUE"
-                    #elif endresult == "FALSE":
-                    #    return "FALSE"
+                    elif endresult == "FALSE":
+                        return "FALSE"
 
                     return "UNKNOWN"
             else:

@@ -29,12 +29,13 @@ fi
 # ESBMC violation properties
 PROPERTY_FORGOTTEN_MEMORY_TAG="dereference failure: forgotten memory"
 PROPERTY_INVALID_POINTER_TAG="dereference failure: invalid pointer"
-PROPERTY_ARRAY_BOUND_VIOLATED_TAG="dereference failure: array bounds violated"
+PROPERTY_ARRAY_BOUND_VIOLATED_TAG="array bounds violated"
+PROPERTY_NULL_POINTER_TAG="dereference failure: NULL pointer"
 #PROPERTY_UNWIND_ASSERTION_LOOP_TAG="unwinding assertion loop" #É verificado dentro do DepthK, se for esse tipo, então o resultado é unknown.
 
 # MEMSAFETY properties pattern
 BENCHMARK_FALSE_VALID_MEMTRACK=${PROPERTY_FORGOTTEN_MEMORY_TAG}
-BENCHMARK_FALSE_VALID_DEREF="(${PROPERTY_INVALID_POINTER_TAG}|${PROPERTY_ARRAY_BOUND_VIOLATED_TAG})"
+BENCHMARK_FALSE_VALID_DEREF="(\|${PROPERTY_INVALID_POINTER_TAG}\|${PROPERTY_ARRAY_BOUND_VIOLATED_TAG}\|${PROPERTY_NULL_POINTER_TAG}\|)"
 
 # Benchmark result controlling flags
 IS_MEMSAFETY_BENCHMARK=0
@@ -50,7 +51,7 @@ property_list=""
 # Use parallel k-induction
 parallel=0
 
-
+getpwd=$( pwd )
 
 while getopts "c:mhptv" arg; do
     case $arg in
@@ -69,28 +70,29 @@ exit
             # tests (except for the memory checking ones), and define all the
             # error labels from other directories to be ERROR.
             #if ! grep -q __VERIFIER_error $OPTARG; then
-  	    cat $OPTARG > ./ALL.prp
+	    cat $OPTARG > ./ALL.prp
             property_list="./ALL.prp"
-	    #echo "PRP: " "$property_list"
-            prp_overflow_result=$( grep -c "LTL(G[ ]*\![ ]*overflow" "$OPTARG")            
-			if [ "$prp_overflow_result" -ge 1 ]; then
-				do_overflow=1
-			fi
+            prp_overflow_result=$( grep -c "overflow" "$property_list")            
 
-			prp_mem_result=$( grep -c "LTL(G[ ]*(valid-free|valid-deref|valid-memtrack)" "$OPTARG")
-			if [ "$prp_mem_result" -ge 1 ]; then
-					do_memsafety=1
-					IS_MEMSAFETY_BENCHMARK=1
-			fi
-			
-			prp_term_result=$( grep -c "LTL(F[ ]*" "$OPTARG")
-			if [ "$prp_term_result" -ge 1 ]; then
-					do_term=1
-			fi
+		if [ "$prp_overflow_result" -ge 1 ]; then
+			do_overflow=1
+	
+		fi
+
+		prp_mem_result=$( grep -c "valid-free" "$property_list")
+		if [ "$prp_mem_result" -ge 1 ]; then
+				do_memsafety=1
+				IS_MEMSAFETY_BENCHMARK=1
+		fi
+	
+		prp_term_result=$( grep -c "CHECK( init(main()), LTL(F end)" "$property_list")
+		if [ "$prp_term_result" -ge 1 ]; then
+				do_term=1
+		fi
         ;;
 	p) parallel=1
         ;;
-	t) getpwd=$( pwd )		
+	t) 		
 		echo ""
 		prpfile="$getpwd/samples/ALL.prp"
 		opt_test="--debug --force-check-base-case --solver z3 --memlimit 15g --prp $prpfile  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
@@ -135,13 +137,13 @@ if test ${parallel} = 1; then
   fi
 else
     if test ${do_term} = 1; then
-	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --termination-category --prp "$property_list" --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
+	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --termination-category --prp "$property_list" --extra-option-esbmc=\"--floatbv -D_Bool=int --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
 	elif test ${do_overflow} = 1; then
-	    depthk_options=" --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp "$property_list"  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
+	    depthk_options=" --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp "$property_list"  --extra-option-esbmc=\"--floatbv -D_Bool=int--no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
     elif test ${do_memsafety} = 0; then
-        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --extra-option-esbmc=\"--floatbv -D_Bool=int --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
     else
-        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --clang-frontend --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver mathsat --memlimit 15g --prp "$property_list" --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --clang-frontend --error-label ERROR\""
     fi
 fi
 
@@ -168,16 +170,16 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	echo "${result_check}"
 fi
 
-VPROP=""
+VPROP=$""
 
 if test ${IS_MEMSAFETY_BENCHMARK} = 1; then
-   
+
    false_valid_mamtrack=$(echo "${result_check}" |grep -c "${BENCHMARK_FALSE_VALID_MEMTRACK}")
    false_valid_deref=$(echo "${result_check}" |grep -c "${BENCHMARK_FALSE_VALID_DEREF}")
 
    if [ "$false_valid_mamtrack" -gt 0 ]; then
       VPROP=$"(valid-memtrack)"
-   elif [ "$false_valid_deref" -gt 0 ]; then
+   elif [ "${false_valid_deref}" -gt 0 ]; then
       VPROP=$"(valid-deref)"
    fi
 elif test ${do_overflow} = 1; then
@@ -190,10 +192,11 @@ success=$(echo "${result_check}" |grep -c "TRUE")
 # Decide which result we determined here.
 if [ "$failed" -gt 0 ]; then
     # Error path found
+	
     if test ${do_term} = 1; then
        echo "UNKNOWN"
     else
-       echo "FALSE${VPROP}"
+       echo "FALSE"${VPROP}
     fi
 elif [ "$success" -gt 0 ]; then
     echo "TRUE"
