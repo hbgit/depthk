@@ -47,17 +47,17 @@ class DepthEsbmcCheck(object):
         # k-induction options
         self.esbmc_basecase_op = "--base-case"
         self.esbmc_forwardcond_op = "--forward-condition"
-        self.esbmc_inductivestep_op = "--inductive-step --no-slice --show-counter-example"
+        self.esbmc_inductivestep_op = "--inductive-step "
 
-        self.dldv_error = " -DLDV_ERROR=ERROR "
-        self.dassert = "  -Dassert=notassert"
+        self.dldv_error = " "
+        self.dassert = " "
         self.no_bounds_check = ""
         self.no_pointer_check = ""
         self.no_div_by_zero_check = ""
         self.no_assertions = ""
         self.memory_leak_check = ""
         self.no_inductive_step = False
-        self.quiet = " --quiet "
+        self.quiet = " "
         self.context_switch = ""
         self.force_malloc = " --force-malloc-success "
         self.is_memory_safety = False
@@ -69,6 +69,7 @@ class DepthEsbmcCheck(object):
         self.enable_witnesschecker = True
         self.file2witness = ""
         self.cpachecker_path = commands.getoutput("readlink -f .") +  "/modules/CPAchecker/"
+        self.ua_path = commands.getoutput("readlink -f .") +  "/modules/UAutomizer/"
         self.listproperty = ""
         self.original_file = ""
         self.start_time = 0
@@ -856,20 +857,31 @@ class DepthEsbmcCheck(object):
                         if(z3Error > 0):
                             result = "UNKNOWN"
                         else:
-                            cpachecker_ops = self.configureCPACheckerPath()
-                            result = self.execCPAChecker(self.original_file, cpachecker_ops)
-                            endresult = self.check_witnessresult(result)
-                            if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() \
-                                    or "UNSUPPORTED FEATURE" in result.upper() or result == "" \
-                                    or "UNRECOGNIZED C CODE" in result:
-                                lastresult[1] = "TRUE"
-                            elif endresult == "TRUE":
-                                lastresult[1] = "TRUE"
-                            elif endresult == "FALSE":
-                                lastresult[1] = "FALSE"
+                            if not self.is_termination:
+                                cpachecker_ops = self.configureCPACheckerPath()
+                                result = self.execCPAChecker(self.original_file, cpachecker_ops)
+                                endresult = self.check_witnessresult(result)
+                                if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() \
+                                        or "UNSUPPORTED FEATURE" in result.upper() or result == "" \
+                                        or "UNRECOGNIZED C CODE" in result:
+                                    lastresult[1] = "TRUE"
+                                elif endresult == "TRUE":
+                                    lastresult[1] = "TRUE"
+                                elif endresult == "FALSE":
+                                    lastresult[1] = "FALSE"
+                                else:
+                                    lastresult[1] = "UNKNOWN"
                             else:
-                                lastresult[1] = "UNKNOWN"
+                                 ua_ops = self.configureUAPath()
+                                 result = self.execUA(self.original_file, ua_ops)
+                                 endresult = self.check_witnessresultUA(result)
 
+                                 if endresult == "TRUE":
+                                    lastresult[1] = "TRUE"
+                                 elif endresult == "FALSE":
+                                    lastresult[1] = "FALSE"
+                                 else:
+                                    lastresult[1] = "UNKNOWN"
                             result = "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
 
                         self.cleantmpfiles(listtmpfiles)
@@ -931,20 +943,23 @@ class DepthEsbmcCheck(object):
 
         return listbeginnumfuct
 
+    def configureUAPath(self):
+        return  "./Ultimate.py " + self.listproperty + " 64bit "
+
     def configureCPACheckerPath(self):
 
         if(self.is_memory_safety):
-            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -config config/sv-comp17--memorysafety.properties " \
+            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -sv-comp17--memorysafety.properties " \
                     " -spec " + self.listproperty + " "
         if(self.is_termination):
-            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -config config/sv-comp17--termination.properties " \
+            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -sv-comp17--termination " \
                     " -spec " + self.listproperty + " "
 
         if(self.overflow_check):
-            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -config config/sv-comp17--overflow.properties " \
+            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -sv-comp17--overflow.properties " \
                     " -spec " + self.listproperty + " "
 
-        return  "./scripts/cpa.sh  -timelimit 900 -disable-java-assertions -heap 10000m -config config/sv-comp17.properties " \
+        return  "./scripts/cpa.sh  -timelimit 900 -disable-java-assertions -heap 10000m -sv-comp17 " \
                     " -spec " + self.listproperty + " "
 
         #return "./scripts/cpa.sh -noout -skipRecursion " \
@@ -966,6 +981,22 @@ class DepthEsbmcCheck(object):
         if (remaining_time > 0):
             cpacommand = "timeout  " + str(remaining_time) + " " + cpachecker_ops  + _cprogrampath
             result_witness =  commands.getoutput(cpacommand)
+        if self.debug:
+            print(result_witness)
+        os.chdir(cwd)
+
+        return result_witness.upper()
+
+    def execUA(self, _cprogrampath, ua_ops):
+        cwd = os.getcwd()
+        os.chdir(self.ua_path)
+
+        elapsed_time = (int) (round(time.time() - self.start_time))
+        remaining_time = 895 - elapsed_time
+        result_witness = ""
+        if (remaining_time > 0):
+            uacommand = "timeout  " + str(remaining_time) + " " + ua_ops + _cprogrampath
+            result_witness = commands.getoutput(uacommand)
         if self.debug:
             print(result_witness)
         os.chdir(cwd)
@@ -1036,17 +1067,8 @@ class DepthEsbmcCheck(object):
             statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
 
             if statusce_basecase > 0:
+
                 if not self.is_memory_safety:
-                    # To witness checker
-                    #cpachecker_ops = self.configureCPACheckerPath()
-                    #result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
-                    #endresult = self.check_witnessresult(result)
-                    #if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-                    #    return "FALSE"
-                    #if endresult == "FALSE":
-                    #    return "FALSE"
-                    #else:
-                    #    return "UNKNOWN"
                     return "FALSE"
                 else:
                     #PROPERTY_FORGOTTEN_MEMORY_TAG
@@ -1153,16 +1175,27 @@ class DepthEsbmcCheck(object):
                     return "CONTINUE"
                 else:
                     self.cleantmpfiles(listtmpfiles)
-                    cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(self.original_file, cpachecker_ops)
-                    endresult = self.check_witnessresult(result)
+                    if not self.is_termination:
 
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
-                        return "TRUE"
-                    if endresult == "TRUE":
-                        return "TRUE"
-                    elif endresult == "FALSE":
-                        return "FALSE"
+                        cpachecker_ops = self.configureCPACheckerPath()
+                        result = self.execCPAChecker(self.original_file, cpachecker_ops)
+                        endresult = self.check_witnessresult(result)
+
+                        if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
+                            return "TRUE"
+                        if endresult == "TRUE":
+                            return "TRUE"
+                        elif endresult == "FALSE":
+                            return "FALSE"
+                    else:
+                        ua_ops = self.configureUAPath()
+                        result = self.execUA(self.original_file, ua_ops)
+                        endresult = self.check_witnessresultUA(result)
+
+                        if endresult == "TRUE":
+                            return "TRUE"
+                        elif endresult == "FALSE":
+                            return "FALSE"
 
                     return "UNKNOWN"
         return ""
@@ -1218,7 +1251,6 @@ class DepthEsbmcCheck(object):
                                                   self.overflow_check +
                                                   self.context_switch +
                                                   self.force_malloc +
-
                                                   self.esbmc_inductivestep_op + " " +
                                                   _cprogrampath)
 
@@ -1246,16 +1278,28 @@ class DepthEsbmcCheck(object):
                         print("\t\t > Forcing last check in base case")
                 else:
                     self.cleantmpfiles(listtmpfiles)
-                    cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(self.original_file, cpachecker_ops)
-                    endresult = self.check_witnessresult(result)
+                    if not self.is_termination:
 
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
-                        return "TRUE"
-                    if endresult == "TRUE":
-                        return "TRUE"
-                    elif endresult == "FALSE":
-                        return "FALSE"
+                        cpachecker_ops = self.configureCPACheckerPath()
+                        result = self.execCPAChecker(self.original_file, cpachecker_ops)
+                        endresult = self.check_witnessresult(result)
+
+                        if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
+                            return "TRUE"
+                        if endresult == "TRUE":
+                            return "TRUE"
+                        elif endresult == "FALSE":
+                            return "FALSE"
+                    else:
+                        ua_ops = self.configureUAPath()
+                        result = self.execUA(self.original_file, ua_ops)
+                        endresult = self.check_witnessresultUA(result)
+
+                        if endresult == "TRUE":
+                            return "TRUE"
+                        elif endresult == "FALSE":
+                            return "FALSE"
+
 
                     return "UNKNOWN"
             else:
@@ -1285,4 +1329,22 @@ class DepthEsbmcCheck(object):
         if not flag_cpa:
             return "UNKNOWN"
 
+    def check_witnessresultUA(self, _listresultwitness):
+        if ("RESULT:\nTRUE" in _listresultwitness):
+            return "TRUE"
+        elif ("RESULT:\nFALSE(TERM)" in _listresultwitness):
+            return  "FALSE"
+        return "UNKNOWN"
+        #list_recheck = _listresultwitness.split("\n")
+        #flag_ua = False
+        #for line in list_recheck:
+        #    #print(line)
+        #    match_failed_UA = re.search(r"RESULT:\nFALSE(TERM)", line.upper())
+        #    match_nobug_UA = re.search(r"RESULT: \nTRUE", line.upper())
+        #    if match_failed_UA:
+        #        return "FALSE"
+        #    elif match_nobug_UA:
+        #        return "TRUE"
 
+        #if not flag_ua:
+        #    return "UNKNOWN"

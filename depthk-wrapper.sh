@@ -137,13 +137,13 @@ if test ${parallel} = 1; then
   fi
 else
     if test ${do_term} = 1; then
-	    depthk_options="--force-check-base-case --solver z3 --memlimit 15g --termination-category --prp "$property_list" --extra-option-esbmc=\"--floatbv -D_Bool=int --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
+	    depthk_options="--force-check-base-case --solver z3 --termination-category --memlimit 15g  --prp "$property_list" --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend  -DLDV_ERROR=ERROR  -D_Bool=int -Dassert=notassert --error-label ERROR\""
 	elif test ${do_overflow} = 1; then
-	    depthk_options=" --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp "$property_list"  --extra-option-esbmc=\"--floatbv -D_Bool=int--no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
+	    depthk_options=" --force-check-base-case --solver z3 --memlimit 15g --overflow-check --prp "$property_list"  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --force-malloc-success --context-bound 7 -Dldv_assume=__ESBMC_assume -D__VERIFIER_error=ESBMC_error --clang-frontend \""
     elif test ${do_memsafety} = 0; then
-        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --extra-option-esbmc=\"--floatbv -D_Bool=int --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --extra-option-esbmc=\"--floatbv --force-malloc-success --context-bound 7 --no-bounds-check --no-pointer-check --no-div-by-zero-check -Dldv_assume=__ESBMC_assume --clang-frontend --error-label ERROR\""
     else
-        depthk_options="--force-check-base-case --solver mathsat --memlimit 15g --prp "$property_list" --memory-safety-category --extra-option-esbmc=\"--floatbv --memory-leak-check --clang-frontend --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver z3 --memlimit 15g --prp "$property_list" --memory-safety-category --extra-option-esbmc=\"--no-div-by-zero-check --force-malloc-success --state-hashing --context-bound 7 -Dldv_assume=__ESBMC_assume --floatbv --memory-leak-check -D__VERIFIER_error=ESBMC_error --clang-frontend \""
     fi
 fi
 
