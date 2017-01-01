@@ -864,7 +864,17 @@ class DepthEsbmcCheck(object):
                                 if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() \
                                         or "UNSUPPORTED FEATURE" in result.upper() or result == "" \
                                         or "UNRECOGNIZED C CODE" in result:
-                                    lastresult[1] = "TRUE"
+
+                                    ua_ops = self.configureUAPath()
+                                    result = self.execUA(self.original_file, ua_ops)
+                                    endresult = self.check_witnessresultUA(result)
+
+                                    if endresult == "TRUE":
+                                        lastresult[1] = "TRUE"
+                                    elif endresult == "FALSE":
+                                        lastresult[1] =  "FALSE"
+                                    else:
+                                        lastresult[1] = "UNKNOWN"
                                 elif endresult == "TRUE":
                                     lastresult[1] = "TRUE"
                                 elif endresult == "FALSE":
@@ -944,7 +954,7 @@ class DepthEsbmcCheck(object):
         return listbeginnumfuct
 
     def configureUAPath(self):
-        return  "./Ultimate.py " + self.listproperty + " 64bit "
+        return "./Ultimate.py " + self.listproperty + " 64bit "
 
     def configureCPACheckerPath(self):
 
@@ -1191,7 +1201,16 @@ class DepthEsbmcCheck(object):
                         endresult = self.check_witnessresult(result)
 
                         if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
-                            return "TRUE"
+                            ua_ops = self.configureUAPath()
+                            result = self.execUA(self.original_file, ua_ops)
+                            endresult = self.check_witnessresultUA(result)
+
+                            if endresult == "TRUE":
+                                return "TRUE"
+                            elif endresult == "FALSE":
+                                return "FALSE"
+                            else:
+                                return "UNKNOWN"
                         if endresult == "TRUE":
                             return "TRUE"
                         elif endresult == "FALSE":
@@ -1288,13 +1307,20 @@ class DepthEsbmcCheck(object):
                 else:
                     self.cleantmpfiles(listtmpfiles)
                     if not self.is_termination:
-
                         cpachecker_ops = self.configureCPACheckerPath()
                         result = self.execCPAChecker(self.original_file, cpachecker_ops)
                         endresult = self.check_witnessresult(result)
 
                         if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
-                            return "TRUE"
+                            ua_ops = self.configureUAPath()
+                            result = self.execUA(self.original_file, ua_ops)
+                            endresult = self.check_witnessresultUA(result)
+                            if endresult == "TRUE":
+                                return "TRUE"
+                            elif endresult == "FALSE":
+                                return "FALSE"
+                            else:
+                                return "UNKNOWN"
                         if endresult == "TRUE":
                             return "TRUE"
                         elif endresult == "FALSE":
