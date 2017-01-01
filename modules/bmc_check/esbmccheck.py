@@ -1067,8 +1067,17 @@ class DepthEsbmcCheck(object):
             statusce_basecase = int(commands.getoutput("cat " + actual_ce + " | grep -c \"VERIFICATION FAILED\" "))
 
             if statusce_basecase > 0:
+                if self.is_termination:
+                    ua_ops = self.configureUAPath()
+                    result = self.execUA(self.original_file, ua_ops)
+                    endresult = self.check_witnessresultUA(result)
 
-                if not self.is_memory_safety:
+                    if endresult == "TRUE":
+                        return "TRUE"
+                    elif endresult == "FALSE":
+                        return "FALSE"
+                    return "UNKNOWN"
+                elif not self.is_memory_safety:
                     return "FALSE"
                 else:
                     #PROPERTY_FORGOTTEN_MEMORY_TAG
@@ -1335,16 +1344,3 @@ class DepthEsbmcCheck(object):
         elif ("RESULT:\nFALSE(TERM)" in _listresultwitness):
             return  "FALSE"
         return "UNKNOWN"
-        #list_recheck = _listresultwitness.split("\n")
-        #flag_ua = False
-        #for line in list_recheck:
-        #    #print(line)
-        #    match_failed_UA = re.search(r"RESULT:\nFALSE(TERM)", line.upper())
-        #    match_nobug_UA = re.search(r"RESULT: \nTRUE", line.upper())
-        #    if match_failed_UA:
-        #        return "FALSE"
-        #    elif match_nobug_UA:
-        #        return "TRUE"
-
-        #if not flag_ua:
-        #    return "UNKNOWN"
