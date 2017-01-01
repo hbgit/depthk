@@ -103,7 +103,7 @@ exit
         ;;
 	v) 
 
-		echo "DepthK version 3.0 - Tue Dez 27 07:24:14 AMT 2016"
+		echo "DepthK version 3.0 - Sun Jan  1 19:08:40 AMT 2017"
 		exit	
 
         ;;
