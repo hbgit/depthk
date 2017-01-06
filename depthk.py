@@ -73,6 +73,7 @@ class DepthK(object):
         self.listproperty = ""
         self.start_time = time.time()
 
+
     def identify_initpips(self, _cfilepath):
         """
         Read the code.pips identify #init, save the VAR#init and the function
@@ -587,6 +588,8 @@ if __name__ == "__main__":
 
             if args.setTerminationCategory:
                 rundepthk.esbmc_is_termination = args.setTerminationCategory
+                if rundepthk.debug_op:
+                    print("Category: Termination Category!")
 
             if args.setProperty:
                 fileDir = os.path.dirname(os.path.realpath('__file__'))

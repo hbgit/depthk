@@ -73,6 +73,7 @@ class DepthEsbmcCheck(object):
         self.listproperty = ""
         self.original_file = ""
         self.start_time = 0
+        self.is_concurrency_category = False
 
     @staticmethod
     def getlastlinenumfromce(_esbmccepath, _indexliststartsearch):
@@ -764,10 +765,6 @@ class DepthEsbmcCheck(object):
                 os.remove(filepath)
 
     def kinductioncheck(self, _cprogrampath):
-        #if(self.is_memory_safety or self.is_termination or self.overflow_check != ""):
-        #if(self.is_memory_safety or self.is_termination):
-        #    return "UNKNOWN"
-
         listtmpfiles = []
         actual_detphver = 1
 
@@ -794,17 +791,17 @@ class DepthEsbmcCheck(object):
         if self.debug:
             print(">> Starting the verification of the P\' program")
 
-        #try:
-        #    file = open(_cprogrampath, "r")
-        #    lines = file.readlines()
-        #    res = [y for y in lines if "safe_write" in y or "fflush_all" in y or "bb_show_usage" in y or "bb_error_msg_and_die" in y]
-        #    if(res is not None and len(res) > 0):
-        #        print("kinductioncheck: Busybox file.")
-        #        return "UNKNOWN"
-        #except:
-        #    print("kinductioncheck: Fails on open file.")
-        #finally:
-        #    file.close()
+        try:
+            file = open(_cprogrampath, "r")
+            lines = file.readlines()
+            res = [y for y in lines if "pthread_t" in y or "pthread_create" in y]
+            if(res is not None and len(res) > 0):
+                print("kinductioncheck: Concurrency file.")
+                self.is_concurrency_category = True
+        except:
+            print("kinductioncheck: Fails on open file.")
+        finally:
+            file.close()
 
         if self.enable_witnesschecker:
             folderPath =  self.root_path + "/graphml/"
@@ -857,7 +854,9 @@ class DepthEsbmcCheck(object):
                         if(z3Error > 0):
                             result = "UNKNOWN"
                         else:
-                            if not self.is_termination:
+                            if self.is_concurrency_category:
+                                lastresult[1] = "TRUE"
+                            elif not self.is_termination:
                                 cpachecker_ops = self.configureCPACheckerPath()
                                 result = self.execCPAChecker(self.original_file, cpachecker_ops)
                                 endresult = self.check_witnessresult(result)
@@ -959,14 +958,14 @@ class DepthEsbmcCheck(object):
     def configureCPACheckerPath(self):
 
         if(self.is_memory_safety):
-            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -sv-comp17--memorysafety.properties " \
+            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -sv-comp17--memorysafety " \
                     " -spec " + self.listproperty + " "
         if(self.is_termination):
             return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -sv-comp17--termination " \
                     " -spec " + self.listproperty + " "
 
         if(self.overflow_check):
-            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -sv-comp17--overflow.properties " \
+            return "./scripts/cpa.sh -disable-java-assertions -heap 10000m -sv-comp17--overflow " \
                     " -spec " + self.listproperty + " "
 
         return  "./scripts/cpa.sh  -timelimit 900 -disable-java-assertions -heap 10000m -sv-comp17 " \
@@ -1001,16 +1000,18 @@ class DepthEsbmcCheck(object):
         cwd = os.getcwd()
         os.chdir(self.ua_path)
 
-        elapsed_time = (int) (round(time.time() - self.start_time))
+        elapsed_time = (int)(round(time.time() - self.start_time))
         remaining_time = 895 - elapsed_time
         result_witness = ""
+
         if (remaining_time > 0):
             uacommand = "timeout  " + str(remaining_time) + " " + ua_ops + _cprogrampath
 
-	if (self.debug):
-            print(uacommand)
+            if (self.debug):
+                print(uacommand)
 
             result_witness = commands.getoutput(uacommand)
+
         if self.debug:
             print(result_witness)
         os.chdir(cwd)
@@ -1115,6 +1116,17 @@ class DepthEsbmcCheck(object):
                                                       " | grep -c " +
                                                       "\"dereference failure: NULL pointer\" ")) > 0:
                         return "FALSE \n dereference failure: NULL pointer"
+
+                    elif int(commands.getoutput("cat " + actual_ce +
+                                                      " | grep -c " +
+                                                      "\"dereference failure: Access to object out of bounds\" ")) > 0:
+                        return "FALSE \n dereference failure: Access to object out of bounds"
+
+                    elif int(commands.getoutput("cat " + actual_ce +
+                                                      " | grep -c " +
+                                                      "\"dereference failure: invalidated dynamic object\" ")) > 0:
+                        return "FALSE \n dereference failure: invalidated dynamic object"
+
                     #PROPERTY_UNWIND_ASSERTION_LOOP_TAG
                     elif int(commands.getoutput("cat " + actual_ce +
                                                       " | grep -c " +
@@ -1198,8 +1210,9 @@ class DepthEsbmcCheck(object):
                     return "CONTINUE"
                 else:
                     self.cleantmpfiles(listtmpfiles)
-                    if not self.is_termination:
-
+                    if self.is_concurrency_category:
+                        return "TRUE"
+                    elif not self.is_termination:
                         cpachecker_ops = self.configureCPACheckerPath()
                         result = self.execCPAChecker(self.original_file, cpachecker_ops)
                         endresult = self.check_witnessresult(result)
@@ -1302,7 +1315,6 @@ class DepthEsbmcCheck(object):
             if self.hassuccessfulfromesbmc(actual_ce):
                 # print("True")
                 if self.moreonecheckbasecase:
-                    #lastresult = "TRUE"
                     lastResult[0] = True
                     lastResult[1] = "TRUE"
                     lastResult[2] = "Status: checking inductive step"
@@ -1310,7 +1322,9 @@ class DepthEsbmcCheck(object):
                         print("\t\t > Forcing last check in base case")
                 else:
                     self.cleantmpfiles(listtmpfiles)
-                    if not self.is_termination:
+                    if self.is_concurrency_category:
+                        return "TRUE"
+                    elif not self.is_termination:
                         cpachecker_ops = self.configureCPACheckerPath()
                         result = self.execCPAChecker(self.original_file, cpachecker_ops)
                         endresult = self.check_witnessresult(result)
@@ -1338,7 +1352,6 @@ class DepthEsbmcCheck(object):
                             return "TRUE"
                         elif endresult == "FALSE":
                             return "FALSE"
-
 
                     return "UNKNOWN"
             else:

@@ -30,12 +30,14 @@ fi
 PROPERTY_FORGOTTEN_MEMORY_TAG="dereference failure: forgotten memory"
 PROPERTY_INVALID_POINTER_TAG="dereference failure: invalid pointer"
 PROPERTY_ARRAY_BOUND_VIOLATED_TAG="array bounds violated"
+PROPERTY_ACCESS_OUT_TAG="dereference failure: Access to object out of bounds"
+PROPERTY_INVALID_OBJECT_TAG="dereference failure: invalidated dynamic object"
 PROPERTY_NULL_POINTER_TAG="dereference failure: NULL pointer"
 #PROPERTY_UNWIND_ASSERTION_LOOP_TAG="unwinding assertion loop" #É verificado dentro do DepthK, se for esse tipo, então o resultado é unknown.
 
 # MEMSAFETY properties pattern
 BENCHMARK_FALSE_VALID_MEMTRACK=${PROPERTY_FORGOTTEN_MEMORY_TAG}
-BENCHMARK_FALSE_VALID_DEREF="(\|${PROPERTY_INVALID_POINTER_TAG}\|${PROPERTY_ARRAY_BOUND_VIOLATED_TAG}\|${PROPERTY_NULL_POINTER_TAG}\|)"
+BENCHMARK_FALSE_VALID_DEREF="(\|${PROPERTY_INVALID_POINTER_TAG}\|${PROPERTY_ARRAY_BOUND_VIOLATED_TAG}\|${PROPERTY_NULL_POINTER_TAG}\|${PROPERTY_ACCESS_OUT_TAG}\|${PROPERTY_INVALID_OBJECT_TAG}\|)"
 
 # Benchmark result controlling flags
 IS_MEMSAFETY_BENCHMARK=0
