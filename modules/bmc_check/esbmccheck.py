@@ -69,7 +69,7 @@ class DepthEsbmcCheck(object):
         self.enable_witnesschecker = True
         self.file2witness = ""
         self.cpachecker_path = commands.getoutput("readlink -f .") +  "/modules/CPAchecker/"
-        self.ua_path = commands.getoutput("readlink -f .") +  "/modules/UAutomizer/"
+        self.ua_path = commands.getoutput("readlink -f .") +  "/modules/UAutomizer-linux/"
         self.listproperty = ""
         self.original_file = ""
         self.start_time = 0
@@ -1006,6 +1006,10 @@ class DepthEsbmcCheck(object):
         result_witness = ""
         if (remaining_time > 0):
             uacommand = "timeout  " + str(remaining_time) + " " + ua_ops + _cprogrampath
+
+	if (self.debug):
+            print(uacommand)
+
             result_witness = commands.getoutput(uacommand)
         if self.debug:
             print(result_witness)
