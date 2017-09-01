@@ -1,0 +1,12 @@
+digraph is_prime {
+42 [shape="circle" label="N42\n2"]
+43 [shape="circle" label="N43\n1"]
+39 [shape="circle" label="N39\n0"]
+40 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">40</td><td align="left">Function start dummy edge</td></tr><tr><td align="right">41</td><td align="left">int __CPAchecker_TMP_0;</td></tr></table>>]
+40 -> 42[label=""]
+100010 [shape="component" label="is_prime_"]
+42 -> 100010 [label="__CPAchecker_TMP_0 = is_prime_(n, n - 1);" fontname="Courier New"]
+100010 -> 43 [label="" fontname="Courier New"]
+42 -> 43 [label="__CPAchecker_TMP_0 = is_prime_(n, n - 1);" fontname="Courier New"]
+43 -> 39 [label="return __CPAchecker_TMP_0;" fontname="Courier New"]
+}

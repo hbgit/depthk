@@ -1,0 +1,7 @@
+digraph __utac_acc__Specification2_spec__1 {
+228 [shape="circle" label="N228\n3"]
+229 [shape="circle" label="N229\n2"]
+229 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">229</td><td align="left">methAndRunningLastTime = 0;</td></tr><tr><td align="right">230</td><td align="left">return;</td></tr></table>>]
+229 -> 227[label=""]
+228 -> 229 [label="Function start dummy edge" fontname="Courier New"]
+}

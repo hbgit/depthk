@@ -1,0 +1,11 @@
+digraph fail {
+1 [shape="circle" label="N1\n4"]
+2 [shape="circle" label="N2\n3"]
+3 [shape="doublecircle" label="N3\n2"]
+4 [shape="circle" label="N4\n1"]
+4 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">4</td><td align="left">__assert_fail(\"0\", \"test-0180.c\", 11, \"__PRETTY_FUNCTION__\");</td></tr><tr><td align="right">5</td><td align="left">Goto: ERROR</td></tr></table>>]
+4 -> 3[label=""]
+1 -> 2 [label="Function start dummy edge" fontname="Courier New"]
+3 -> 4 [label="__VERIFIER_error();" fontname="Courier New"]
+2 -> 3 [label="Label: ERROR" fontname="Courier New"]
+}

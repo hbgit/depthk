@@ -1,0 +1,15 @@
+digraph return_self {
+6 [shape="circle" label="N6\n6"]
+7 [shape="circle" label="N7\n5"]
+9 [shape="diamond" label="N9\n3"]
+11 [shape="circle" label="N11\n1"]
+12 [shape="circle" label="N12\n2"]
+5 [shape="circle" label="N5\n0"]
+7 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">7</td><td align="left">int tmp;</td></tr><tr><td align="right">8</td><td align="left">tmp = __VERIFIER_nondet_int();</td></tr></table>>]
+7 -> 9[label=""]
+6 -> 7 [label="Function start dummy edge" fontname="Courier New"]
+9 -> 11 [label="[(tmp == 0) == 0]" fontname="Courier New"]
+9 -> 12 [label="[!((tmp == 0) == 0)]" fontname="Courier New"]
+11 -> 5 [label="return p;" fontname="Courier New"]
+12 -> 5 [label="return p;" fontname="Courier New"]
+}

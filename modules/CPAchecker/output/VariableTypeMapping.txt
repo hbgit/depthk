@@ -1,0 +1,7 @@
+main::k	7
+main::array	0
+main::j	4
+main::SIZE	4
+main::menor	0
+main::__retval__	7
+__VERIFIER_assert::cond	0

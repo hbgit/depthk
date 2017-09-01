@@ -1,0 +1,12 @@
+digraph dll_create_slave {
+110 [shape="circle" label="N110\n2"]
+111 [shape="circle" label="N111\n1"]
+105 [shape="circle" label="N105\n0"]
+106 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">106</td><td align="left">Function start dummy edge</td></tr><tr><td align="right">107</td><td align="left">void *tmp;</td></tr><tr><td align="right">108</td><td align="left">void (*__cil_tmp2)();</td></tr><tr><td align="right">109</td><td align="left">__cil_tmp2 = (void (*)())(&amp;dll_insert_slave);</td></tr></table>>]
+106 -> 110[label=""]
+100001 [shape="component" label="dll_create_generic"]
+110 -> 100001 [label="tmp = dll_create_generic(__cil_tmp2);" fontname="Courier New"]
+100001 -> 111 [label="" fontname="Courier New"]
+110 -> 111 [label="tmp = dll_create_generic(__cil_tmp2);" fontname="Courier New"]
+111 -> 105 [label="return (struct slave_item *)tmp;" fontname="Courier New"]
+}

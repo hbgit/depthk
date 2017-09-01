@@ -1,0 +1,16 @@
+digraph misc_open {
+52 [shape="circle" label="N52\n7"]
+53 [shape="circle" label="N53\n6"]
+55 [shape="diamond" label="N55\n4"]
+57 [shape="circle" label="N57\n1"]
+58 [shape="circle" label="N58\n3"]
+51 [shape="circle" label="N51\n0"]
+53 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">53</td><td align="left">int tmp;</td></tr><tr><td align="right">54</td><td align="left">tmp = __VERIFIER_nondet_int();</td></tr></table>>]
+53 -> 55[label=""]
+58 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">58</td><td align="left">open_called = 1;</td></tr><tr><td align="right">60</td><td align="left">return 0;</td></tr></table>>]
+58 -> 51[label=""]
+52 -> 53 [label="Function start dummy edge" fontname="Courier New"]
+55 -> 57 [label="[(tmp == 0) == 0]" fontname="Courier New"]
+55 -> 58 [label="[!((tmp == 0) == 0)]" fontname="Courier New"]
+57 -> 51 [label="return 1;" fontname="Courier New"]
+}

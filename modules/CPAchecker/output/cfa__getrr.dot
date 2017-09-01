@@ -1,0 +1,7 @@
+digraph getrr {
+6 [shape="circle" label="N6\n9"]
+7 [shape="circle" label="N7\n8"]
+7 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">7</td><td align="left">rr *r;</td></tr><tr><td align="right">8</td><td align="left">void *tmp;</td></tr><tr><td align="right">9</td><td align="left">unsigned int __cil_tmp3;</td></tr><tr><td align="right">10</td><td align="left">__cil_tmp3 = 4U;</td></tr><tr><td align="right">11</td><td align="left">tmp = malloc(__cil_tmp3);</td></tr><tr><td align="right">12</td><td align="left">r = (rr *)tmp;</td></tr><tr><td align="right">13</td><td align="left">r-&gt;state = 0;</td></tr><tr><td align="right">14</td><td align="left">return r;</td></tr></table>>]
+7 -> 5[label=""]
+6 -> 7 [label="Function start dummy edge" fontname="Courier New"]
+}

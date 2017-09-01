@@ -1,0 +1,18 @@
+digraph alloc_or_die_master {
+44 [shape="diamond" label="N44\n15"]
+46 [shape="circle" label="N46\n13"]
+47 [shape="circle" label="N47\n14"]
+45 [shape="circle" label="N45\n11"]
+49 [shape="circle" label="N49\n10"]
+48 [shape="circle" label="N48\n12"]
+30 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">30</td><td align="left">Function start dummy edge</td></tr><tr><td align="right">31</td><td align="left">struct master_item *ptr;</td></tr><tr><td align="right">32</td><td align="left">void *tmp;</td></tr><tr><td align="right">33</td><td align="left">unsigned int __cil_tmp3;</td></tr><tr><td align="right">34</td><td align="left">void *__cil_tmp4;</td></tr><tr><td align="right">35</td><td align="left">unsigned int __cil_tmp5;</td></tr><tr><td align="right">36</td><td align="left">unsigned int __cil_tmp6;</td></tr><tr><td align="right">37</td><td align="left">void *__cil_tmp7;</td></tr><tr><td align="right">38</td><td align="left">unsigned int __cil_tmp8;</td></tr><tr><td align="right">39</td><td align="left">unsigned int __cil_tmp9;</td></tr><tr><td align="right">40</td><td align="left">void *__cil_tmp10;</td></tr><tr><td align="right">41</td><td align="left">__cil_tmp3 = 12U;</td></tr><tr><td align="right">42</td><td align="left">tmp = malloc(__cil_tmp3);</td></tr><tr><td align="right">43</td><td align="left">ptr = (struct master_item *)tmp;</td></tr></table>>]
+30 -> 44[label=""]
+49 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">49</td><td align="left">*((struct master_item **)ptr) = (struct master_item *)__cil_tmp4;</td></tr><tr><td align="right">50</td><td align="left">__cil_tmp5 = (unsigned int)ptr;</td></tr><tr><td align="right">51</td><td align="left">__cil_tmp6 = __cil_tmp5 + 4;</td></tr><tr><td align="right">52</td><td align="left">__cil_tmp7 = (void *)0;</td></tr><tr><td align="right">53</td><td align="left">*((struct master_item **)__cil_tmp6) = (struct master_item *)__cil_tmp7;</td></tr><tr><td align="right">54</td><td align="left">__cil_tmp8 = (unsigned int)ptr;</td></tr><tr><td align="right">55</td><td align="left">__cil_tmp9 = __cil_tmp8 + 8;</td></tr><tr><td align="right">56</td><td align="left">__cil_tmp10 = (void *)0;</td></tr><tr><td align="right">57</td><td align="left">*((struct slave_item **)__cil_tmp9) = (struct slave_item *)__cil_tmp10;</td></tr><tr><td align="right">58</td><td align="left">return ptr;</td></tr></table>>]
+49 -> 29[label=""]
+44 -> 46 [label="[ptr == 0]" fontname="Courier New"]
+44 -> 47 [label="[!(ptr == 0)]" fontname="Courier New"]
+45 -> 49 [label="__cil_tmp4 = (void *)0;" fontname="Courier New"]
+46 -> 48 [label="abort();" fontname="Courier New"]
+47 -> 45 [label="" fontname="Courier New"]
+48 -> 45 [label="" fontname="Courier New"]
+}

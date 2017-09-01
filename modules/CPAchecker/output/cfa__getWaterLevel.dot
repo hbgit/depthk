@@ -1,0 +1,7 @@
+digraph getWaterLevel {
+322 [shape="circle" label="N322\n4"]
+323 [shape="circle" label="N323\n3"]
+323 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">323</td><td align="left">int retValue_acc;</td></tr><tr><td align="right">324</td><td align="left">retValue_acc = waterLevel;</td></tr><tr><td align="right">325</td><td align="left">return retValue_acc;</td></tr></table>>]
+323 -> 321[label=""]
+322 -> 323 [label="Function start dummy edge" fontname="Courier New"]
+}

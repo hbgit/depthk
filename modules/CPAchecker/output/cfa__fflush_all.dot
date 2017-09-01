@@ -1,0 +1,7 @@
+digraph fflush_all {
+27 [shape="circle" label="N27\n4"]
+28 [shape="circle" label="N28\n3"]
+28 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">28</td><td align="left">signed int return_value_fflush$1;</td></tr><tr><td align="right">29</td><td align="left">return_value_fflush$1 = fflush((struct _IO_FILE *)((void *)0));</td></tr><tr><td align="right">30</td><td align="left">return return_value_fflush$1;</td></tr></table>>]
+28 -> 26[label=""]
+27 -> 28 [label="Function start dummy edge" fontname="Courier New"]
+}

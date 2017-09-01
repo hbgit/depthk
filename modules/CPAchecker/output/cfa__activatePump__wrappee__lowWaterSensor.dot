@@ -1,0 +1,7 @@
+digraph activatePump__wrappee__lowWaterSensor {
+48 [shape="circle" label="N48\n3"]
+49 [shape="circle" label="N49\n2"]
+49 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">49</td><td align="left">pumpRunning = 1;</td></tr><tr><td align="right">50</td><td align="left">return;</td></tr></table>>]
+49 -> 47[label=""]
+48 -> 49 [label="Function start dummy edge" fontname="Courier New"]
+}

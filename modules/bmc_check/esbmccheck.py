@@ -34,9 +34,8 @@ class DepthEsbmcCheck(object):
         self.maxdepthverification = 25
         self.en_kparalell = False
         self.esbmcpath = ''
-        self.esbmc_arch = "--64"
         self.esbmc_bound = 1
-        self.esbmc_unwind_op = "--unwind"
+        self.esbmc_unwind_op = " --context-bound 7 --unwind"
         self.esbmc_memlimit_op = ""
         self.esbmc_timeout_op = "15m"
         #self.esbmc_nolibrary = "--no-library"
@@ -69,7 +68,8 @@ class DepthEsbmcCheck(object):
         self.enable_witnesschecker = True
         self.file2witness = ""
         self.cpachecker_path = commands.getoutput("readlink -f .") +  "/modules/CPAchecker/"
-        self.listproperty = ""#os.path.abspath(".")+"/ALL.prp"
+        self.listproperty = ""
+        self.original_file = ""
 
     @staticmethod
     def getlastlinenumfromce(_esbmccepath, _indexliststartsearch):
@@ -712,7 +712,7 @@ class DepthEsbmcCheck(object):
 
 
     def checkwithkparallel(self, _cprogrampath, _actual_ce, _listtmpfiles):
-        result_parallel = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+        result_parallel = commands.getoutput(self.esbmcpath +  " " +
                                              self.esbmc_solver_op + " " +
                                              "--k-induction-parallel" + " " +
                                              self.isdefiniedmemlimit() +
@@ -762,10 +762,8 @@ class DepthEsbmcCheck(object):
 
     def kinductioncheck(self, _cprogrampath):
         #if(self.is_memory_safety or self.is_termination or self.overflow_check != ""):
-        if(self.is_memory_safety or self.is_termination):
-            return "UNKNOWN"
-
-        self.listproperty = os.path.dirname(_cprogrampath) +"/ALL.prp"
+        #if(self.is_memory_safety or self.is_termination):
+        #    return "UNKNOWN"
 
         listtmpfiles = []
         actual_detphver = 1
@@ -810,11 +808,9 @@ class DepthEsbmcCheck(object):
             if not os.path.exists(folderPath):
                 os.makedirs(folderPath)
 
-            if os.path.splitext(_cprogrampath)[1] == ".i":
-                self.file2witness = folderPath + os.path.basename(_cprogrampath.replace(".i", ".graphml"))
-            else:
-                self.file2witness = folderPath + os.path.basename(_cprogrampath.replace(".c", ".graphml"))
-            self.esbmc_witness_op = " --witness-output " + str(self.file2witness) + " " #+ " --tokenizer " + str(esbmc_tokenizer_path)
+            self.file2witness = folderPath + os.path.basename(_cprogrampath) + ".graphml"
+            
+            self.esbmc_witness_op = " --witness-output " + str(self.file2witness) + " --witness-programfile " + self.original_file + " "
         else:
             self.esbmc_witness_op = ""
 
@@ -840,7 +836,7 @@ class DepthEsbmcCheck(object):
 
 
                 # checking we are in the force last check
-                statusce_basecase = self.execBaseCase(_cprogrampath, actual_ce, lastresult)
+                statusce_basecase = self.execBaseCase(self.original_file, actual_ce, lastresult)
 
                 if(statusce_basecase == "UNKNOWN" or statusce_basecase <> "no bug has been found"):
                     result = statusce_basecase
@@ -859,7 +855,7 @@ class DepthEsbmcCheck(object):
                             result = "UNKNOWN"
                         else:
                             cpachecker_ops = self.configureCPACheckerPath()
-                            result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                            result = self.execCPAChecker(self.original_file, cpachecker_ops)
                             endresult = self.check_witnessresult(result)
                             if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                                 lastresult[1] = "TRUE"
@@ -880,7 +876,7 @@ class DepthEsbmcCheck(object):
                                                                      "\"No bug has been found in the base case\" "))
                     if statusce_basecase_nobug > 0:
 
-                        status_forwardcond = self.execForwardCondition(_cprogrampath, actual_ce, lastresult, listtmpfiles)
+                        status_forwardcond = self.execForwardCondition(self.original_file, actual_ce, lastresult, listtmpfiles)
 
                         if(status_forwardcond == "TRUE" or status_forwardcond == "UNKNOWN"):
                             result = status_forwardcond
@@ -908,7 +904,6 @@ class DepthEsbmcCheck(object):
 
         return result
 
-
     @staticmethod
     def getnumbeginfuncts(_cfilepath):
 
@@ -931,46 +926,29 @@ class DepthEsbmcCheck(object):
 
     def configureCPACheckerPath(self):
 
-        return "./scripts/cpa.sh -noout " + \
-               " -heap 10000M -predicateAnalysis " +  \
-               " -setprop cfa.useMultiEdges=false " +  \
-               " -setprop cfa.simplifyCfa=false " +  \
-               " -setprop cfa.allowBranchSwapping=false " +  \
-               " -setprop cpa.predicate.ignoreIrrelevantVariables=false " +  \
-               " -setprop counterexample.export.assumptions.assumeLinearArithmetics=true " +  \
-               " -setprop analysis.traversal.byAutomatonVariable=__DISTANCE_TO_VIOLATION " +  \
-               " -setprop cpa.automaton.treatErrorsAsTargets=false " +  \
-               " -setprop WitnessAutomaton.cpa.automaton.treatErrorsAsTargets=true " +  \
-               " -setprop parser.transformTokensToLines=false " +  \
-               " -skipRecursion " +  \
+        return "./scripts/cpa.sh -witness-validation " + \
                " -spec " + self.file2witness + " " \
                " -spec " + self.listproperty + " " \
 
 
 
     def execCPAChecker(self, _cprogrampath, cpachecker_ops):
-        # show counterexample
         cwd = os.getcwd()
-        # Apply witness checker
-        # making a copy of the P'
-        tmpname = _cprogrampath+"_c.c"
-        shutil.copy(_cprogrampath,tmpname)
-        # removing __ESBMC_ASSUME
-        commands.getoutput("sed -i \'s/__ESBMC_assume.*//\' "+ _cprogrampath)
         os.chdir(self.cpachecker_path)
-        cpacommand = cpachecker_ops  + _cprogrampath
+        cpacommand = "timeout 60 " + cpachecker_ops  + _cprogrampath
         result_witness = commands.getoutput(cpacommand)
+        if self.debug:
+            print(result_witness)
         os.chdir(cwd)
-        os.remove(tmpname)
 
         return result_witness.upper()
 
     def execBaseCase(self, _cprogrampath, actual_ce, lastResult):
         if(lastResult[0]):
-            self.esbmc_bound = self.esbmc_bound + 5
+            return "no bug has been found"#self.esbmc_bound = self.esbmc_bound + 5
 
         if self.esbmc_bound <= self.maxk:
-            result_basecase = commands.getoutput(self.esbmcpath + " " + self.esbmc_arch + " " +
+            result_basecase = commands.getoutput(self.esbmcpath + " " +
                                                  self.esbmc_solver_op + " " +
                                                  self.esbmc_unwind_op + " " + str(self.esbmc_bound) + " " +
                                                  self.isdefiniedmemlimit() +
@@ -1003,15 +981,16 @@ class DepthEsbmcCheck(object):
             if statusce_basecase > 0:
                 if not self.is_memory_safety:
                     # To witness checker
-                    cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
-                    endresult = self.check_witnessresult(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
-                        return "FALSE"
-                    if endresult == "FALSE":
-                        return "FALSE"
-                    else:
-                        return "UNKNOWN"
+                    #cpachecker_ops = self.configureCPACheckerPath()
+                    #result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                    #endresult = self.check_witnessresult(result)
+                    #if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
+                    #    return "FALSE"
+                    #if endresult == "FALSE":
+                    #    return "FALSE"
+                    #else:
+                    #    return "UNKNOWN"
+                    return "FALSE"
                 else:
                     #PROPERTY_FORGOTTEN_MEMORY_TAG
                     if int(commands.getoutput("cat " + actual_ce +
@@ -1162,7 +1141,7 @@ class DepthEsbmcCheck(object):
                     print(" ")
                     self.cleantmpfiles(listtmpfiles)
                     cpachecker_ops = self.configureCPACheckerPath()
-                    result = self.execCPAChecker(_cprogrampath, cpachecker_ops)
+                    result = self.execCPAChecker(self.original_file, cpachecker_ops)
                     endresult = self.check_witnessresult(result)
                     if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper():
                         return "TRUE"
@@ -1196,4 +1175,5 @@ class DepthEsbmcCheck(object):
 
         if not flag_cpa:
             return "UNKNOWN"
+
 

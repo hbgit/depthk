@@ -1,0 +1,7 @@
+digraph fillslotinfo {
+33 [shape="circle" label="N33\n4"]
+34 [shape="circle" label="N34\n3"]
+34 [style="filled,bold" penwidth="1" fillcolor="white" fontname="Courier New" shape="Mrecord" label=<<table border="0" cellborder="0" cellpadding="3" bgcolor="white"><tr><td align="right">34</td><td align="left">int tmp;</td></tr><tr><td align="right">35</td><td align="left">tmp = __VERIFIER_nondet_int();</td></tr><tr><td align="right">36</td><td align="left">return tmp;</td></tr></table>>]
+34 -> 32[label=""]
+33 -> 34 [label="Function start dummy edge" fontname="Courier New"]
+}
