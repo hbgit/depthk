@@ -517,7 +517,7 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--arch', metavar='nr', type=int, dest='setArchCheck',
                         default="64", help='set width of machine word (16, 32 or 64) to ESBMC (default is 64)')
     parser.add_argument('-s', '--solver', metavar='name', type=str, dest='setESBMCSolver',
-                        help='set the solver to adopted by ESBMC (default is Z3)', default="z3")
+                        help='set the solver to adopted by ESBMC (default is boolector)', default="boolector")
     parser.add_argument('-m', '--memlimit', metavar='nr', type=str, dest='setMemESBMC',
                         help='configure memory limit to ESBMC, of form \"100m\" or \"2g\"', default="")
     parser.add_argument('-t', '--timeout', metavar='nr', type=str, dest='setTOESBMC',
