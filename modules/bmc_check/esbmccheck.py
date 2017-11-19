@@ -827,7 +827,7 @@ class DepthEsbmcCheck(object):
                             if self.is_concurrency_category:
                                 lastresult[1] = "TRUE"
                             elif not self.is_termination:
-                                lastresult[1] = "FALSE"
+                                lastresult[1] = "TRUE"
                             result = "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
 
                         self.cleantmpfiles(listtmpfiles)
