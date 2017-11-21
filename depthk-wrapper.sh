@@ -97,7 +97,7 @@ exit
 	t) 		
 		echo ""
 		prpfile="$getpwd/samples/ALL.prp"
-		opt_test="--debug --force-check-base-case --solver z3 --memlimit 15g --prp $prpfile  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --error-label ERROR\""
+		opt_test="--debug --force-check-base-case --solver boolector --memlimit 15g --prp $prpfile  --extra-option-esbmc=\"--no-div-by-zero-check --force-malloc-success --state-hashing --no-align-check --floatbv --32 --memory-leak-check --no-assertions \""
 		run_test="${path_to_depthk} $opt_test $getpwd/samples/example1_true-unreach-call.c"
 		result_check=$(timeout 895 bash -c "$run_test")
 		echo "$result_check"
@@ -141,11 +141,11 @@ else
     if test ${do_term} = 1; then
 	    depthk_options="--force-check-base-case --solver z3 --termination-category --memlimit 14g  --prp "$property_list" --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --clang-frontend  -DLDV_ERROR=ERROR  -D_Bool=int -Dassert=notassert --error-label ERROR\""
 	elif test ${do_overflow} = 1; then
-	    depthk_options=" --force-check-base-case --solver z3 --memlimit 14g --overflow-check --prp "$property_list"  --extra-option-esbmc=\"--floatbv --no-bounds-check --no-pointer-check --no-div-by-zero-check --force-malloc-success --context-bound 7 -Dldv_assume=__ESBMC_assume -D__VERIFIER_error=ESBMC_error --clang-frontend \""
+	    depthk_options=" --force-check-base-case --solver boolector --memlimit 14g --overflow-check --prp "$property_list"  --extra-option-esbmc=\"--no-div-by-zero-check --force-malloc-success --state-hashing --no-align-check --no-pointer-check --no-bounds-check --overflow-check \""
     elif test ${do_memsafety} = 0; then
-        depthk_options="--force-check-base-case --solver z3 --memlimit 14g --prp "$property_list" --extra-option-esbmc=\"--floatbv --force-malloc-success --context-bound 7 --no-bounds-check --no-pointer-check --no-div-by-zero-check -Dldv_assume=__ESBMC_assume --clang-frontend --error-label ERROR\""
+        depthk_options="--force-check-base-case --solver boolector --prp "$property_list" --extra-option-esbmc=\"--no-div-by-zero-check --force-malloc-success --state-hashing --no-align-check --floatbv --32 --memory-leak-check \""
     else
-        depthk_options="--force-check-base-case --solver z3 --memlimit 14g --prp "$property_list" --memory-safety-category --extra-option-esbmc=\"--no-div-by-zero-check --force-malloc-success --state-hashing --context-bound 7 -Dldv_assume=__ESBMC_assume --floatbv --memory-leak-check -D__VERIFIER_error=ESBMC_error --clang-frontend \""
+        depthk_options="--force-check-base-case --solver boolector --memlimit 14g --prp "$property_list" --memory-safety-category --extra-option-esbmc=\"--no-div-by-zero-check --force-malloc-success --state-hashing --no-align-check --memory-leak-check  \""
     fi
 fi
 

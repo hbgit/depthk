@@ -42,7 +42,7 @@ class DepthEsbmcCheck(object):
         #self.esbmc_nolibrary = "--no-library"
         self.esbmc_nolibrary = ""
         self.esbmc_extra_op = ""
-        self.esbmc_solver_op = "--z3"
+        self.esbmc_solver_op = "--boolector"
         self.use_counter_example = False
         # k-induction options
         self.esbmc_basecase_op = "--base-case"
@@ -809,8 +809,8 @@ class DepthEsbmcCheck(object):
                 os.makedirs(folderPath)
 
             self.file2witness = folderPath + os.path.basename(_cprogrampath) + ".graphml"
-            
-            self.esbmc_witness_op = " --witness-output " + str(self.file2witness) + " --witness-programfile " + self.original_file + " "
+
+            self.esbmc_witness_op = " --witness-output " + str(self.file2witness) + " --witness-producer \"DepthK v3.0\"  --witness-programfile " + self.original_file + " " + _cprogrampath + " "
         else:
             self.esbmc_witness_op = ""
 
