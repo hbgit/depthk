@@ -59,11 +59,19 @@ class TranslatePagai(object):
 
         i = 0
         lineidinv = 0
+<<<<<<< HEAD
         flag_labreach = False
+=======
+        line_start_inv = 0
+        line_end_inv = 0
+        flag_labreach = False
+        match_previnv = False
+>>>>>>> Depthk & ESBMC tools updated
         count_labreach = 1
         flag_skip_inv = False
         while i < len(listfilec):
 
+<<<<<<< HEAD
             #label reachable
             match_labrea = re.search(r'/\* reachable', listfilec[i])
             if match_labrea:
@@ -112,6 +120,31 @@ class TranslatePagai(object):
                         # Translate math format -> a = 100 to a == 100
                         list_splitpredicate = re.split("=", listfilec[i].strip())
                         # check if in the predicate we have only "="
+=======
+            matchinv = re.search(r'/\* invariant:', listfilec[i])
+            if matchinv:
+                flagreadinv = True
+                line_start_inv = i
+                
+                
+                # Invariant translation
+                tmplistinv = []
+                while flagreadinv and not match_previnv:
+                    # jump invariant text
+                    i += 1
+                    
+                    #Indetifying if the prev line we have other 
+                    #comment to end inv location
+                    match_previnv = re.search(r'\*/', listfilec[i])
+                    if match_previnv:
+                        flag_fline = False                    
+                        line_end_inv = i
+                    else:                                        
+                        # Translate math format -> a = 100 to a == 100
+                        # check if in the predicate we have only "="
+                        list_splitpredicate = re.split("=", listfilec[i].strip())
+                        #print(">>>>>>"+listfilec[i].strip())
+>>>>>>> Depthk & ESBMC tools updated
 
                         matchleftsidepredicate = re.search(r'[<>!]+', list_splitpredicate[0])
                         matchrightsidepredicate = re.search(r'[<>!]+', list_splitpredicate[1])
@@ -126,6 +159,7 @@ class TranslatePagai(object):
                             tmplistinv.append(listfilec[i].strip())
 
                 # save program invariants
+<<<<<<< HEAD
                 if flag_labreach:
                     #print(str(count_labreach)+"<<<<<<<")
                     self.invlocation[lineidinv-count_labreach] = tmplistinv
@@ -133,6 +167,12 @@ class TranslatePagai(object):
                     count_labreach = 0
                 else:
                     self.invlocation[lineidinv] = tmplistinv
+=======
+                if matchinv:  
+                    #print(">>>>>>>"+str(line_end_inv-line_start_inv))                  
+                    self.invlocation[line_start_inv-1] = tmplistinv                   
+                
+>>>>>>> Depthk & ESBMC tools updated
                 lineidinv = 0
                 tmplistinv = []
 
@@ -166,6 +206,7 @@ class TranslatePagai(object):
         listfilec = fileprogram.readlines()
         fileprogram.close()
 
+<<<<<<< HEAD
         listcodewithinv = []
         invbuffer = []
         i = 0
@@ -198,6 +239,32 @@ class TranslatePagai(object):
             i += 1
 
         return listcodewithinv
+=======
+        listcodewithinv__ = []
+        invbuffer = []        
+        j = 0
+        count_inv = 0
+        hasInvariantInLine = False        
+        id_list_file = 0
+        len_listfilec = len(listfilec)
+        #while id_list_file < len_listfilec:
+        for line in listfilec:  
+            #print(">>>"+str(id_list_file) )                     
+            listcodewithinv__.append(line)
+            
+            if id_list_file in self.invlocation and count_inv <= (len(self.invlocation)-1):                                        
+                lista = self.invlocation.items()[count_inv][1]                
+                hasInvariantInLine = True                
+                for inv in lista:
+                    #invbuffer.append(self.applyesbmcassume(inv))                            
+                    listcodewithinv__.append(self.applyesbmcassume(inv))
+                count_inv = count_inv + 1
+                            
+            # count while
+            id_list_file += 1
+        
+        return listcodewithinv__
+>>>>>>> Depthk & ESBMC tools updated
 
 
 if __name__ == "__main__":
@@ -207,7 +274,11 @@ if __name__ == "__main__":
         r.pathprogram = filename
         if r.identifyInv(r.pathprogram):
             print("Program invariants were detected")
+<<<<<<< HEAD
             newprogram = r.writeInvPAGAI(r.pathprogram)
+=======
+            newprogram = r.writeInvPAGAI(r.pathprogram,False)
+>>>>>>> Depthk & ESBMC tools updated
             for line in newprogram:
                 print(line, end="")
         else:

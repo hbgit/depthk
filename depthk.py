@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: latin1 -*-
 # -------------------------------------------------
+<<<<<<< HEAD
 # DepthK v3.0
+=======
+# DepthK v3.1
+>>>>>>> Depthk & ESBMC tools updated
 # by Herbert Rocha
 #
 # e-mail: herberthb12@gmail.com
@@ -23,6 +27,10 @@ import random
 import string
 from pipes import quote
 import platform
+<<<<<<< HEAD
+=======
+import time
+>>>>>>> Depthk & ESBMC tools updated
 
 # From project
 from modules.run_ast import ast
@@ -69,6 +77,12 @@ class DepthK(object):
         self.esbmc_is_memory_safety = False
         self.esbmc_is_termination = False
         self.esbmc_overflow_check = ""
+<<<<<<< HEAD
+=======
+        self.listproperty = ""
+        self.start_time = time.time()
+
+>>>>>>> Depthk & ESBMC tools updated
 
     def identify_initpips(self, _cfilepath):
         """
@@ -292,6 +306,12 @@ class DepthK(object):
         runesbmc.is_memory_safety = self.esbmc_is_memory_safety
         runesbmc.is_termination = self.esbmc_is_termination
         runesbmc.overflow_check = self.esbmc_overflow_check
+<<<<<<< HEAD
+=======
+        runesbmc.original_file = self.cfilepath
+        runesbmc.listproperty = self.listproperty
+        runesbmc.start_time = self.start_time
+>>>>>>> Depthk & ESBMC tools updated
 
         if _enableforceassume:
             runesbmc.forceassume = True
@@ -432,6 +452,11 @@ class DepthK(object):
             return True
         if _namesolver == "boolector":
             return True
+<<<<<<< HEAD
+=======
+        if _namesolver == "mathsat":
+            return True
+>>>>>>> Depthk & ESBMC tools updated
         else:
             return False
 
@@ -487,8 +512,13 @@ if __name__ == "__main__":
 
     # ############ Parse args options
 
+<<<<<<< HEAD
     parser = argparse.ArgumentParser(description='Run DepthK v3.0')
     parser.add_argument('-v', '--version', action='version', version="version 3.0")
+=======
+    parser = argparse.ArgumentParser(description='Run DepthK v3.1')
+    parser.add_argument('-v', '--version', action='version', version="version 3.1 - Fri Jan  6 18:14:20 AMT 2018")
+>>>>>>> Depthk & ESBMC tools updated
     parser.add_argument(dest='inputCProgram', metavar='file.c or file.i (experimental)', type=str,
                         help='the C program file to be analyzed')
     parser.add_argument('-k', '--max-k-step', metavar='nr', type=int, dest='setMaxK',
@@ -502,7 +532,11 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--force-check-base-case', action="store_true", dest='setForceBaseCase',
                         help='force a last check in the base case of the k-induction algorithm', default=True)
     parser.add_argument('-i', '--invariant-generation', metavar='name', type=str, dest='setInvariantTool',
+<<<<<<< HEAD
                         help='set the invariant generation {pips, pagai, all} to be adopted (default is pips)', default="pips")
+=======
+                        help='set the invariant generation {pips, pagai, all} to be adopted (default is pips)', default="pagai")
+>>>>>>> Depthk & ESBMC tools updated
 
     # --16, --32, --64             set width of machine word
     parser.add_argument('-a', '--arch', metavar='nr', type=int, dest='setArchCheck',
@@ -533,7 +567,11 @@ if __name__ == "__main__":
 
     parser.add_argument('-y', '--termination-category', action="store_true", dest='setTerminationCategory', help='Is termination category', default=False)
 
+<<<<<<< HEAD
 
+=======
+    parser.add_argument('-z', '--prp', metavar='name', type=str, dest='setProperty', help='path to property file (ALL.prp)', default="")
+>>>>>>> Depthk & ESBMC tools updated
 
     args = parser.parse_args()
 
@@ -579,7 +617,23 @@ if __name__ == "__main__":
 
             if args.setTerminationCategory:
                 rundepthk.esbmc_is_termination = args.setTerminationCategory
+<<<<<<< HEAD
 
+=======
+                if rundepthk.debug_op:
+                    print("Category: Termination Category!")
+
+            if args.setProperty:
+                fileDir = os.path.dirname(os.path.realpath('__file__'))
+                if rundepthk.debug_op:
+                    print("depthk.py path: " + fileDir)
+                    print("PRP Relative Path: " + args.setProperty)
+                    print("File to verification: " + inputCFile)
+                rundepthk.listproperty = os.path.join(fileDir, args.setProperty)
+                rundepthk.listproperty = os.path.abspath(os.path.relpath(rundepthk.listproperty))
+                if rundepthk.debug_op:
+                    print("PRP Absolute Path: " + rundepthk.listproperty)
+>>>>>>> Depthk & ESBMC tools updated
 
             if args.setESBMCSolver:
                 # Checking if this solver is supported by ESBMC
@@ -648,9 +702,12 @@ if __name__ == "__main__":
                 # HackGNUext: Generate a copy the analyzed program to a tmp file
                 # now with the extension replaced from .i to .c
                 inputCFile = rundepthk.applygnuhack(inputCFile)
+<<<<<<< HEAD
                 #print(inputCFile)
                 #os.system("cat " + inputCFile)
                 #sys.exit()
+=======
+>>>>>>> Depthk & ESBMC tools updated
 
             #if args.setOnlyCEUse or args.setInvariantTool == "all":
             rundepthk.use_counter_example = True
@@ -666,6 +723,7 @@ if __name__ == "__main__":
             __invgeneration = args.setInvariantTool
             pathcodeinvtranslated = ""
             ERROR_FLAG = False
+<<<<<<< HEAD
             if not args.setOnlyCEUse or args.setInvariantTool == "all":
 
                 # Choose invariant generation __invgeneration
@@ -787,6 +845,113 @@ if __name__ == "__main__":
                     else:
                         rundepthk.callesbmccheck(pathcodeinvtranslated, True, args.setForceBaseCase)
 
+=======
+            if (not args.setOnlyCEUse or args.setInvariantTool == "all") and  (not rundepthk.esbmc_is_termination and not rundepthk.esbmc_is_memory_safety):
+                try:
+                    # Choose invariant generation __invgeneration
+                    # Applying steps of DepthK
+                    runtranspagai = translate_pagai.TranslatePagai()
+                    if __invgeneration == "pagai" or __invgeneration == "all":
+                        # Generate invariants
+                        if rundepthk.debug_op:
+                            print(">> Running PAGAI to generate the invariants")
+                        geninvpagai = generate_inv_pagai.GeneratePagaiInv()
+                        codewithinv = geninvpagai.generate_inv(inputCFile)
+
+                        # Translate invariants
+                        if rundepthk.debug_op:
+                            print(">> Running PAGAI translation")
+
+                        runtranspagai.pathprogram = codewithinv
+                        if codewithinv:
+                            if runtranspagai.identifyInv(runtranspagai.pathprogram):
+                                # Program invariants were detected
+                                newprogram = runtranspagai.writeInvPAGAI(runtranspagai.pathprogram, False)
+                                newprogram = runtranspagai.removenotprintable(newprogram)
+                                newfileinv = open(codewithinv, "w")
+                                for line in newprogram:
+                                    newfileinv.write(line)
+                                    #print(line, end="")
+                                newfileinv.close()
+
+                                pathcodeinvtranslated = codewithinv
+                                list_paths_to_delete.append(pathcodeinvtranslated)
+                                inputCFile = runtranspagai.pathprogram
+                            else:
+                                if rundepthk.debug_op:
+                                    print("ERROR. Program invariants were NOT detected with PAGAI")
+                                rundepthk.cleantmpfiles(list_paths_to_delete)
+                                ERROR_FLAG = True
+                                #pathcodeinvtranslated = inputCFile
+                                #sys.exit()
+                        else:
+                            ERROR_FLAG = True
+
+                    if __invgeneration == "pips" or __invgeneration == "all":
+                        # Generating pips script
+                        if rundepthk.debug_op:
+                            print(">> Generating PIPS script")
+                        scriptpipspath = rundepthk.generatepipsscript(inputCFile)
+                        list_paths_to_delete.append(scriptpipspath)
+
+                        # Generating invariants with PIPS
+                        if rundepthk.debug_op:
+                            print(">> Running PIPS to generate the invariants")
+                        codewithinv = rundepthk.runpips(scriptpipspath, inputCFile, list_paths_to_delete)
+
+                        if codewithinv:
+                            # rundepthk.debug_gh = True
+                            if rundepthk.debug_op:
+                                print(">> Applying GNU hack")
+                            codewithinv = rundepthk.applygnuhack(codewithinv)
+
+                            # Identify #init from PIPS in the code with invariants
+                            if rundepthk.debug_op:
+                                print(">> Running PIPS Translation")
+                            dict_init = rundepthk.identify_initpips(codewithinv)
+                            # Generate auxiliary code to support the translation of #init from PIPS
+                            pathcodeinit = rundepthk.generatecodewithinit(codewithinv, inputCFile, dict_init)
+                            # Translate the invariants generated by PIPS
+                            pathcodeinvtranslated = rundepthk.translatepipsannot(pathcodeinit)
+                        else:
+                            print("ERROR. Program invariants with PIPS")
+                            rundepthk.cleantmpfiles(list_paths_to_delete)
+                            ERROR_FLAG = True
+
+                    includespath = os.path.dirname(pathcodeinvtranslated)
+
+                    if rundepthk.onlygeninvs_p:
+                        if ERROR_FLAG:
+                            if rundepthk.debug_op:
+                                print("\t ERROR. Generating code with invariants")
+                            # Removing tmp files
+                            rundepthk.cleantmpfiles(list_paths_to_delete)
+                            sys.exit()
+                        else:
+                            os.system("cat " + pathcodeinvtranslated)
+                            # Removing tmp files
+                            rundepthk.cleantmpfiles(list_paths_to_delete)
+                            sys.exit()
+                    else:
+                        # Execute the k-induction with ESBMC
+                        # Last test to validated the new code generated
+                        if rundepthk.debug_op and not ERROR_FLAG:
+                            print(">> ESBMC PARSING CHECKING")
+                        if not ERROR_FLAG:
+                            resultparse = commands.getoutput(rundepthk.esbmcpath + " -I "+ includespath + " " + rundepthk.esbmc_arch + " --show-claims " + pathcodeinvtranslated)
+                            matchparseerror = re.search(r'PARSING ERROR', resultparse)
+                            if matchparseerror:
+                                if rundepthk.debug_op:
+                                    print("\t ERROR. PARSING ERROR")
+                                ERROR_FLAG = True
+
+                        if ERROR_FLAG: # Some ERROR in invariant generation
+                            rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
+                        else:
+                            rundepthk.callesbmccheck(pathcodeinvtranslated, True, args.setForceBaseCase)
+                except:
+                    rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)
+>>>>>>> Depthk & ESBMC tools updated
             else:
                 # Execute the k-induction with ESBMC
                 rundepthk.callesbmccheck(originalFile, True, args.setForceBaseCase)

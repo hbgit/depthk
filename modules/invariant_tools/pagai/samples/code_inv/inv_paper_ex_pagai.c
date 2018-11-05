@@ -13,12 +13,16 @@ void main(){
 	1-phase >= 0
 	-phase+t >= 0
 	phase >= 0
+<<<<<<< HEAD
 	*/
 	__ESBMC_assume( -3*phase-t+2*x == 0 );
 	__ESBMC_assume( 100-phase-t >= 0 );
 	__ESBMC_assume( 1-phase >= 0 );
 	__ESBMC_assume( -phase+t >= 0 );
 	__ESBMC_assume( phase >= 0 );	
+=======
+	*/	
+>>>>>>> Depthk & ESBMC tools updated
 	while ( t < 100) {
 		if( phase == 0 )
 			// safe

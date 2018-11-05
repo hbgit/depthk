@@ -19,7 +19,11 @@ class GeneratePagaiInv(object):
         self.pathprogram = ""
         self.pathprograminv = ""
         #self.compilescript = os.path.dirname(os.path.abspath(__file__)) + "/compile_llvm.sh"
+<<<<<<< HEAD
         self.compilecmd = "clang -fsanitize=undefined -fsanitize=local-bounds -Wno-return-type " \
+=======
+        self.compilecmd = "clang-3.5 -fsanitize=undefined -fsanitize=local-bounds -Wno-return-type " \
+>>>>>>> Depthk & ESBMC tools updated
                           "-emit-llvm -Wno-implicit-function-declaration -Wno-parentheses-equality -I . -g -c "
         self.opcompscript = " -g -i "
         self.pathpagai = os.path.dirname(os.path.abspath(__file__)) + "/pagai"
@@ -63,7 +67,11 @@ class GeneratePagaiInv(object):
         # error:
         matchcompileerror = re.search(r'error:', result)
         if not matchcompileerror:
+<<<<<<< HEAD
             os.system("opt -mem2reg -inline -lowerswitch -loops  -loop-simplify -loop-rotate -lcssa -loop-unroll -unroll-count=1 " +
+=======
+            os.system("opt-3.5 -mem2reg -inline -lowerswitch -loops  -loop-simplify -loop-rotate -lcssa -loop-unroll -unroll-count=1 " +
+>>>>>>> Depthk & ESBMC tools updated
                       filecompiled + " -o " +  filecompiled)
             #os.system("opt -mem2reg -lowerswitch " + filecompiled + " -o " +  filecompiled)
 
