@@ -19,11 +19,7 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	else
 	  echo "NOT works"
 	fi
-<<<<<<< HEAD
-echo "DepthK version 3.0 - Mon Dez 19 17:40:02 AMT 2016"
-=======
 echo "DepthK version 3.1 - Mon Dez 19 17:40:02 AMT 2018"
->>>>>>> Depthk & ESBMC tools updated
 fi
 
 
@@ -67,11 +63,7 @@ Options:
 -h             Print this message
 -c propfile    Specifythe given property file
 -p             Using k-induction with parallel algorithm
-<<<<<<< HEAD
--t             Testing a sample"
-=======
 -t             Testing a sample on a screen for each step K up to a maximum value "
->>>>>>> Depthk & ESBMC tools updated
 exit
             ;;
         c)
@@ -114,11 +106,7 @@ exit
         ;;
 	v) 
 
-<<<<<<< HEAD
-		echo "DepthK version 3.0 - Sat Nov  22 18:14:20 AMT 2017"
-=======
 		echo "DepthK version 3.1 - Sat Nov  2 18:14:20 AMT 2018"
->>>>>>> Depthk & ESBMC tools updated
 		exit	
 
         ;;
