@@ -2,7 +2,7 @@
 export PATH="$PATH:`pwd`"
 DEBUG_SCRIPT=0
 if [ $DEBUG_SCRIPT -eq 1 ]; then
-	echo "DepthK version"
+	echo "version"
 	./depthk.py --version
 	echo ""
 	
@@ -12,14 +12,14 @@ if [ $DEBUG_SCRIPT -eq 1 ]; then
 	pwd
 		
 	echo "GREP command: Testing 1 "
-	value=$( grep -c "depthk" depthk.py )
+	value=$( grep -c depthk.py )
 	if [ "$value" -ge 1 ]
 	then
 	  echo "Grep works"
 	else
 	  echo "NOT works"
 	fi
-echo "DepthK version 3.1 - Mon Dez 19 17:40:02 AMT 2018"
+echo "3.1"
 fi
 
 
@@ -106,7 +106,7 @@ exit
         ;;
 	v) 
 
-		echo "DepthK version 3.1 - Sat Nov  2 18:14:20 AMT 2018"
+		echo "3.1"
 		exit	
 
         ;;
