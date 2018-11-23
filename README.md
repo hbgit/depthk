@@ -79,7 +79,7 @@ Use the 'depthk-wrapper.sh' script in the installation directory to verify each 
 
 ===========================
 
-<b> Instructions for SV-COMP'17 </b>
+<b> Instructions for SV-COMP'19 </b>
 
 Use the 'depthk-wrapper.sh' script in the installation directory to verify each single test-case. 
 
