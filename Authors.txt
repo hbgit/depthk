@@ -3,8 +3,8 @@ Maintainers:
   Williame Rocha (since 2015), Federal University of Amazonas, Brazil
   
 Contributors:
-  Hussama Ismail (since 2015), Federal University of Amazonas, Brazil
-  Omar Alhawi	(since 2018), The University of Manchester, UK
+  Hussama Ismail  (since 2015), Federal University of Amazonas, Brazil
+  Omar M. Alhawi  (since 2018), The University of Manchester, UK
 
 Questions and bug reports:
 Herbert O. Rocha: herberthb12@gmail.com
