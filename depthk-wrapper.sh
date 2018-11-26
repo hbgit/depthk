@@ -23,7 +23,7 @@ echo "3.1"
 fi
 
 
-# ------------- DepthK wrapper script to tests
+# -------------- DepthK wrapper script to tests
 # Usage: ./wrapper_script_tests.sh <[-p|]> <file.c|file.i>
 
 # ESBMC violation properties
