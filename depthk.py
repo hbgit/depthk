@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: latin1 -*-
-# -------------------------------------------------
+# --------------------------------------------------
 # DepthK v3.1
 # by Herbert Rocha
 #
@@ -8,7 +8,7 @@
 #
 #
 # The input should be .i already preprocessed by CIL
-# -------------------------------------------------
+# --------------------------------------------------
 
 from __future__ import print_function
 
