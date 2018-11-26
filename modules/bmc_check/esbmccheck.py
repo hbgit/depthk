@@ -846,7 +846,7 @@ class DepthEsbmcCheck(object):
                     # checking we are in the force last check
                     # This last force is always to TRUE
                     if lastresult[0]:
-                        os.system("cat " + last_ce)
+                        #os.system("cat " + last_ce)
                         print(" ")
                         z3Error = int(commands.getoutput("cat " + last_ce +
                                                                      " | grep -c " +
@@ -854,8 +854,11 @@ class DepthEsbmcCheck(object):
                         if(z3Error > 0):
                             result = "UNKNOWN"
                         else:
-                          
-                          
+                            if self.is_concurrency_category:
+                                lastresult[1] = "TRUE"
+						
+							    
+                            elif not self.is_termination:
                                 endresult = self.check_witnessresult(result)
                                 if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() \
                                         or "UNSUPPORTED FEATURE" in result.upper() or result == "" \
@@ -870,19 +873,25 @@ class DepthEsbmcCheck(object):
                                     elif endresult == "FALSE":
                                         lastresult[1] =  "FALSE"
                                     else:
-										                           
-                                 	ua_ops = self.configureUAPath()
-                                 	result = self.execUA(self.original_file, ua_ops)
-                                 	endresult = self.check_witnessresultUA(result)
-                                       
+                                        lastresult[1] = "UNKNOWN"
                                 elif endresult == "TRUE":
                                     lastresult[1] = "TRUE"
                                 elif endresult == "FALSE":
                                     lastresult[1] = "FALSE"
                                 else:
                                     lastresult[1] = "UNKNOWN"
-                             
-                      #	result = "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
+                            else:
+                                 ua_ops = self.configureUAPath()
+                                 result = self.execUA(self.original_file, ua_ops)
+                                 endresult = self.check_witnessresultUA(result)
+
+                                 if endresult == "TRUE":
+                                    lastresult[1] = "TRUE"
+                                 elif endresult == "FALSE":
+                                    lastresult[1] = "FALSE"
+                                 else:
+                                    lastresult[1] = "UNKNOWN"
+                            result = "\t\t Last adopted - " + lastresult[2] + "\n" + lastresult[1] + "\n"
 
                         self.cleantmpfiles(listtmpfiles)
                         break
@@ -1044,30 +1053,17 @@ class DepthEsbmcCheck(object):
 
             if statusce_basecase > 0:
                 if self.is_termination:
-					 # To witness checker
                     ua_ops = self.configureUAPath()
                     result = self.execUA(self.original_file, ua_ops)
                     endresult = self.check_witnessresultUA(result)
-					
+
                     if endresult == "TRUE":
                         return "TRUE"
                     elif endresult == "FALSE":
                         return "FALSE"
                     return "UNKNOWN"
                 elif not self.is_memory_safety:
-                    # To witness checker
-                    ua_ops = self.configureUAPath()
-                    result = self.execUA(self.original_file, ua_ops)
-                    endresult = self.check_witnessresultUA(result)
-                    if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() \
-                    or "UNSUPPORTED FEATURE" in result.upper() or result == "" \
-                    or "UNRECOGNIZED C CODE" in result:
-                        return "FALSE"
-                    if endresult == "FALSE":
-                        return "FALSE"
-                    elif endresult == "TRUE":
-                        return "TRUE"
-                  
+                    return "FALSE"
                 else:
                     #PROPERTY_FORGOTTEN_MEMORY_TAG
                     if int(commands.getoutput("cat " + actual_ce +
@@ -1187,8 +1183,8 @@ class DepthEsbmcCheck(object):
                     if self.is_concurrency_category:
                         return "TRUE"
                     elif not self.is_termination:
-                   
-                     
+                   #      cpachecker_ops = self.configureCPACheckerPath()
+                     #    result = self.execCPAChecker(self.original_file)#, cpachecker_ops)
                         endresult = self.check_witnessresult(result)
 
                         if "IS NOT SUPPORTED" in result.upper() or "UNSUPPORTED C FEATURE" in result.upper() or "UNSUPPORTED FEATURE" in result.upper() or result == "":
