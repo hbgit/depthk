@@ -20,4 +20,4 @@
 [2018-11-23 15:33:10,830 INFO  L220          PluginFactory]: --------------------------------------------------------------------------------
 [2018-11-23 15:33:10,884 INFO  L95        ToolchainStorage]: Clearing 1 storables from ToolchainStorage
 An error has occurred. See the log file
-/home/omar/.ultimate/.metadata/.log.
+/home/omar/.ultimate/.metadata/.log
