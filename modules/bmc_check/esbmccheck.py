@@ -50,15 +50,15 @@ class DepthEsbmcCheck(object):
         self.esbmc_forwardcond_op = "--forward-condition"
         self.esbmc_inductivestep_op = "--inductive-step "
 
-        self.dldv_error = " "
-        self.dassert = " "
+        self.dldv_error = " -DLDV_ERROR=ERROR "
+        self.dassert = " -D_Bool=int "
         self.no_bounds_check = ""
         self.no_pointer_check = ""
         self.no_div_by_zero_check = ""
         self.no_assertions = ""
         self.memory_leak_check = ""
         self.no_inductive_step = False
-        self.quiet = " "
+        self.quiet = " --quiet "
         self.context_switch = ""
         self.force_malloc = " --force-malloc-success "
         self.is_memory_safety = False
