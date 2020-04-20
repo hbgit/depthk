@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: latin1 -*-
 # -------------------------------------------------
-# DepthK v3.1
+# DepthK v4.1
 # by Herbert Rocha
 #
 # e-mail: herberthb12@gmail.com
